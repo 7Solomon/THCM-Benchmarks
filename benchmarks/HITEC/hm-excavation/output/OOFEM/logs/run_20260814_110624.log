@@ -1,0 +1,32 @@
+11:06:24 INFO     tools.simulations: Log file: debug/HITEC/hm-excavation/output/OOFEM/logs/run_20260814_110624.log
+11:06:24 INFO     tools.simulations: == STARTING BENCHMARK: hm-excavation ==
+11:06:24 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HITEC/hm-excavation
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+11:06:24 INFO     tools.simulations: Loading benchmark config: debug/HITEC/hm-excavation/benchmark.json
+11:06:24 INFO     tools.simulations: Benchmark: HITEC near-field benchmark - COx claystone, isotropic, hydro-mechanical excavation + 6-month waiting phase (hitec-cox-isotropic-hm-excavation)
+11:06:24 INFO     tools.simulations: Configurations loaded.
+11:06:24 INFO     tools.simulations: Loading mesh...
+11:06:25 INFO     tools.simulations: Mesh loaded: 46378 nodes, 45975 elements (quad)
+11:06:25 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:06:25 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 46378
+  Total DOFs: 139134
+  Fields: 2
+    - displacement: 92756 DOFs (['ux', 'uy'])
+    - pore_pressure: 46378 DOFs (['p'])
+11:06:25 INFO     tools.simulations: Building oofem problem...
+11:06:25 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[482.1 -> 5785.7] s
+11:06:25 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[13982.1 -> 167785.1] s
+11:06:25 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[88698.4 -> 443492.1] s
+11:06:25 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: mobility = intrinsic_permeability/fluid_viscosity = 2.3e-20 / 0.001 = 2.3e-17 m2/(Pa.s)
+11:06:25 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: storage 1/Q = 1.02314e-10 1/Pa (from porosity)

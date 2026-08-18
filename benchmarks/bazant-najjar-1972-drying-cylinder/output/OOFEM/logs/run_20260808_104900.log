@@ -1,0 +1,26 @@
+10:49:00 INFO     tools.simulations: Log file: debug/bazant-najjar-1972-drying-cylinder/OOFEM/output/OOFEM/logs/run_20260808_104900.log
+10:49:00 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+10:49:00 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/bazant-najjar-1972-drying-cylinder/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+10:49:00 INFO     tools.simulations: Loading benchmark config: debug/bazant-najjar-1972-drying-cylinder/OOFEM/benchmark.json
+10:49:00 INFO     tools.simulations: Benchmark: Drying of concrete cylinder — Bažant-Najjar moisture transport validation (bazant-najjar-1972-drying-cylinder)
+10:49:00 INFO     tools.simulations: Configurations loaded.
+10:49:00 INFO     tools.simulations: Loading mesh...
+10:49:00 INFO     tools.simulations: Mesh loaded: 1016 nodes, 1856 elements (triangle)
+10:49:00 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+10:49:00 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1016
+  Total DOFs: 1016
+  Fields: 1
+    - humidity: 1016 DOFs (['h'])
+10:49:00 INFO     tools.simulations: Building oofem problem...

@@ -1,0 +1,357 @@
+11:48:52 INFO     tools.simulations: Log file: debug/bazant-najjar-1972-drying-cylinder/OOFEM/output/OOFEM/logs/run_20260801_114852.log
+11:48:52 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+11:48:52 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/bazant-najjar-1972-drying-cylinder/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+11:48:52 INFO     tools.simulations: Loading benchmark config: debug/bazant-najjar-1972-drying-cylinder/OOFEM/benchmark.json
+11:48:52 INFO     tools.simulations: Benchmark: Drying of concrete cylinder — Bažant-Najjar moisture transport validation (bazant-najjar-1972-drying-cylinder)
+11:48:52 INFO     tools.simulations: Configurations loaded.
+11:48:52 INFO     tools.simulations: Loading mesh...
+11:48:52 INFO     tools.simulations: Mesh loaded: 1016 nodes, 1856 elements (triangle)
+11:48:52 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:48:52 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1016
+  Total DOFs: 1016
+  Fields: 1
+    - humidity: 1016 DOFs (['h'])
+11:48:52 INFO     tools.simulations: Building oofem problem...
+11:48:52 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[8.0 -> 481.0] s
+11:48:52 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[159.6 -> 4788.9] s
+11:48:52 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[1455.2 -> 17462.4] s
+11:48:52 INFO     tools.simulations: oofem problem built: 1016 nodes, 1856 elements, 170 steps (t=[0 -> 6.05e+05])
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:48:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:48:53 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.900e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +9.275e-05
+────────────────────────────────────────────────────────────────────
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:48:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:48:54 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.900e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +1.898e-03
+────────────────────────────────────────────────────────────────────
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:48:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:48:55 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.01 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.900e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +9.688e-03
+────────────────────────────────────────────────────────────────────
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:48:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:48:56 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.04 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.900e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +4.165e-02
+────────────────────────────────────────────────────────────────────
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:48:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:48:57 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.07 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.900e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +6.592e-02
+────────────────────────────────────────────────────────────────────
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:48:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:48:58 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.11 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.900e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +1.091e-01
+────────────────────────────────────────────────────────────────────
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:48:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:48:59 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.19 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.900e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +1.860e-01
+────────────────────────────────────────────────────────────────────
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:00 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.32 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.898e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +3.228e-01
+────────────────────────────────────────────────────────────────────
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.88e-01,  max=+9.88e-01)
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:01 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.57 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.881e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +5.663e-01
+────────────────────────────────────────────────────────────────────
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.81e-01,  max=+9.81e-01)
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:02 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.00 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.900e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.812e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +9.996e-01
+────────────────────────────────────────────────────────────────────
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.78e-01,  max=+9.78e-01)
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:03 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.19 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.899e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.775e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +1.194e+00
+────────────────────────────────────────────────────────────────────
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.72e-01,  max=+9.72e-01)
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:04 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.46 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.897e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.724e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +1.461e+00
+────────────────────────────────────────────────────────────────────
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.89e-01,  max=+9.89e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.66e-01,  max=+9.66e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:06 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.83 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.892e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.657e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +1.827e+00
+────────────────────────────────────────────────────────────────────
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.88e-01,  max=+9.88e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.57e-01,  max=+9.57e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:06 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.33 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.900e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.879e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.574e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +2.327e+00
+────────────────────────────────────────────────────────────────────
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.85e-01,  max=+9.85e-01)
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.48e-01,  max=+9.48e-01)
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.01 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.900e-01   h @ center
+   RH at r=R/4 [-]            +9.898e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.855e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.477e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +3.012e+00
+────────────────────────────────────────────────────────────────────
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.89e-01,  max=+9.89e-01)
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.81e-01,  max=+9.81e-01)
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.37e-01,  max=+9.37e-01)
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:09 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.95 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.899e-01   h @ center
+   RH at r=R/4 [-]            +9.893e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.813e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.370e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +3.951e+00
+────────────────────────────────────────────────────────────────────
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.90e-01,  max=+9.90e-01)
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.88e-01,  max=+9.88e-01)
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.75e-01,  max=+9.75e-01)
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.25e-01,  max=+9.25e-01)
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.24 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.897e-01   h @ center
+   RH at r=R/4 [-]            +9.879e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.750e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.254e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +5.237e+00
+────────────────────────────────────────────────────────────────────
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.89e-01,  max=+9.89e-01)
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.85e-01,  max=+9.85e-01)
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.67e-01,  max=+9.67e-01)
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+9.13e-01,  max=+9.13e-01)
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    1 nodes
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    (min=+5.00e-01,  max=+5.00e-01)
+11:49:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                    11 nodes
+11:49:11 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 7.00 d · 7 queries ok ────────────────────────────────────────
+   RH at center (r=0) [-]     +9.887e-01   h @ center
+   RH at r=R/4 [-]            +9.850e-01   h @ r_quarter
+   RH at r=R/2 [-]            +9.666e-01   h @ r_half
+   RH at r=3R/4 [-]           +9.133e-01   h @ r_threequarter
+   RH at drying surface [-]   +5.000e-01   h @ drying_surface
+   Time [days]                +6.998e+00
+────────────────────────────────────────────────────────────────────
+11:49:11 INFO     tools.simulations: VTU export: 170 file(s) -> debug/bazant-najjar-1972-drying-cylinder/OOFEM/output/OOFEM/vtu
+11:49:11 INFO     tools.simulations: Checkpoint saved -> debug/bazant-najjar-1972-drying-cylinder/OOFEM/output/OOFEM/checkpoint.h5  (0.8 MB)
+11:49:11 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 170/170 steps ok) ==

@@ -1,0 +1,939 @@
+# THCM-Fem benchmark paper catalog
+# Generated 2026-08-17
+# Papers whose published setup is usually complete enough for SKILLs/CREATE.md
+# (geometry, materials, BCs, times, validation quantity).
+#
+# How to open a paper
+#   doi:     https://doi.org/<doi>
+#   url:     landing page if there is no DOI
+#   crossref: https://search.crossref.org/?q=<query>
+#   scholar:  https://scholar.google.com/scholar?q=<query>
+# Never invent a DOI. Entries without doi use journal + query instead.
+#
+# physics: one of
+#   hydromechanical | thermal-hydration | fracture | elastic
+#   b3creep | drying-moisture | heatmoisturetransport
+#
+# completeness:
+#   high   — numbers in the paper / closed-form
+#   medium — paper + one cited annex/thesis usually enough
+#   low    — setup clear but some knobs must be tagged ASSUMED
+
+meta:
+  pipeline: THCM-Fem / OOFEM backend
+  skill: SKILLs/CREATE.md
+  schema: SKILLs/benchmark.schema.json
+  already_in_repo:
+    - debug/HAMSTAD/B1
+    - debug/HAMSTAD/B2
+    - debug/HAMSTAD/B4
+    - debug/bazant-najjar-1972-drying-cylinder
+    - debug/briffaut-2010-civaux-wall
+    - debug/ConCracksRestrainedBeam
+    - debug/EarlyAgeThermalCracking
+    - debug/HITEC
+    - debug/BenVaSim/1.1
+    - debug/ATENA
+
+papers:
+
+  # ---------------------------------------------------------------------------
+  # Hydromechanical (2D quads, plane strain only)
+  # ---------------------------------------------------------------------------
+  - id: terzaghi-1925-1d-consolidation
+    title: Erdbaumechanik auf bodenphysikalischer Grundlage
+    authors: [Karl Terzaghi]
+    year: 1925
+    type: book
+    isbn: null
+    doi: null
+    url: null
+    scholar: Terzaghi 1925 Erdbaumechanik consolidation
+    crossref: Terzaghi Erdbaumechanik 1925
+    physics: hydromechanical
+    completeness: high
+    already_in_repo: false
+    notes: >
+      Closed-form 1-D consolidation. Pick H, cv, mv, load q yourself;
+      analytical u(z,t) and settlement are the reference. Model as a
+      plane-strain strip, drained top, sealed base.
+
+  - id: terzaghi-peck-1948-soil-mechanics
+    title: Soil Mechanics in Engineering Practice
+    authors: [Karl Terzaghi, Ralph B. Peck]
+    year: 1948
+    type: book
+    doi: null
+    scholar: Terzaghi Peck Soil Mechanics in Engineering Practice consolidation example
+    physics: hydromechanical
+    completeness: high
+    already_in_repo: false
+    notes: Worked numerical 1-D examples with units.
+
+  - id: mandel-1953-consolidation
+    title: "Consolidation des sols (étude mathématique)"
+    authors: [Jean Mandel]
+    year: 1953
+    journal: Géotechnique
+    volume: "3"
+    issue: "7"
+    pages: 287-299
+    doi: 10.1680/geot.1953.3.7.287
+    url: https://doi.org/10.1680/geot.1953.3.7.287
+    scholar: Mandel 1953 Consolidation des sols Geotechnique
+    physics: hydromechanical
+    completeness: high
+    already_in_repo: false
+    notes: >
+      Canonical 2-D drained-sides / rigid-plate case. Mandel–Cryer
+      pore-pressure rise is the check. Also in Verruijt textbooks.
+
+  - id: verruijt-poroelasticity-notes
+    title: Theory and Problems of Poroelasticity
+    authors: [Arnold Verruijt]
+    year: 2016
+    type: notes
+    doi: null
+    url: http://geo.verruijt.net/
+    scholar: Verruijt Theory and Problems of Poroelasticity Mandel
+    physics: hydromechanical
+    completeness: high
+    already_in_repo: false
+    notes: Free notes with complete Mandel / strip / borehole numbers.
+
+  - id: booker-small-1976-finite-layer
+    title: Finite layer analysis of consolidation
+    authors: [J. R. Booker, J. C. Small]
+    year: 1976
+    journal: International Journal for Numerical and Analytical Methods in Geomechanics
+    volume: "1"
+    pages: 1-16
+    doi: null
+    scholar: Booker Small 1976 Finite layer analysis of consolidation
+    crossref: Booker Small 1976 Finite layer analysis of consolidation
+    physics: hydromechanical
+    completeness: high
+    already_in_repo: false
+    notes: Tabulated 1-D / strip solutions.
+
+  - id: cheng-2016-poroelasticity
+    title: Poroelasticity
+    authors: [Alexander H.-D. Cheng]
+    year: 2016
+    type: book
+    isbn: "978-3-319-25200-1"
+    doi: 10.1007/978-3-319-25202-5
+    url: https://doi.org/10.1007/978-3-319-25202-5
+    scholar: Cheng Poroelasticity 2016 Mandel
+    physics: hydromechanical
+    completeness: high
+    already_in_repo: false
+    notes: >
+      Ch. 5–7 worked problems (Mandel, strip footing, borehole).
+      Skip Cryer sphere (needs 3-D u-p; backend is 2-D quads only).
+
+  - id: schiffman-1958-time-varying-load
+    title: Consolidation of soil under time-dependent loading and variable permeability
+    authors: [Robert L. Schiffman]
+    year: 1958
+    journal: Proceedings Highway Research Board
+    doi: null
+    scholar: Schiffman 1958 Consolidation time-dependent loading
+    physics: hydromechanical
+    completeness: medium
+    already_in_repo: false
+    notes: Same mesh as Terzaghi; Neumann timetable for q(t).
+
+  # ---------------------------------------------------------------------------
+  # Hygrothermal (Kunzel / HAMSTAD)
+  # ---------------------------------------------------------------------------
+  - id: hagentoft-2004-hamstad
+    title: "Assessment method for numerical prediction models for combined heat, air and moisture transfer in building components: benchmarks for one-dimensional cases"
+    authors: [Carl-Eric Hagentoft, Olaf Adan, Bijan Adl-Zarrabi, Rachel Becker, Henk Brocken, Jan Carmeliet, Reda Djebbar]
+    year: 2004
+    journal: Journal of Thermal Envelope and Building Science
+    volume: "27"
+    issue: "4"
+    pages: 327-352
+    doi: null
+    url: https://nrc-publications.canada.ca/eng/view/object/?id=c52a2b66-f1ee-41b8-8759-9fd30063c217
+    nrc: NRCC-46623
+    scholar: Hagentoft 2004 HAMSTAD Assessment method numerical prediction models
+    physics: heatmoisturetransport
+    completeness: high
+    already_in_repo: [B1, B2, B4]
+    notes: >
+      Full WP2 exercises. B3 (airtightness/moisture) and B5 still free.
+      Also issued as NRC report 2003-07-22 (free PDF at url).
+
+  - id: kunzel-1995-dissertation
+    title: Simultaneous Heat and Moisture Transport in Building Components
+    authors: [Hartwig M. Künzel]
+    year: 1995
+    type: dissertation
+    institution: Universität Stuttgart / Fraunhofer IRB
+    isbn: "3-8167-4103-7"
+    doi: null
+    url: https://wufi.de/de/wp-content/uploads/sites/9/2014/12/K%C3%BCnzel-1995-Simultaneous-Heat-and-Moisture-Transport.pdf
+    scholar: Kunzel 1995 Simultaneous Heat and Moisture Transport in Building Components
+    physics: heatmoisturetransport
+    completeness: high
+    already_in_repo: false
+    notes: Original hemokunzel constitutive model and worked walls.
+
+  - id: dang-2024-ham-dataset
+    title: A comprehensive benchmark dataset for the validation of building component HAM models
+    authors: [Xinyuan Dang, Hans Janssen, Staf Roels]
+    year: 2024
+    journal: Building Simulation
+    doi: 10.1007/s12273-024-1176-8
+    url: https://doi.org/10.1007/s12273-024-1176-8
+    scholar: Dang Janssen Roels 2024 comprehensive benchmark dataset HAM
+    related_data: Empirical validation of HAM-models based on a dedicated HB-CB experiment_datasets (Zenodo)
+    physics: heatmoisturetransport
+    completeness: high
+    already_in_repo: false
+    notes: >
+      THIS is the experiment paper (thicknesses, films, measured
+      functions). Prefer over Dang 2025 round-robin. Fit Kunzel
+      wf/w80/A/mu; do not ingest full Dw(w) tables.
+
+  - id: dang-2025-ham-roundrobin
+    title: A state-of-the-art empirical round robin validation of heat, air and moisture (HAM) models
+    authors: [Xinyuan Dang, Hans Janssen, Staf Roels]
+    year: 2025
+    journal: Building and Environment
+    volume: "276"
+    pages: "112867"
+    doi: 10.1016/j.buildenv.2025.112867
+    url: https://doi.org/10.1016/j.buildenv.2025.112867
+    scholar: Dang 2025 empirical round robin validation HAM models
+    physics: heatmoisturetransport
+    completeness: low
+    already_in_repo: false
+    notes: Results paper only. Inputs live in dang-2024-ham-dataset.
+
+  - id: iea-annex24-hamtie
+    title: "IEA Annex 24 HAMTIE: Heat, Air and Moisture Transport in Insulated Envelope Parts"
+    authors: [Hugo Hens]
+    year: 1996
+    type: report
+    doi: null
+    scholar: IEA Annex 24 HAMTIE Hens benchmark
+    physics: heatmoisturetransport
+    completeness: medium
+    already_in_repo: false
+    notes: Use only exercises that quote mu, A, wf (Kunzel knobs).
+
+  # ---------------------------------------------------------------------------
+  # Thermal + hydration
+  # ---------------------------------------------------------------------------
+  - id: azenha-2009-temperatures-strains
+    title: "Identification of early-age concrete temperatures and strains: monitoring and numerical simulation"
+    authors: [Miguel Azenha, Rui Faria, D. Ferreira]
+    year: 2009
+    journal: Cement and Concrete Composites
+    volume: "31"
+    pages: 369-378
+    doi: null
+    scholar: Azenha Faria Ferreira 2009 Identification of early-age concrete temperatures and strains
+    crossref: Azenha Identification of early-age concrete temperatures and strains 2009
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: Lab wall, sensors, mix, films. Prime next JSON.
+
+  - id: faria-azenha-figueiras-2006
+    title: Modelling of concrete at early ages
+    authors: [Rui Faria, Miguel Azenha, Joaquim A. Figueiras]
+    year: 2006
+    journal: Cement and Concrete Composites
+    volume: "28"
+    pages: 572-585
+    doi: null
+    scholar: Faria Azenha Figueiras 2006 Modelling of concrete at early ages
+    crossref: Faria Azenha Figueiras 2006 Modelling of concrete at early ages
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: azenha-2011-humidity
+    title: Early-age concrete residual stresses
+    authors: [Miguel Azenha]
+    year: 2009
+    type: thesis
+    institution: Universidade do Porto
+    doi: null
+    scholar: Azenha 2009 PhD early-age concrete residual stresses Porto
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: Full appendices with mix, B1/B2-style kinetics, gages.
+
+  - id: schindler-folliard-2005
+    title: Heat of hydration models for cementitious materials
+    authors: [Anton K. Schindler, Kevin J. Folliard]
+    year: 2005
+    journal: ACI Materials Journal
+    volume: "102"
+    issue: "1"
+    pages: 24-33
+    doi: null
+    scholar: Schindler Folliard 2005 Heat of hydration models for cementitious materials
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: Affinity / equivalent-age heat source; map to B1,B2,Hu,ccement.
+
+  - id: schindler-2002-thesis
+    title: Concrete Hydration, Temperature Development, and Setting at Early-Ages
+    authors: [Anton K. Schindler]
+    year: 2002
+    type: thesis
+    institution: University of Texas at Austin
+    doi: null
+    url: https://repositories.lib.utexas.edu/
+    scholar: Schindler 2002 Concrete Hydration Temperature Development Setting thesis
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: riding-poole-2006
+    title: Quantification of effects of fly ash type on concrete early-age cracking
+    authors: [Kyle A. Riding, Jonathan L. Poole, Anton K. Schindler, Maria C. G. Juenger, Kevin J. Folliard]
+    year: 2008
+    journal: ACI Materials Journal
+    doi: null
+    scholar: Riding Poole Schindler 2008 fly ash early-age cracking temperature
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: Instrumented elements; several related ACI papers 2006–2011.
+
+  - id: fairbairn-2004-optimization
+    title: Optimization of mass concrete construction using genetic algorithms
+    authors: [Eduardo M. R. Fairbairn, Marcos M. Silvoso, Romildo D. Toledo Filho, José L. D. Alves, Nelson F. F. Ebecken]
+    year: 2004
+    journal: Computers & Structures
+    volume: "82"
+    pages: 281-299
+    doi: null
+    scholar: Fairbairn 2004 Optimization of mass concrete construction genetic algorithms
+    crossref: Fairbairn 2004 Optimization of mass concrete construction
+    physics: thermal-hydration
+    completeness: medium
+    already_in_repo: false
+
+  - id: fairbairn-azenha-2018-rilem-254
+    title: "Thermal Cracking of Massive Concrete Structures (RILEM TC 254-CMS STAR)"
+    authors: [Eduardo M. R. Fairbairn, Miguel Azenha]
+    year: 2018
+    type: book
+    isbn: "978-3-319-76616-4"
+    doi: 10.1007/978-3-319-76617-1
+    url: https://doi.org/10.1007/978-3-319-76617-1
+    scholar: Fairbairn Azenha 2018 Thermal Cracking of Massive Concrete Structures RILEM 254
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: State of the art + several fully numbered case studies.
+
+  - id: de-schutter-2002-hardening
+    title: Finite element simulation of thermal cracking in massive hardening concrete elements
+    authors: [Geert De Schutter]
+    year: 2002
+    journal: Cement and Concrete Research
+    doi: null
+    scholar: De Schutter 2002 Finite element simulation thermal cracking massive hardening
+    crossref: De Schutter 2002 thermal cracking massive hardening concrete
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: cervera-1999-thermo-chemo
+    title: Thermo-chemo-mechanical model for concrete
+    authors: [Miguel Cervera, Javier Oliver, Tomás Prato]
+    year: 1999
+    journal: Journal of Engineering Mechanics
+    volume: "125"
+    issue: "9"
+    pages: 1018-1027
+    doi: null
+    scholar: Cervera Oliver Prato 1999 Thermo-chemo-mechanical model for concrete
+    crossref: Cervera Oliver Prato 1999 Thermo-chemo-mechanical model
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: Affinity kinetics match hydratingConcreteMat / Cervera B1 B2.
+
+  - id: cervera-2002-aging
+    title: A coupled thermo-chemo-mechanical model for concrete
+    authors: [Miguel Cervera, Javier Oliver, Tomás Prato]
+    year: 1999
+    journal: Journal of Engineering Mechanics
+    volume: "125"
+    issue: "9"
+    pages: 1028-1039
+    doi: null
+    scholar: Cervera Oliver Prato 1999 part II aging strength
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: ulm-coussy-1998
+    title: Couplings in early-age concrete
+    authors: [Franz-Josef Ulm, Olivier Coussy]
+    year: 1998
+    journal: Journal of Engineering Mechanics
+    volume: "124"
+    issue: "10"
+    pages: 1123-1132
+    doi: null
+    scholar: Ulm Coussy 1998 Couplings in early-age concrete
+    crossref: Ulm Coussy 1998 Couplings in early-age concrete
+    physics: thermal-hydration
+    completeness: medium
+    already_in_repo: false
+    notes: Use thermal/hydration subset only.
+
+  - id: benboudjema-torrenti-2008
+    title: Early-age behaviour of concrete nuclear containments
+    authors: [Farid Benboudjema, Jean-Michel Torrenti]
+    year: 2008
+    journal: Nuclear Engineering and Design
+    volume: "238"
+    pages: 2495-2506
+    doi: null
+    scholar: Benboudjema Torrenti 2008 Early-age behaviour of concrete nuclear containments
+    crossref: Benboudjema Torrenti 2008 nuclear containments
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: kwak-ha-2006
+    title: "An experimental and analytical study on early-age thermal cracking of mass concrete"
+    authors: [Hyung-Keun Kwak, Sung-Hun Ha]
+    year: 2006
+    journal: Cement and Concrete Research
+    doi: null
+    scholar: Kwak Ha 2006 early-age thermal cracking of mass concrete
+    crossref: Kwak Ha 2006 early-age thermal cracking mass concrete
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: honorio-2014
+    title: Evaluation of the potential for thermal cracking in massive concrete structures
+    authors: [Tulio Honorio, Benoît Bary, Farid Benboudjema]
+    year: 2014
+    journal: Cement and Concrete Research
+    doi: null
+    scholar: Honorio Bary Benboudjema 2014 thermal cracking massive concrete
+    crossref: Honorio Bary Benboudjema 2014
+    physics: thermal-hydration
+    completeness: medium
+    already_in_repo: false
+
+  - id: buffo-lacarriere-2011-ceos
+    title: "CEOS.fr experimental program: behaviour of a massive reinforced concrete wall"
+    authors: [Laurie Buffo-Lacarrière, Alain Sellier, Anaclet Turatsinze, Gilles Escadeillas]
+    year: 2011
+    journal: European Journal of Environmental and Civil Engineering
+    doi: null
+    scholar: Buffo-Lacarriere CEOS.fr massive reinforced concrete wall
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: Full-scale RG8-type wall. Skip rebar (unsupported).
+
+  - id: waller-2000-lcpc
+    title: Relations entre formulation d'un béton et propriétés mécaniques
+    authors: [Vincent Waller]
+    year: 2000
+    type: thesis
+    institution: LCPC / ENPC
+    doi: null
+    scholar: Waller 2000 LCPC formulation beton chaleur hydration
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: Adiabatic calorimetry → Hu, affinity.
+
+  - id: bamforth-2007-c660
+    title: "Early-age thermal crack control in concrete (CIRIA C660)"
+    authors: [P. B. Bamforth]
+    year: 2007
+    type: report
+    isbn: "978-0-86017-660-2"
+    doi: null
+    scholar: Bamforth CIRIA C660 Early-age thermal crack control
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: Worked walls, h, formwork strip times. Updated as C766 (2018).
+
+  - id: bamforth-2018-c766
+    title: "Control of cracking caused by restrained deformation in concrete (CIRIA C766)"
+    authors: [P. B. Bamforth]
+    year: 2018
+    type: report
+    isbn: "978-0-86017-781-4"
+    doi: null
+    scholar: Bamforth CIRIA C766 Control of cracking restrained deformation
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: cusson-hoogeveen-2007
+    title: An experimental approach for the analysis of early-age behaviour of high-performance concrete structures
+    authors: [Daniel Cusson, Ted Hoogeveen]
+    year: 2007
+    journal: Cement and Concrete Research
+    volume: "37"
+    pages: 957-965
+    doi: null
+    scholar: Cusson Hoogeveen 2007 early-age behaviour high-performance concrete
+    crossref: Cusson Hoogeveen 2007 experimental approach early-age
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: lura-2003-thesis
+    title: Autogenous deformation and internal curing of concrete
+    authors: [Pietro Lura]
+    year: 2003
+    type: thesis
+    institution: TU Delft
+    isbn: "90-407-2404-0"
+    doi: null
+    url: https://repository.tudelft.nl/
+    scholar: Lura 2003 Autogenous deformation and internal curing of concrete
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+    notes: Hu, alpha, sealed strain. Pair with autogenousshrinkage.
+
+  - id: tazawa-miyazawa-1995
+    title: Influence of cement and admixture on autogenous shrinkage of cement paste
+    authors: [Ei-ichi Tazawa, Shingo Miyazawa]
+    year: 1995
+    journal: Cement and Concrete Research
+    volume: "25"
+    pages: 281-287
+    doi: null
+    scholar: Tazawa Miyazawa 1995 Influence of cement autogenous shrinkage
+    crossref: Tazawa Miyazawa 1995 autogenous shrinkage cement paste
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: jensen-hansen-2001
+    title: Autogenous deformation and RH-change in perspective
+    authors: [Ole Mejlhede Jensen, Per Freiesleben Hansen]
+    year: 2001
+    journal: Cement and Concrete Research
+    volume: "31"
+    pages: 1859-1865
+    doi: 10.1016/S0008-8846(01)00549-1
+    url: https://doi.org/10.1016/S0008-8846(01)00549-1
+    scholar: Jensen Hansen 2001 Autogenous deformation and RH-change
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: bentz-nist-vicct
+    title: A review of early-age properties of cement-based materials
+    authors: [Dale P. Bentz]
+    year: 2008
+    journal: Cement and Concrete Research
+    volume: "38"
+    pages: 196-204
+    doi: null
+    scholar: Bentz 2008 review early-age properties cement-based NIST
+    physics: thermal-hydration
+    completeness: medium
+    already_in_repo: false
+    notes: Points at NIST VICCT datasets with full calorimetry.
+
+  - id: emborg-1989-thesis
+    title: Thermal stresses in concrete structures at early ages
+    authors: [Mats Emborg]
+    year: 1989
+    type: thesis
+    institution: Luleå University of Technology
+    doi: null
+    scholar: Emborg 1989 Thermal stresses in concrete structures at early ages
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: larson-2003-thesis
+    title: Estimation of crack risk in early age concrete
+    authors: [Martin Larson]
+    year: 2003
+    type: thesis
+    institution: Luleå University of Technology
+    doi: null
+    scholar: Larson 2003 Estimation of crack risk in early age concrete Lulea
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: false
+
+  - id: springenschmid-1994-rilem119
+    title: "Thermal Cracking in Concrete at Early Ages (RILEM Proceedings 25 / TC 119)"
+    authors: [Rupert Springenschmid]
+    year: 1994
+    type: book
+    isbn: "0-419-18710-3"
+    doi: null
+    scholar: Springenschmid 1994 Thermal Cracking in Concrete at Early Ages RILEM
+    physics: thermal-hydration
+    completeness: medium
+    already_in_repo: false
+    notes: Cracking-frame stress vs time. Several numbered labs.
+
+  - id: klemczak-2012
+    title: Modeling thermal stresses and early-age cracking in massive foundation slabs
+    authors: [Barbara Klemczak, Aneta Knoppik-Wróbel]
+    year: 2014
+    journal: Procedia Engineering / Archives of Civil Engineering
+    doi: null
+    scholar: Klemczak Knoppik-Wrobel early-age cracking massive foundation slabs
+    physics: thermal-hydration
+    completeness: medium
+    already_in_repo: false
+
+  # ---------------------------------------------------------------------------
+  # Fracture / elastic
+  # ---------------------------------------------------------------------------
+  - id: rilem-tc50-fmc-1985
+    title: Determination of the fracture energy of mortar and concrete by means of three-point bend tests on notched beams
+    authors: [RILEM TC 50-FMC]
+    year: 1985
+    journal: Materials and Structures
+    volume: "18"
+    issue: "106"
+    pages: 287-290
+    doi: 10.1007/BF02472918
+    url: https://doi.org/10.1007/BF02472918
+    scholar: RILEM 1985 Determination of the fracture energy three-point bend notched beams
+    physics: fracture
+    completeness: high
+    already_in_repo: false
+    notes: Standard geometry. Pair with a paper that lists E, ft, Gf.
+
+  - id: hillerborg-1976-fictitious-crack
+    title: Analysis of crack formation and crack growth in concrete by means of fracture mechanics and finite elements
+    authors: [Arne Hillerborg, Mats Modéer, P.-E. Petersson]
+    year: 1976
+    journal: Cement and Concrete Research
+    volume: "6"
+    pages: 773-781
+    doi: 10.1016/0008-8846(76)90007-7
+    url: https://doi.org/10.1016/0008-8846(76)90007-7
+    scholar: Hillerborg Modeer Petersson 1976 fictitious crack
+    physics: fracture
+    completeness: high
+    already_in_repo: false
+
+  - id: petersson-1981-fracture
+    title: Crack growth and development of fracture zones in plain concrete and similar materials
+    authors: [Per-Erik Petersson]
+    year: 1981
+    type: report
+    institution: Lund Institute of Technology
+    report_no: TVBM-1006
+    doi: null
+    scholar: Petersson 1981 Crack growth fracture zones plain concrete TVBM-1006
+    physics: fracture
+    completeness: high
+    already_in_repo: false
+    notes: Full P–δ for several sizes. Best Rankine/damage beam.
+
+  - id: bazant-pfeiffer-1987
+    title: Determination of fracture energy from size effect and brittleness number
+    authors: [Zdeněk P. Bažant, Phillip A. Pfeiffer]
+    year: 1987
+    journal: ACI Materials Journal
+    volume: "84"
+    issue: "6"
+    pages: 463-480
+    doi: null
+    scholar: Bazant Pfeiffer 1987 Determination of fracture energy from size effect
+    physics: fracture
+    completeness: high
+    already_in_repo: false
+    notes: Tabulated peak loads vs size.
+
+  - id: guinea-planas-elices-1992
+    title: Measurement of the fracture energy using three-point bend tests
+    authors: [G. V. Guinea, Jaime Planas, Manuel Elices]
+    year: 1992
+    journal: Materials and Structures
+    volume: "25"
+    pages: 212-218
+    doi: null
+    scholar: Guinea Planas Elices 1992 Measurement of the fracture energy three-point
+    crossref: Guinea Planas Elices 1992 fracture energy three-point
+    physics: fracture
+    completeness: high
+    already_in_repo: false
+
+  - id: hordijk-1991-thesis
+    title: Local approach to fatigue of concrete
+    authors: [D. A. Hordijk]
+    year: 1991
+    type: thesis
+    institution: TU Delft
+    doi: null
+    url: https://repository.tudelft.nl/
+    scholar: Hordijk 1991 Local approach to fatigue of concrete softening
+    physics: fracture
+    completeness: high
+    already_in_repo: false
+    notes: σ–w law + beams.
+
+  - id: van-mier-1984
+    title: Strain-softening of concrete under multiaxial loading conditions
+    authors: [Jan G. M. van Mier]
+    year: 1984
+    type: thesis
+    institution: TU Eindhoven
+    doi: null
+    scholar: van Mier 1984 Strain-softening of concrete multiaxial
+    physics: fracture
+    completeness: medium
+    already_in_repo: false
+    notes: Use uniaxial tension subset (plane stress).
+
+  - id: gopalaratnam-shah-1985
+    title: Softening response of plain concrete in direct tension
+    authors: [V. S. Gopalaratnam, Surendra P. Shah]
+    year: 1985
+    journal: ACI Journal
+    volume: "82"
+    issue: "3"
+    pages: 310-323
+    doi: null
+    scholar: Gopalaratnam Shah 1985 Softening response plain concrete direct tension
+    physics: fracture
+    completeness: high
+    already_in_repo: false
+
+  - id: malvar-warren-1988
+    title: Fracture energy for three-point-bend tests on single-edge-notched beams
+    authors: [L. Javier Malvar, G. E. Warren]
+    year: 1988
+    journal: Experimental Mechanics
+    volume: "28"
+    pages: 266-272
+    doi: null
+    scholar: Malvar Warren 1988 Fracture energy three-point-bend single-edge-notched
+    crossref: Malvar Warren 1988 Fracture energy three-point-bend
+    physics: fracture
+    completeness: high
+    already_in_repo: false
+
+  # ---------------------------------------------------------------------------
+  # Creep / shrinkage (B3)
+  # ---------------------------------------------------------------------------
+  - id: bazant-baweja-1995-b3
+    title: Creep and shrinkage prediction model for analysis and design of concrete structures — Model B3
+    authors: [Zdeněk P. Bažant, Sandeep Baweja]
+    year: 1995
+    journal: Materials and Structures
+    volume: "28"
+    pages: 357-365
+    doi: 10.1007/BF02473152
+    url: https://doi.org/10.1007/BF02473152
+    scholar: Bazant Baweja 1995 Model B3 creep shrinkage
+    physics: b3creep
+    completeness: high
+    already_in_repo: false
+    notes: q1–q4 worked examples. Errata Mater. Struct. 29:126.
+
+  - id: bazant-baweja-2000-aci-sp
+    title: "Creep and shrinkage prediction model for analysis and design of concrete structures: Model B3"
+    authors: [Zdeněk P. Bažant, Sandeep Baweja]
+    year: 2000
+    journal: ACI Special Publication
+    doi: null
+    scholar: Bazant Baweja 2000 ACI SP Model B3
+    physics: b3creep
+    completeness: high
+    already_in_repo: false
+
+  - id: wendner-hubler-bazant-2015-b4
+    title: "The B4 model for multi-decade creep and shrinkage prediction"
+    authors: [Roman Wendner, Mija H. Hubler, Zdeněk P. Bažant]
+    year: 2015
+    journal: Materials and Structures
+    doi: null
+    scholar: Wendner Hubler Bazant 2015 B4 model multi-decade creep
+    crossref: Wendner Hubler Bazant 2015 B4 model
+    physics: b3creep
+    completeness: high
+    already_in_repo: false
+    notes: Convert B4 qs to backend b3creep q1–q4; tag INFERRED.
+
+  - id: rilem-tc107-1995
+    title: "RILEM TC 107: Guidelines for characterizing concrete creep and shrinkage in structural design codes"
+    authors: [RILEM TC 107]
+    year: 1995
+    journal: Materials and Structures
+    doi: null
+    scholar: RILEM TC 107 1995 creep shrinkage guidelines
+    physics: b3creep
+    completeness: medium
+    already_in_repo: false
+
+  - id: granger-1995-lcpc
+    title: Comportement différé du béton dans les enceintes de centrales nucléaires
+    authors: [Laurent Granger]
+    year: 1995
+    type: thesis
+    institution: LCPC / ENPC
+    doi: null
+    scholar: Granger 1995 these LCPC beton enceintes nucleaires fluage
+    physics: b3creep
+    completeness: high
+    already_in_repo: false
+
+  - id: baroghel-bouny-1999
+    title: Characterization and identification of equilibrium and transfer moisture properties for ordinary and high-performance cementitious materials
+    authors: [Véronique Baroghel-Bouny, M. Mainguy, T. Lassabatere, O. Coussy]
+    year: 1999
+    journal: Cement and Concrete Research
+    volume: "29"
+    pages: 1225-1238
+    doi: null
+    scholar: Baroghel-Bouny 1999 moisture properties cementitious
+    crossref: Baroghel-Bouny 1999 Characterization equilibrium transfer moisture
+    physics: drying-moisture
+    completeness: high
+    already_in_repo: false
+    notes: Pair desorption with B3 + dryingshrinkage if qi exist.
+
+  - id: persson-1997
+    title: Self-desiccation and its importance in concrete technology
+    authors: [Bertil Persson]
+    year: 1997
+    journal: Materials and Structures
+    volume: "30"
+    pages: 293-305
+    doi: null
+    scholar: Persson 1997 Self-desiccation importance concrete technology
+    physics: b3creep
+    completeness: medium
+    already_in_repo: false
+
+  - id: aci-209.2r-08
+    title: Guide for Modeling and Calculating Shrinkage and Creep in Hardened Concrete
+    authors: [ACI Committee 209]
+    year: 2008
+    type: report
+    report_no: ACI 209.2R-08
+    doi: null
+    scholar: ACI 209.2R-08 Modeling Calculating Shrinkage Creep
+    physics: b3creep
+    completeness: medium
+    already_in_repo: false
+    notes: Numerical examples; convert ACI/B3 tables, tag INFERRED.
+
+  # ---------------------------------------------------------------------------
+  # Moisture only (Bažant–Najjar / isolin)
+  # ---------------------------------------------------------------------------
+  - id: bazant-najjar-1972
+    title: Nonlinear water diffusion in nonsaturated concrete
+    authors: [Zdeněk P. Bažant, L. J. Najjar]
+    year: 1972
+    journal: Materials and Structures
+    volume: "5"
+    pages: 3-20
+    doi: 10.1007/BF02479073
+    url: https://doi.org/10.1007/BF02479073
+    scholar: Bazant Najjar 1972 Nonlinear water diffusion nonsaturated concrete
+    physics: drying-moisture
+    completeness: high
+    already_in_repo: true
+    notes: Cylinder already in repo. Other hc, n, D0 cases still free.
+
+  - id: sakata-1983
+    title: A study on moisture diffusion in drying and drying shrinkage of concrete
+    authors: [Kenji Sakata]
+    year: 1983
+    journal: Cement and Concrete Research
+    volume: "13"
+    pages: 216-224
+    doi: null
+    scholar: Sakata 1983 moisture diffusion drying shrinkage concrete
+    crossref: Sakata 1983 moisture diffusion drying shrinkage
+    physics: drying-moisture
+    completeness: high
+    already_in_repo: false
+
+  - id: kim-lee-1999
+    title: Moisture diffusion of concrete considering self-desiccation at early ages
+    authors: [Jin-Keun Kim, Chil-Sung Lee]
+    year: 1999
+    journal: Cement and Concrete Research
+    volume: "29"
+    pages: 1921-1927
+    doi: null
+    scholar: Kim Lee 1999 Moisture diffusion concrete self-desiccation
+    crossref: Kim Lee 1999 Moisture diffusion self-desiccation
+    physics: drying-moisture
+    completeness: high
+    already_in_repo: false
+
+  - id: xi-bazant-jennings-1994
+    title: Moisture diffusion in cementitious materials
+    authors: [Yunping Xi, Zdeněk P. Bažant, Hamlin M. Jennings]
+    year: 1994
+    journal: Advanced Cement Based Materials
+    volume: "1"
+    pages: 248-257
+    doi: null
+    scholar: Xi Bazant Jennings 1994 Moisture diffusion cementitious materials
+    crossref: Xi Bazant Jennings 1994 Moisture diffusion
+    physics: drying-moisture
+    completeness: high
+    already_in_repo: false
+
+  # ---------------------------------------------------------------------------
+  # Already in the repo (kept so the file is the full list)
+  # ---------------------------------------------------------------------------
+  - id: briffaut-2011-civaux
+    title: Numerical analysis of the thermal active restrained shrinkage ring test to study the early age behavior of massive concrete structures
+    authors: [Matthieu Briffaut, Farid Benboudjema, Jean-Michel Torrenti, Georges Nahas]
+    year: 2011
+    journal: Engineering Structures
+    doi: null
+    scholar: Briffaut 2011 thermal active restrained shrinkage ring
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: true
+    notes: debug/briffaut-2010-civaux-wall
+
+  - id: briffaut-2012-wall
+    title: Effects of early-age thermal behaviour on damage risks in massive concrete structures
+    authors: [Matthieu Briffaut, Farid Benboudjema, Jean-Michel Torrenti, Georges Nahas]
+    year: 2012
+    journal: European Journal of Environmental and Civil Engineering
+    doi: null
+    scholar: Briffaut 2012 early-age thermal behaviour massive concrete
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: true
+
+  - id: concrack-benchmark
+    title: "ConCrack: International Benchmark for Control of Cracking in Reinforced Concrete Structures"
+    authors: [CEOS.fr / EDF]
+    year: 2010
+    type: report
+    doi: null
+    scholar: ConCrack benchmark restrained beam CEOS.fr
+    physics: thermal-hydration
+    completeness: high
+    already_in_repo: true
+    notes: debug/ConCracksRestrainedBeam

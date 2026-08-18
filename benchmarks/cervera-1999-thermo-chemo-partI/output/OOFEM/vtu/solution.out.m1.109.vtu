@@ -1,0 +1,20 @@
+<!-- TimeStep 78100.8 Computed 2026-08-17 at 14:40:29 -->
+<VTKFile type="UnstructuredGrid" version="0.1" byte_order="LittleEndian">
+<UnstructuredGrid>
+<Piece NumberOfPoints="12" NumberOfCells="14">
+<Points>
+ <DataArray type="Float64" NumberOfComponents="3" format="ascii"> 0.000000e+00 0.000000e+00 0.000000e+00 1.000000e-01 0.000000e+00 0.000000e+00 1.000000e-01 1.000000e-01 0.000000e+00 0.000000e+00 1.000000e-01 0.000000e+00 5.000000e-02 0.000000e+00 0.000000e+00 1.000000e-01 5.000000e-02 0.000000e+00 5.000000e-02 1.000000e-01 0.000000e+00 0.000000e+00 5.000000e-02 0.000000e+00 2.500000e-02 2.500000e-02 0.000000e+00 6.250000e-02 3.750000e-02 0.000000e+00 7.187500e-02 7.187500e-02 0.000000e+00 3.457031e-02 6.542969e-02 0.000000e+00 </DataArray>
+</Points>
+<Cells>
+ <DataArray type="Int32" Name="connectivity" format="ascii"> 5 9 1  1 9 4  7 11 3  3 11 6  6 10 2  2 10 5  4 8 0  0 8 7  9 11 8  8 11 7  4 9 8  10 11 9  6 11 10  5 10 9  </DataArray>
+ <DataArray type="Int32" Name="offsets" format="ascii"> 3 6 9 12 15 18 21 24 27 30 33 36 39 42 </DataArray>
+ <DataArray type="UInt8" Name="types" format="ascii"> 5 5 5 5 5 5 5 5 5 5 5 5 5 5 </DataArray>
+</Cells>
+<PointData Scalars="Temperature " Vectors="" Tensors="" >
+ <DataArray type="Float64" Name="Temperature" NumberOfComponents="1" format="ascii"> 7.523976e+01 7.523976e+01 7.523976e+01 7.523976e+01 7.523976e+01 7.523976e+01 7.523976e+01 7.523976e+01 7.523976e+01 7.523976e+01 7.523976e+01 7.523976e+01 </DataArray>
+</PointData>
+<CellData Scalars="" Vectors="" Tensors="" >
+</CellData>
+</Piece>
+</UnstructuredGrid>
+</VTKFile>

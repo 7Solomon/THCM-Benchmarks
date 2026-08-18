@@ -1,0 +1,30 @@
+15:02:04 INFO     tools.simulations: Log file: debug/HITEC/cox-isotropic-temperature/oofem/output/OOFEM/logs/run_20260813_150204.log
+15:02:04 INFO     tools.simulations: == STARTING BENCHMARK: oofem ==
+15:02:04 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HITEC/cox-isotropic-temperature/oofem
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+15:02:04 INFO     tools.simulations: Loading benchmark config: debug/HITEC/cox-isotropic-temperature/oofem/benchmark.json
+15:02:04 INFO     tools.simulations: Benchmark: HITEC near-field benchmark - COx claystone, isotropic, heat conduction from gallery (10 y) (hitec-cox-isotropic-temperature)
+15:02:04 INFO     tools.simulations: Configurations loaded.
+15:02:04 INFO     tools.simulations: Loading mesh...
+15:02:05 INFO     tools.simulations: Mesh loaded: 11857 nodes, 23312 elements (triangle)
+15:02:05 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+15:02:05 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 11857
+  Total DOFs: 11857
+  Fields: 1
+    - temperature: 11857 DOFs (['T'])
+15:02:05 INFO     tools.simulations: Building oofem problem...
+15:02:05 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[168844.2 -> 1181909.1] s
+15:02:05 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[3375.0 -> 40499.8] s
+15:02:05 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[356161.9 -> 1424647.6] s
+15:02:05 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[1202756.1 -> 12027561.4] s

@@ -1,0 +1,46 @@
+09:45:25 INFO     tools.simulations: Log file: debug/HITEC/cox-isotropic-temperature/oofem/output/OOFEM/logs/run_20260814_094525.log
+09:45:25 INFO     tools.simulations: == STARTING BENCHMARK: oofem ==
+09:45:25 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HITEC/cox-isotropic-temperature/oofem
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+09:45:25 INFO     tools.simulations: Loading benchmark config: debug/HITEC/cox-isotropic-temperature/oofem/benchmark.json
+09:45:25 INFO     tools.simulations: Benchmark: HITEC near-field benchmark - COx claystone, isotropic, heat conduction from gallery (10 y) (hitec-cox-isotropic-temperature)
+09:45:25 INFO     tools.simulations: Configurations loaded.
+09:45:25 INFO     tools.simulations: Loading mesh...
+09:45:25 INFO     tools.simulations: Mesh loaded: 11857 nodes, 23312 elements (triangle)
+09:45:25 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+09:45:25 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 11857
+  Total DOFs: 11857
+  Fields: 1
+    - temperature: 11857 DOFs (['T'])
+09:45:25 INFO     tools.simulations: Building oofem problem...
+09:45:25 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[20152.4 -> 2418289.9] s
+09:45:25 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[3375.0 -> 40499.8] s
+09:45:25 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[103604.3 -> 518021.3] s
+09:45:25 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 160 steps, dt=[399821.1 -> 4797853.2] s
+09:45:26 INFO     tools.simulations: oofem problem built: 11857 nodes, 23312 elements, 362 steps (t=[0 -> 3.31e+08])
+09:47:25 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:47:25 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:47:25 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:47:25 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:47:25 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:47:25 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:47:25 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:47:25 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:47:25 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.08 d · 6 queries ok ────────────────────────────────────────
+   T at P1 [degC]   +2.200e+01   T @ P1
+   T at P2 [degC]   +2.200e+01   T @ P2
+   T at P3 [degC]   +2.200e+01   T @ P3
+   T at P4 [degC]   +2.200e+01   T @ P4
+   Time [days]      +8.333e-02
+────────────────────────────────────────────────────────────────────

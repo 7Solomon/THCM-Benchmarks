@@ -1,0 +1,51 @@
+15:07:50 INFO     tools.simulations: Log file: benchmarks/xi-bazant-jennings-1994-moisture-diffusion/output/OOFEM/logs/run_20260817_150750.log
+15:07:50 INFO     tools.simulations: == STARTING BENCHMARK: xi-bazant-jennings-1994-moisture-diffusion ==
+15:07:50 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/xi-bazant-jennings-1994-moisture-diffusion
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+15:07:50 INFO     tools.simulations: Loading benchmark config: benchmarks/xi-bazant-jennings-1994-moisture-diffusion/benchmark.json
+15:07:50 INFO     tools.simulations: Benchmark: Concrete drying - relative humidity history at several depths (Parrott 15 cm slab, w/c=0.58, Type I) (xi-bazant-jennings-1994-parrott-drying)
+15:07:50 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[40.6 -> 7316.8] s
+15:07:50 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[4614.1 -> 27684.7] s
+15:07:50 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[38250.9 -> 612015.0] s
+15:07:50 INFO     tools.simulations: Configurations loaded.
+15:07:50 INFO     tools.simulations: Loading mesh...
+15:07:50 INFO     tools.simulations: Mesh loaded: 3993 nodes, 3748 elements (quad)
+15:07:51 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+15:07:51 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 3993
+  Total DOFs: 3993
+  Fields: 1
+    - humidity: 3993 DOFs (['H'])
+15:07:51 INFO     tools.simulations: Building oofem problem...
+15:07:51 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[40.6 -> 7316.8] s
+15:07:51 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[4614.1 -> 27684.7] s
+15:07:51 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[38250.9 -> 612015.0] s
+15:07:51 INFO     tools.simulations: oofem problem built: 3993 nodes, 3748 elements, 180 steps (t=[0 -> 1.73e+07])
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:08:17 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:08:17 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 7 queries ok ────────────────────────────────────────
+   RH @ 0.175 cm   +9.800e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +4.705e-04
+────────────────────────────────────────────────────────────────────

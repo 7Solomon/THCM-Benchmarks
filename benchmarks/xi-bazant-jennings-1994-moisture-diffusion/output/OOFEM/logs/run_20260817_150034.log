@@ -1,0 +1,32 @@
+15:00:34 INFO     tools.simulations: Log file: benchmarks/xi-bazant-jennings-1994-moisture-diffusion/output/OOFEM/logs/run_20260817_150034.log
+15:00:34 INFO     tools.simulations: == STARTING BENCHMARK: xi-bazant-jennings-1994-moisture-diffusion ==
+15:00:34 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/xi-bazant-jennings-1994-moisture-diffusion
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+15:00:34 INFO     tools.simulations: Loading benchmark config: benchmarks/xi-bazant-jennings-1994-moisture-diffusion/benchmark.json
+15:00:34 INFO     tools.simulations: Benchmark: Concrete drying - relative humidity history at several depths (Parrott 15 cm slab, w/c=0.58, Type I) (xi-bazant-jennings-1994-parrott-drying)
+15:00:34 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[40.6 -> 7316.8] s
+15:00:34 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[4614.1 -> 27684.7] s
+15:00:34 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[38250.9 -> 612015.0] s
+15:00:34 INFO     tools.simulations: Configurations loaded.
+15:00:34 INFO     tools.simulations: Loading mesh...
+15:00:34 INFO     tools.simulations: Mesh loaded: 3993 nodes, 3748 elements (quad)
+15:00:34 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+15:00:34 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 3993
+  Total DOFs: 3993
+  Fields: 1
+    - humidity: 3993 DOFs (['H'])
+15:00:34 INFO     tools.simulations: Building oofem problem...
+15:00:34 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[40.6 -> 7316.8] s
+15:00:34 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[4614.1 -> 27684.7] s
+15:00:34 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[38250.9 -> 612015.0] s

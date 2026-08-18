@@ -1,0 +1,300 @@
+12:25:29 INFO     tools.simulations: Log file: debug/OpenGeoSys/consolidation-with-staggered-scheme/output/OOFEM/logs/run_20260817_122529.log
+12:25:29 INFO     tools.simulations: == STARTING BENCHMARK: consolidation-with-staggered-scheme ==
+12:25:29 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/OpenGeoSys/consolidation-with-staggered-scheme
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+12:25:29 INFO     tools.simulations: Loading benchmark config: debug/OpenGeoSys/consolidation-with-staggered-scheme/benchmark.json
+12:25:29 INFO     tools.simulations: Benchmark: 1-D Biot consolidation of a laterally confined, singly drained column (OGS staggered-scheme consolidation benchmark) (ogs-consolidation-benchmark)
+12:25:29 INFO     tools.simulations: Configurations loaded.
+12:25:29 INFO     tools.simulations: Loading mesh...
+12:25:29 INFO     tools.simulations: Mesh loaded: 373 nodes, 316 elements (quad)
+12:25:29 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:25:29 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 373
+  Total DOFs: 1119
+  Fields: 2
+    - displacement: 746 DOFs (['ux', 'uy'])
+    - pore_pressure: 373 DOFs (['p'])
+12:25:29 INFO     tools.simulations: Building oofem problem...
+12:25:29 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: mobility = intrinsic_permeability/fluid_viscosity = 1e-10 / 0.001 = 1e-07 m2/(Pa.s)
+12:25:29 INFO     tools.simulations: oofem problem built: 373 nodes, 316 elements, 20 steps (t=[0 -> 10])
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.04e+02,  max=+9.04e+02)
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.92e+02,  max=+9.92e+02)
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-1.23e-03,  max=-1.23e-03)
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-5.34e-03,  max=-5.34e-03)
+12:25:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:29 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +9.039e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +9.925e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +1.000e+03   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +1.000e+03   p @ probe_xD0p8
+   Top settlement [m]                                    -1.228e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -5.344e-03   syy @ probe_xD0p5
+   Time [s]                                              +5.000e-01
+   Dimensionless time t_D = c t / H^2                    +1.667e-03
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +4.094e-02
+   p_D at x_D = 0.5                                      +1.000e+00
+────────────────────────────────────────────────────────────────────
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+7.87e+02,  max=+7.87e+02)
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.73e+02,  max=+9.73e+02)
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-1.84e-03,  max=-1.84e-03)
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-3.90e-02,  max=-3.90e-02)
+12:25:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:30 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +7.871e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +9.733e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +1.000e+03   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +1.000e+03   p @ probe_xD0p8
+   Top settlement [m]                                    -1.840e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -3.903e-02   syy @ probe_xD0p5
+   Time [s]                                              +1.000e+00
+   Dimensionless time t_D = c t / H^2                    +3.333e-03
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +6.132e-02
+   p_D at x_D = 0.5                                      +1.000e+00
+────────────────────────────────────────────────────────────────────
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+6.16e+02,  max=+6.16e+02)
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.11e+02,  max=+9.11e+02)
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-2.68e-03,  max=-2.68e-03)
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-4.27e-01,  max=-4.27e-01)
+12:25:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:31 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +6.164e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +9.110e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.997e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +1.000e+03   p @ probe_xD0p8
+   Top settlement [m]                                    -2.681e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -4.270e-01   syy @ probe_xD0p5
+   Time [s]                                              +2.000e+00
+   Dimensionless time t_D = c t / H^2                    +6.667e-03
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +8.935e-02
+   p_D at x_D = 0.5                                      +9.997e-01
+────────────────────────────────────────────────────────────────────
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+5.16e+02,  max=+5.16e+02)
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+8.42e+02,  max=+8.42e+02)
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.98e+02,  max=+9.98e+02)
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-3.32e-03,  max=-3.32e-03)
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-1.85e+00,  max=-1.85e+00)
+12:25:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:32 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +5.158e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +8.417e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.984e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +1.000e+03   p @ probe_xD0p8
+   Top settlement [m]                                    -3.317e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -1.848e+00   syy @ probe_xD0p5
+   Time [s]                                              +3.000e+00
+   Dimensionless time t_D = c t / H^2                    +1.000e-02
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +1.106e-01
+   p_D at x_D = 0.5                                      +9.984e-01
+────────────────────────────────────────────────────────────────────
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+4.51e+02,  max=+4.51e+02)
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+7.79e+02,  max=+7.79e+02)
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.96e+02,  max=+9.96e+02)
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-3.85e-03,  max=-3.85e-03)
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-4.99e+00,  max=-4.99e+00)
+12:25:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:33 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +4.510e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +7.794e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.957e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +1.000e+03   p @ probe_xD0p8
+   Top settlement [m]                                    -3.849e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -4.995e+00   syy @ probe_xD0p5
+   Time [s]                                              +4.000e+00
+   Dimensionless time t_D = c t / H^2                    +1.333e-02
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +1.283e-01
+   p_D at x_D = 0.5                                      +9.957e-01
+────────────────────────────────────────────────────────────────────
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+4.05e+02,  max=+4.05e+02)
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+7.26e+02,  max=+7.26e+02)
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.91e+02,  max=+9.91e+02)
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-4.32e-03,  max=-4.32e-03)
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-1.02e+01,  max=-1.02e+01)
+12:25:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:34 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +4.053e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +7.264e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.911e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +9.999e+02   p @ probe_xD0p8
+   Top settlement [m]                                    -4.317e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -1.021e+01   syy @ probe_xD0p5
+   Time [s]                                              +5.000e+00
+   Dimensionless time t_D = c t / H^2                    +1.667e-02
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +1.439e-01
+   p_D at x_D = 0.5                                      +9.911e-01
+────────────────────────────────────────────────────────────────────
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+3.71e+02,  max=+3.71e+02)
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+6.82e+02,  max=+6.82e+02)
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.84e+02,  max=+9.84e+02)
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-4.74e-03,  max=-4.74e-03)
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-1.75e+01,  max=-1.75e+01)
+12:25:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:35 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +3.710e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +6.816e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.845e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +9.998e+02   p @ probe_xD0p8
+   Top settlement [m]                                    -4.738e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -1.746e+01   syy @ probe_xD0p5
+   Time [s]                                              +6.000e+00
+   Dimensionless time t_D = c t / H^2                    +2.000e-02
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +1.579e-01
+   p_D at x_D = 0.5                                      +9.845e-01
+────────────────────────────────────────────────────────────────────
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+3.44e+02,  max=+3.44e+02)
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+6.44e+02,  max=+6.44e+02)
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.76e+02,  max=+9.76e+02)
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.99e+02,  max=+9.99e+02)
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-5.13e-03,  max=-5.13e-03)
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-2.64e+01,  max=-2.64e+01)
+12:25:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:36 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +3.441e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +6.436e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.762e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +9.995e+02   p @ probe_xD0p8
+   Top settlement [m]                                    -5.126e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -2.645e+01   syy @ probe_xD0p5
+   Time [s]                                              +7.000e+00
+   Dimensionless time t_D = c t / H^2                    +2.333e-02
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +1.709e-01
+   p_D at x_D = 0.5                                      +9.762e-01
+────────────────────────────────────────────────────────────────────
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+3.22e+02,  max=+3.22e+02)
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+6.11e+02,  max=+6.11e+02)
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.67e+02,  max=+9.67e+02)
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.99e+02,  max=+9.99e+02)
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-5.49e-03,  max=-5.49e-03)
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-3.68e+01,  max=-3.68e+01)
+12:25:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:37 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +3.223e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +6.110e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.665e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +9.990e+02   p @ probe_xD0p8
+   Top settlement [m]                                    -5.486e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -3.680e+01   syy @ probe_xD0p5
+   Time [s]                                              +8.000e+00
+   Dimensionless time t_D = c t / H^2                    +2.667e-02
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +1.829e-01
+   p_D at x_D = 0.5                                      +9.665e-01
+────────────────────────────────────────────────────────────────────
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+3.04e+02,  max=+3.04e+02)
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+5.83e+02,  max=+5.83e+02)
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.56e+02,  max=+9.56e+02)
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.98e+02,  max=+9.98e+02)
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-5.82e-03,  max=-5.82e-03)
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-4.82e+01,  max=-4.82e+01)
+12:25:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:38 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +3.042e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +5.826e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.559e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +9.982e+02   p @ probe_xD0p8
+   Top settlement [m]                                    -5.823e-03   uy @ probe_top
+   sigma_yy at x_D = 0.5 [Pa]                            -4.815e+01   syy @ probe_xD0p5
+   Time [s]                                              +9.000e+00
+   Dimensionless time t_D = c t / H^2                    +3.000e-02
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +1.941e-01
+   p_D at x_D = 0.5                                      +9.559e-01
+────────────────────────────────────────────────────────────────────
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+2.89e+02,  max=+2.89e+02)
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+5.58e+02,  max=+5.58e+02)
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.44e+02,  max=+9.44e+02)
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.97e+02,  max=+9.97e+02)
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-6.14e-03,  max=-6.14e-03)
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               101 sample pts,  t=10 s
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               101 sample pts,  t=10 s
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-6.02e+01,  max=-6.02e+01)
+12:25:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:25:39 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 13 queries ok ───────────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +2.888e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +5.578e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.445e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +9.972e+02   p @ probe_xD0p8
+   Top settlement [m]                                    -6.142e-03   uy @ probe_top
+   Pore pressure over depth at t = 10 s                  +0.000e+00 → +9.995e+02   pore_pressure
+   Vertical displacement over depth at t = 10 s          -6.143e-03 → +0.000e+00   displacement
+   sigma_yy at x_D = 0.5 [Pa]                            -6.017e+01   syy @ probe_xD0p5
+   Time [s]                                              +1.000e+01
+   Dimensionless time t_D = c t / H^2                    +3.333e-02
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +2.047e-01
+   p_D at x_D = 0.5                                      +9.445e-01
+────────────────────────────────────────────────────────────────────
+12:25:39 INFO     tools.simulations: VTU export: 20 file(s) -> debug/OpenGeoSys/consolidation-with-staggered-scheme/output/OOFEM/vtu
+12:25:39 INFO     tools.simulations: Checkpoint saved -> debug/OpenGeoSys/consolidation-with-staggered-scheme/output/OOFEM/checkpoint.h5  (0.2 MB)
+12:25:39 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 20/20 steps ok) ==

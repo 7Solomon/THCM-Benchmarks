@@ -1,0 +1,83 @@
+{
+  "panel": 1,
+  "title": "Model 1.1 scenario (a): pore-water pressure evolution, log time axis (Fig. 4.8)",
+  "n_series": 45,
+  "px_in_x": 0.010804845876512415,
+  "px_in_y": 0.0005528050288293762,
+  "threshold_a_px": 3.0,
+  "threshold_b_px": 19.802424,
+  "masks": [
+    [
+      0.0,
+      0.0,
+      0.235,
+      0.435
+    ]
+  ],
+  "masked_original_px": 7016,
+  "original_to_extracted": {
+    "mean_px": 0.0,
+    "p99_px": 0.0,
+    "max_px": 1.0,
+    "frac_over_threshold": 0.0,
+    "pixels_total": 297995
+  },
+  "extracted_to_original": {
+    "mean_px": 3.313,
+    "p99_px": 17.0,
+    "frac_over_threshold": 0.00345
+  },
+  "path_fidelity": {
+    "worst_offset_pt": 0.0002,
+    "threshold_pt": 0.05,
+    "series_failing": [],
+    "per_series": {
+      "fig4_8_X0.25m_analytical": 0.0001,
+      "fig4_8_X0.75m_analytical": 0.0001,
+      "fig4_8_X1.25m_analytical": 0.0001,
+      "fig4_8_X5m_analytical": 0.0001,
+      "fig4_8_X9.75m_analytical": 0.0001,
+      "fig4_8_X0.25m_BGR": 0.0001,
+      "fig4_8_X0.75m_BGR": 0.0001,
+      "fig4_8_X1.25m_BGR": 0.0001,
+      "fig4_8_X5m_BGR": 0.0001,
+      "fig4_8_X9.75m_BGR": 0.0001,
+      "fig4_8_X0.25m_ENSI-TF": 0.0001,
+      "fig4_8_X0.75m_ENSI-TF": 0.0001,
+      "fig4_8_X1.25m_ENSI-TF": 0.0002,
+      "fig4_8_X5m_ENSI-TF": 0.0002,
+      "fig4_8_X9.75m_ENSI-TF": 0.0001,
+      "fig4_8_X0.25m_ENSI-OGS": 0.0001,
+      "fig4_8_X0.75m_ENSI-OGS": 0.0001,
+      "fig4_8_X1.25m_ENSI-OGS": 0.0001,
+      "fig4_8_X5m_ENSI-OGS": 0.0001,
+      "fig4_8_X9.75m_ENSI-OGS": 0.0001,
+      "fig4_8_X0.25m_ENSI-CM": 0.0001,
+      "fig4_8_X0.75m_ENSI-CM": 0.0001,
+      "fig4_8_X1.25m_ENSI-CM": 0.0001,
+      "fig4_8_X5m_ENSI-CM": 0.0001,
+      "fig4_8_X9.75m_ENSI-CM": 0.0001,
+      "fig4_8_X0.25m_GRS-BS": 0.0001,
+      "fig4_8_X0.75m_GRS-BS": 0.0001,
+      "fig4_8_X1.25m_GRS-BS": 0.0001,
+      "fig4_8_X5m_GRS-BS": 0.0001,
+      "fig4_8_X9.75m_GRS-BS": 0.0001,
+      "fig4_8_X0.25m_GRS-K": 0.0001,
+      "fig4_8_X0.75m_GRS-K": 0.0001,
+      "fig4_8_X1.25m_GRS-K": 0.0001,
+      "fig4_8_X5m_GRS-K": 0.0001,
+      "fig4_8_X9.75m_GRS-K": 0.0001,
+      "fig4_8_X0.25m_LBNL": 0.0001,
+      "fig4_8_X0.75m_LBNL": 0.0001,
+      "fig4_8_X1.25m_LBNL": 0.0001,
+      "fig4_8_X5m_LBNL": 0.0001,
+      "fig4_8_X9.75m_LBNL": 0.0001,
+      "fig4_8_X0.25m_TUC": 0.0001,
+      "fig4_8_X0.75m_TUC": 0.0002,
+      "fig4_8_X1.25m_TUC": 0.0001,
+      "fig4_8_X5m_TUC": 0.0001,
+      "fig4_8_X9.75m_TUC": 0.0001
+    }
+  },
+  "verdict": "PASS"
+}

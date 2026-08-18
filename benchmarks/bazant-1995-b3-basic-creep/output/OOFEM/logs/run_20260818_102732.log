@@ -1,0 +1,88 @@
+10:27:32 INFO     tools.simulations: Log file: benchmarks/bazant-1995-b3-basic-creep/output/OOFEM/logs/run_20260818_102732.log
+10:27:32 INFO     tools.simulations: == STARTING BENCHMARK: bazant-1995-b3-basic-creep ==
+10:27:32 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/bazant-1995-b3-basic-creep
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+10:27:32 INFO     tools.simulations: Loading benchmark config: benchmarks/bazant-1995-b3-basic-creep/benchmark.json
+10:27:32 INFO     tools.simulations: Benchmark: Model B3 basic creep - worked example Sec. 1.4.5 (sealed cylinder, t'=28 d, sigma=0.4*fc) (bazant-1995-b3-basic-creep)
+10:27:32 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[195.2 -> 975758.9] s
+10:27:32 INFO     tools.simulations: Configurations loaded.
+10:27:32 INFO     tools.simulations: Loading mesh...
+10:27:32 INFO     tools.simulations: Mesh loaded: 527 nodes, 476 elements (quad)
+10:27:32 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+10:27:32 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 527
+  Total DOFs: 1054
+  Fields: 1
+    - displacement: 1054 DOFs (['ux', 'uy'])
+10:27:32 INFO     tools.simulations: Building oofem problem...
+10:27:32 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[195.2 -> 975758.9] s
+10:27:32 INFO     tools.simulations: oofem problem built: 527 nodes, 476 elements, 60 steps (t=[0 -> 7.26e+06])
+10:27:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-1.62e-03,  max=-1.62e-03)
+10:27:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:27:32 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 5 queries ok ────────────────────────────────────────
+   u_y at top [m]          -1.624e-03   uy @ probe_top
+   Load duration [days]    +2.259e-03
+   Axial strain [-]        -5.412e-03
+   Compliance [1e-6/MPa]   +4.906e+02
+────────────────────────────────────────────────────────────────────
+10:27:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-1.83e-03,  max=-1.83e-03)
+10:27:34 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:27:34 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.05 d · 5 queries ok ────────────────────────────────────────
+   u_y at top [m]          -1.829e-03   uy @ probe_top
+   Load duration [days]    +4.706e-02
+   Axial strain [-]        -6.096e-03
+   Compliance [1e-6/MPa]   +5.526e+02
+────────────────────────────────────────────────────────────────────
+10:27:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-1.93e-03,  max=-1.93e-03)
+10:27:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:27:37 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.25 d · 5 queries ok ────────────────────────────────────────
+   u_y at top [m]          -1.932e-03   uy @ probe_top
+   Load duration [days]    +2.464e-01
+   Axial strain [-]        -6.439e-03
+   Compliance [1e-6/MPa]   +5.837e+02
+────────────────────────────────────────────────────────────────────
+10:27:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-2.04e-03,  max=-2.04e-03)
+10:27:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:27:39 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.09 d · 5 queries ok ────────────────────────────────────────
+   u_y at top [m]          -2.042e-03   uy @ probe_top
+   Load duration [days]    +1.091e+00
+   Axial strain [-]        -6.808e-03
+   Compliance [1e-6/MPa]   +6.171e+02
+────────────────────────────────────────────────────────────────────
+10:27:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-2.17e-03,  max=-2.17e-03)
+10:27:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:27:41 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.67 d · 5 queries ok ────────────────────────────────────────
+   u_y at top [m]          -2.167e-03   uy @ probe_top
+   Load duration [days]    +4.668e+00
+   Axial strain [-]        -7.223e-03
+   Compliance [1e-6/MPa]   +6.548e+02
+────────────────────────────────────────────────────────────────────
+10:27:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-2.35e-03,  max=-2.35e-03)
+10:27:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:27:44 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 19.82 d · 5 queries ok ───────────────────────────────────────
+   u_y at top [m]          -2.353e-03   uy @ probe_top
+   Load duration [days]    +1.982e+01
+   Axial strain [-]        -7.842e-03
+   Compliance [1e-6/MPa]   +7.109e+02
+────────────────────────────────────────────────────────────────────
+10:27:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-2.63e-03,  max=-2.63e-03)
+10:27:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:27:48 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 84.00 d · 5 queries ok ───────────────────────────────────────
+   u_y at top [m]          -2.634e-03   uy @ probe_top
+   Load duration [days]    +8.400e+01
+   Axial strain [-]        -8.781e-03
+   Compliance [1e-6/MPa]   +7.959e+02
+────────────────────────────────────────────────────────────────────
+10:27:48 INFO     tools.simulations: VTU export: 60 file(s) -> benchmarks/bazant-1995-b3-basic-creep/output/OOFEM/vtu
+10:27:48 INFO     tools.simulations: Checkpoint saved -> benchmarks/bazant-1995-b3-basic-creep/output/OOFEM/checkpoint.h5  (0.4 MB)
+10:27:48 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 60/60 steps ok) ==

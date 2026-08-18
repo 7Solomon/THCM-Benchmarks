@@ -1,0 +1,273 @@
+11:34:05 INFO     tools.simulations: Log file: benchmarks/externally-restrained-slab/output/OOFEM/logs/run_20260818_113405.log
+11:34:05 INFO     tools.simulations: == STARTING BENCHMARK: externally-restrained-slab ==
+11:34:05 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/externally-restrained-slab
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+11:34:05 INFO     tools.simulations: Loading benchmark config: benchmarks/externally-restrained-slab/benchmark.json
+11:34:05 INFO     tools.simulations: Benchmark: Early-age temperature through a 0.35 m restrained floor slab (faria-2006-restrained-slab-thermal)
+11:34:05 WARNING  tools.simulations.fem.boundaries.time_files: boundary_conditions[1].u_ref (robin on 'surface_top'): the time grid does not resolve this table -- 18 of 36 breakpoints where the value changes have no step on them, the first at t = 17280 s. The grid has 220 steps over [0, 792000] s. The table is resampled onto the grid; with interp 'linear' the signal is approximated rather than dropped.
+11:34:05 INFO     tools.simulations.fem.boundaries.time_files:   time table  boundary_conditions[1].u_ref (robin on 'surface_top') <- input/ambient_temperature_fig7a.csv:T_ambient_degC
+11:34:05 INFO     tools.simulations: Expanded 1 file-backed BC time table(s)
+11:34:05 INFO     tools.simulations: Configurations loaded.
+11:34:05 INFO     tools.simulations: Loading mesh...
+11:34:05 INFO     tools.simulations: Mesh loaded: 23 nodes, 28 elements (triangle)
+11:34:06 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:34:06 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 23
+  Total DOFs: 23
+  Fields: 1
+    - temperature: 23 DOFs (['T'])
+11:34:06 INFO     tools.simulations: Building oofem problem...
+11:34:06 INFO     tools.simulations: oofem problem built: 23 nodes, 28 elements, 220 steps (t=[0 -> 7.92e+05])
+11:34:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.92e+01,  max=+1.92e+01)
+11:34:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.96e+01,  max=+1.96e+01)
+11:34:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.96e+01,  max=+1.96e+01)
+11:34:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:06 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.04 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.923e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.957e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.956e+01   T @ sensor_centre
+   Time [days]                        +4.167e-02
+────────────────────────────────────────────────────────────────────
+11:34:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+3.09e+01,  max=+3.09e+01)
+11:34:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+3.30e+01,  max=+3.30e+01)
+11:34:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+3.30e+01,  max=+3.30e+01)
+11:34:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.50 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +3.086e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +3.302e+01   T @ sensor_bottom
+   Centre temperature [degC]          +3.298e+01   T @ sensor_centre
+   Time [days]                        +5.000e-01
+────────────────────────────────────────────────────────────────────
+11:34:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+2.94e+01,  max=+2.94e+01)
+11:34:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+3.17e+01,  max=+3.17e+01)
+11:34:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+3.15e+01,  max=+3.15e+01)
+11:34:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.00 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +2.940e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +3.168e+01   T @ sensor_bottom
+   Centre temperature [degC]          +3.154e+01   T @ sensor_centre
+   Time [days]                        +1.000e+00
+────────────────────────────────────────────────────────────────────
+11:34:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+2.58e+01,  max=+2.58e+01)
+11:34:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+2.73e+01,  max=+2.73e+01)
+11:34:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+2.72e+01,  max=+2.72e+01)
+11:34:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:11 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.50 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +2.575e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +2.735e+01   T @ sensor_bottom
+   Centre temperature [degC]          +2.725e+01   T @ sensor_centre
+   Time [days]                        +1.500e+00
+────────────────────────────────────────────────────────────────────
+11:34:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+2.20e+01,  max=+2.20e+01)
+11:34:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+2.36e+01,  max=+2.36e+01)
+11:34:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+2.34e+01,  max=+2.34e+01)
+11:34:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.00 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +2.200e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +2.362e+01   T @ sensor_bottom
+   Centre temperature [degC]          +2.336e+01   T @ sensor_centre
+   Time [days]                        +2.000e+00
+────────────────────────────────────────────────────────────────────
+11:34:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.97e+01,  max=+1.97e+01)
+11:34:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+2.08e+01,  max=+2.08e+01)
+11:34:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+2.05e+01,  max=+2.05e+01)
+11:34:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:13 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.50 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.967e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +2.077e+01   T @ sensor_bottom
+   Centre temperature [degC]          +2.053e+01   T @ sensor_centre
+   Time [days]                        +2.500e+00
+────────────────────────────────────────────────────────────────────
+11:34:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.86e+01,  max=+1.86e+01)
+11:34:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.93e+01,  max=+1.93e+01)
+11:34:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.92e+01,  max=+1.92e+01)
+11:34:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:14 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.00 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.865e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.932e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.919e+01   T @ sensor_centre
+   Time [days]                        +3.000e+00
+────────────────────────────────────────────────────────────────────
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.71e+01,  max=+1.71e+01)
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.82e+01,  max=+1.82e+01)
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.78e+01,  max=+1.78e+01)
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:15 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.50 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.707e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.816e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.785e+01   T @ sensor_centre
+   Time [days]                        +3.500e+00
+────────────────────────────────────────────────────────────────────
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.58e+01,  max=+1.58e+01)
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.69e+01,  max=+1.69e+01)
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.65e+01,  max=+1.65e+01)
+11:34:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:15 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.00 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.577e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.691e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.650e+01   T @ sensor_centre
+   Time [days]                        +4.000e+00
+────────────────────────────────────────────────────────────────────
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.58e+01,  max=+1.58e+01)
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.64e+01,  max=+1.64e+01)
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.61e+01,  max=+1.61e+01)
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:17 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.50 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.577e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.635e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.610e+01   T @ sensor_centre
+   Time [days]                        +4.500e+00
+────────────────────────────────────────────────────────────────────
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.61e+01,  max=+1.61e+01)
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.65e+01,  max=+1.65e+01)
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.63e+01,  max=+1.63e+01)
+11:34:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:17 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.00 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.607e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.648e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.632e+01   T @ sensor_centre
+   Time [days]                        +5.000e+00
+────────────────────────────────────────────────────────────────────
+11:34:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.51e+01,  max=+1.51e+01)
+11:34:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.62e+01,  max=+1.62e+01)
+11:34:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.58e+01,  max=+1.58e+01)
+11:34:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:19 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.50 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.515e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.619e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.581e+01   T @ sensor_centre
+   Time [days]                        +5.500e+00
+────────────────────────────────────────────────────────────────────
+11:34:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.48e+01,  max=+1.48e+01)
+11:34:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.56e+01,  max=+1.56e+01)
+11:34:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.53e+01,  max=+1.53e+01)
+11:34:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:20 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 6.00 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.481e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.562e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.526e+01   T @ sensor_centre
+   Time [days]                        +6.000e+00
+────────────────────────────────────────────────────────────────────
+11:34:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.54e+01,  max=+1.54e+01)
+11:34:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.57e+01,  max=+1.57e+01)
+11:34:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.56e+01,  max=+1.56e+01)
+11:34:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:21 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 6.50 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.544e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.574e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.556e+01   T @ sensor_centre
+   Time [days]                        +6.500e+00
+────────────────────────────────────────────────────────────────────
+11:34:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.53e+01,  max=+1.53e+01)
+11:34:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.60e+01,  max=+1.60e+01)
+11:34:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.57e+01,  max=+1.57e+01)
+11:34:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:22 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 7.00 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.533e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.597e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.572e+01   T @ sensor_centre
+   Time [days]                        +7.000e+00
+────────────────────────────────────────────────────────────────────
+11:34:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.48e+01,  max=+1.48e+01)
+11:34:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.56e+01,  max=+1.56e+01)
+11:34:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.53e+01,  max=+1.53e+01)
+11:34:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:23 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 7.50 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.485e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.564e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.529e+01   T @ sensor_centre
+   Time [days]                        +7.500e+00
+────────────────────────────────────────────────────────────────────
+11:34:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.53e+01,  max=+1.53e+01)
+11:34:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.57e+01,  max=+1.57e+01)
+11:34:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.55e+01,  max=+1.55e+01)
+11:34:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:24 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 8.00 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.535e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.569e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.550e+01   T @ sensor_centre
+   Time [days]                        +8.000e+00
+────────────────────────────────────────────────────────────────────
+11:34:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.51e+01,  max=+1.51e+01)
+11:34:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.58e+01,  max=+1.58e+01)
+11:34:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.55e+01,  max=+1.55e+01)
+11:34:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:25 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 8.50 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.507e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.580e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.551e+01   T @ sensor_centre
+   Time [days]                        +8.500e+00
+────────────────────────────────────────────────────────────────────
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.44e+01,  max=+1.44e+01)
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.54e+01,  max=+1.54e+01)
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.50e+01,  max=+1.50e+01)
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:26 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 9.00 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.439e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.537e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.495e+01   T @ sensor_centre
+   Time [days]                        +9.000e+00
+────────────────────────────────────────────────────────────────────
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.43e+01,  max=+1.43e+01)
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.52e+01,  max=+1.52e+01)
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            (min=+1.48e+01,  max=+1.48e+01)
+11:34:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                            1 nodes
+11:34:26 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 9.17 d · 5 queries ok ────────────────────────────────────────
+   Top sensor temperature [degC]      +1.429e+01   T @ sensor_top
+   Bottom sensor temperature [degC]   +1.524e+01   T @ sensor_bottom
+   Centre temperature [degC]          +1.482e+01   T @ sensor_centre
+   Time [days]                        +9.167e+00
+────────────────────────────────────────────────────────────────────
+11:34:26 INFO     tools.simulations: VTU export: 220 file(s) -> benchmarks/externally-restrained-slab/output/OOFEM/vtu
+11:34:26 INFO     tools.simulations: Checkpoint saved -> benchmarks/externally-restrained-slab/output/OOFEM/checkpoint.h5  (0.1 MB)
+11:34:26 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 220/220 steps ok) ==

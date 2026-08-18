@@ -1,0 +1,338 @@
+14:00:18 INFO     tools.simulations: Log file: debug/EarlyAgeThermalCracking/OOFEM/output/OOFEM/logs/run_20260812_140018.log
+14:00:18 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+14:00:18 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/EarlyAgeThermalCracking/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+14:00:18 INFO     tools.simulations: Loading benchmark config: debug/EarlyAgeThermalCracking/OOFEM/benchmark.json
+14:00:18 INFO     tools.simulations: Benchmark: Thermo-mechanical simulations of early-age concrete cracking — Oslo restrained wall (havlasek-2017-oslo-wall)
+14:00:18 INFO     tools.simulations: Configurations loaded.
+14:00:18 INFO     tools.simulations: Loading mesh...
+14:00:18 INFO     tools.simulations: Mesh loaded: 207 nodes, 529 elements (tetra)
+14:00:18 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+14:00:18 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 207
+  Total DOFs: 828
+  Fields: 2
+    - temperature: 207 DOFs (['T'])
+    - displacement: 621 DOFs (['ux', 'uy', 'uz'])
+14:00:18 INFO     tools.simulations: Building oofem problem...
+14:00:18 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[117.9 -> 1473.5] s
+14:00:18 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[1993.5 -> 3987.1] s
+14:00:18 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[2666.5 -> 16985.3] s
+14:00:18 INFO     tools.simulations.oofem.src.builder.problem.single: 'temperature' sub-problem: skipping BC entries of other fields: displacement x5
+14:00:19 WARNING  tools.simulations.oofem.src.builder.problem.couplings.staggered: thermal_strain keys ['alpha_inf'] (domain 'concrete_domain') have NO oofem mapping and are IGNORED (D9 amendment)
+14:00:19 INFO     tools.simulations.oofem.src.builder.problem.single: 'displacement' sub-problem: skipping BC entries of other fields: temperature x3
+14:00:19 INFO     tools.simulations: Solution plan: STAGGERED lockstep (1 sources)
+14:00:19 INFO     tools.simulations: oofem problem built: 207 nodes, 529 elements, 736 steps (t=[0 -> 1.08e+06])
+14:00:19 INFO     tools.simulations.oofem.src.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+14:00:19 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:19 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_bottom_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:19 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_gage15' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.50e+01,  max=+1.50e+01)
+14:00:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+14:00:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.03e-08,  max=+1.03e-08)
+14:00:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+14:00:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.94e-08,  max=+1.94e-08)
+14:00:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+14:00:19 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 6 queries 3 FAILED ──────────────────────────────────
+   temperature_gage15                  +1.500e+01   T @ gage_15
+   displacement_ux_gage15              +1.032e-08   ux @ gage_15
+   total_strain_gage15_ezz             +1.944e-08   ezz @ gage_15
+ ✗ max damage in wall [-]              +0.000e+00
+ ✗ max damage at restrained base [-]   +0.000e+00
+ ✗ damage at gage 15 [-]               +0.000e+00
+────────────────────────────────────────────────────────────────────
+14:00:19 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:19 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_bottom_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:19 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_gage15': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:20 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:20 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_bottom_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:20 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_gage15' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:20 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:20 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_bottom_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:20 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_gage15': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:21 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:21 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_bottom_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:21 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_gage15' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:21 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:21 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_bottom_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:21 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_gage15': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:22 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:22 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_bottom_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:22 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_gage15' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:22 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:22 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_bottom_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:22 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_gage15': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:25 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:25 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_bottom_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:25 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_gage15' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:25 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:25 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_bottom_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:25 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_gage15': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:27 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:27 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_bottom_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:27 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_gage15' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:27 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:27 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_bottom_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:27 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_gage15': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:30 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:30 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_bottom_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:30 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_gage15' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:30 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:30 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_bottom_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:30 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_gage15': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:32 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:32 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_bottom_max' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:32 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'damage_gage15' failed: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 115, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:32 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:32 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_bottom_max': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"
+14:00:32 WARNING  tools.simulations.post.evaluate.queries.display: Query 'damage_gage15': KeyError: "Unknown field 'damage'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain']"

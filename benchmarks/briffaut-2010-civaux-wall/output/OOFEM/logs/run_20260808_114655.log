@@ -1,0 +1,84 @@
+11:46:55 INFO     tools.simulations: Log file: debug/briffaut-2010-civaux-wall/GT/output/OOFEM/logs/run_20260808_114655.log
+11:46:55 INFO     tools.simulations: == STARTING BENCHMARK: GT ==
+11:46:55 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/briffaut-2010-civaux-wall/GT
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+11:46:55 INFO     tools.simulations: Loading benchmark config: debug/briffaut-2010-civaux-wall/GT/benchmark.json
+11:46:55 INFO     tools.simulations: Benchmark: Temperature prediction on Civaux Wall during hydration (briffaut-2010-civaux-wall)
+11:46:55 INFO     tools.simulations: Configurations loaded.
+11:46:55 INFO     tools.simulations: Loading mesh...
+11:46:55 INFO     tools.simulations: Mesh loaded: 1425 nodes, 2704 elements (triangle)
+11:46:55 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:46:55 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1425
+  Total DOFs: 1425
+  Fields: 1
+    - temperature: 1425 DOFs (['T'])
+11:46:55 INFO     tools.simulations: Building oofem problem...
+11:46:55 INFO     tools.simulations.oofem.src.builder.problem.solution_plan: physics declares ['displacement', 'temperature'] but assignment.active_fields excludes ['displacement'] -- not building an engine for it (dimension-pin fields are legacy-only; see active_field_names)
+11:46:55 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[40.2 -> 482.1] s
+11:46:55 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[389.4 -> 3894.3] s
+11:46:55 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[1843.1 -> 14745.1] s
+11:46:55 INFO     tools.simulations: oofem problem built: 1425 nodes, 2704 elements, 180 steps (t=[0 -> 5.04e+05])
+11:46:56 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +1.116e-02
+   Core temperature [°C]      -2.531e+02
+   Surface temperature [°C]   -2.531e+02
+────────────────────────────────────────────────────────────────────
+11:47:15 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.02 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +4.370e-01
+   Core temperature [°C]      -2.531e+02
+   Surface temperature [°C]   -2.531e+02
+────────────────────────────────────────────────────────────────────
+11:47:31 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.08 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +2.000e+00
+   Core temperature [°C]      -2.528e+02
+   Surface temperature [°C]   -2.530e+02
+────────────────────────────────────────────────────────────────────
+11:47:54 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.20 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +4.894e+00
+   Core temperature [°C]      -2.467e+02
+   Surface temperature [°C]   -2.476e+02
+────────────────────────────────────────────────────────────────────
+11:48:21 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.42 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +1.008e+01
+   Core temperature [°C]      -2.209e+02
+   Surface temperature [°C]   -2.249e+02
+────────────────────────────────────────────────────────────────────
+11:48:45 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.81 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +1.937e+01
+   Core temperature [°C]      -2.068e+02
+   Surface temperature [°C]   -2.156e+02
+────────────────────────────────────────────────────────────────────
+11:49:14 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.50 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +3.600e+01
+   Core temperature [°C]      -2.032e+02
+   Surface temperature [°C]   -2.153e+02
+────────────────────────────────────────────────────────────────────
+11:49:44 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.11 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +5.061e+01
+   Core temperature [°C]      -2.052e+02
+   Surface temperature [°C]   -2.206e+02
+────────────────────────────────────────────────────────────────────
+11:50:15 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.34 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +8.017e+01
+   Core temperature [°C]      -2.163e+02
+   Surface temperature [°C]   -2.344e+02
+────────────────────────────────────────────────────────────────────
+11:50:30 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.83 d · 6 queries ok ────────────────────────────────────────
+   Time [hours]               +1.400e+02
+   Core temperature [°C]      -2.367e+02
+   Surface temperature [°C]   -2.461e+02
+────────────────────────────────────────────────────────────────────
+11:50:30 INFO     tools.simulations: VTU export: 180 file(s) -> debug/briffaut-2010-civaux-wall/GT/output/OOFEM/vtu
+11:50:30 INFO     tools.simulations: Checkpoint saved -> debug/briffaut-2010-civaux-wall/GT/output/OOFEM/checkpoint.h5  (1.7 MB)
+11:50:30 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 180/180 steps ok) ==

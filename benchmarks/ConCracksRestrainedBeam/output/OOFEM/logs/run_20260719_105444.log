@@ -1,0 +1,14 @@
+10:54:44 INFO     tools.simulations: Log file: debug/ConCracksRestrainedBeam/OOFEM/output/OOFEM/logs/run_20260719_105444.log
+10:54:44 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+10:54:44 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/ConCracksRestrainedBeam/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+10:54:44 INFO     tools.simulations: Loading benchmark config: debug/ConCracksRestrainedBeam/OOFEM/benchmark.json

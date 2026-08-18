@@ -1,0 +1,34 @@
+14:42:05 INFO     tools.simulations: Log file: debug/EarlyAgeThermalCracking/OOFEM/output/OOFEM/logs/logs/run_20260712_144205.log
+14:42:05 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+14:42:05 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/EarlyAgeThermalCracking/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+14:42:05 INFO     tools.simulations: Loading benchmark config: debug/EarlyAgeThermalCracking/OOFEM/benchmark.json
+14:42:05 INFO     tools.simulations: Benchmark: Thermo-mechanical simulations of early-age concrete cracking — Oslo restrained wall (havlasek-2017-oslo-wall)
+14:42:05 INFO     tools.simulations: Configurations loaded.
+14:42:05 INFO     tools.simulations: Loading mesh...
+14:42:05 INFO     tools.simulations: Mesh loaded: 204 nodes, 509 elements (tetra)
+14:42:05 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+14:42:05 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 204
+  Total DOFs: 816
+  Fields: 2
+    - temperature: 204 DOFs (['T'])
+    - displacement: 612 DOFs (['ux', 'uy', 'uz'])
+14:42:05 INFO     tools.simulations: Building COUPLED oofem problem (lockstep)...
+14:42:05 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[117.9 -> 1473.5] s
+14:42:05 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[1632.0 -> 20791.4] s
+14:42:05 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+14:42:05 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+14:42:05 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+14:42:05 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+14:42:05 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem

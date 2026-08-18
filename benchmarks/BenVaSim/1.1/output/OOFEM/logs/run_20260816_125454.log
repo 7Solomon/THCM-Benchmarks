@@ -1,0 +1,785 @@
+12:54:54 INFO     tools.simulations: Log file: debug/BenVaSim/1.1/output/OOFEM/logs/run_20260816_125454.log
+12:54:54 INFO     tools.simulations: == STARTING BENCHMARK: 1.1 ==
+12:54:54 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/BenVaSim/1.1
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+12:54:54 INFO     tools.simulations: Loading benchmark config: debug/BenVaSim/1.1/benchmark.json
+12:54:54 INFO     tools.simulations: Benchmark: BenVaSim Stage 1 / Model 1.1(a): 1D HM-coupled saturated column (Biot consolidation benchmark) (benvasim-model-1-1a)
+12:54:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 465 steps, dt=[19791.0 -> 13194015.4] s
+12:54:54 INFO     tools.simulations: Configurations loaded.
+12:54:54 INFO     tools.simulations: Loading mesh...
+12:54:54 INFO     tools.simulations: Mesh loaded: 927 nodes, 684 elements (quad)
+12:54:54 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:54:54 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 927
+  Total DOFs: 2781
+  Fields: 2
+    - displacement: 1854 DOFs (['ux', 'uy'])
+    - pore_pressure: 927 DOFs (['p'])
+12:54:54 INFO     tools.simulations: Building oofem problem...
+12:54:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 465 steps, dt=[19791.0 -> 13194015.4] s
+12:54:54 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: mobility = intrinsic_permeability/fluid_viscosity = 1e-20 / 0.001 = 1e-17 m2/(Pa.s)
+12:54:54 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: storage 1/Q = 7.14286e-11 1/Pa (from porosity)
+12:54:54 INFO     tools.simulations: oofem problem built: 927 nodes, 684 elements, 465 steps (t=[0 -> 9.47e+08])
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.14e+05,  max=+5.14e+05)
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.979e+04 s
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.12e-04,  max=+4.12e-04)
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:54:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.979e+04 s
+12:54:55 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.23 d · 15 queries ok ───────────────────────────────────────
+   p' at X=0.25 m [Pa]      +5.720e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +5.719e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +5.143e+05   p @ probe_x125
+   p' at X=5 m [Pa]         +5.719e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +5.719e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +4.115e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +4.115e-04   displacement
+   Time [years]             +6.271e-04
+   p at X=0.25m [MPa abs]   +6.733e-01
+   p at X=0.75m [MPa abs]   +6.732e-01
+   p at X=1.25m [MPa abs]   +6.156e-01
+   p at X=5m [MPa abs]      +6.732e-01
+   p at X=9.75m [MPa abs]   +6.732e-01
+────────────────────────────────────────────────────────────────────
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+6.50e+05,  max=+6.50e+05)
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.65e+05,  max=+5.65e+05)
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.64e+05,  max=+1.64e+05)
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.35e+05,  max=+4.35e+05)
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=4.537e+05 s
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.32e-04,  max=+4.32e-04)
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=4.537e+05 s
+12:55:00 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.25 d · 15 queries ok ───────────────────────────────────────
+   p' at X=0.25 m [Pa]      +6.503e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +5.647e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +1.637e+05   p @ probe_x125
+   p' at X=5 m [Pa]         +5.719e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +4.351e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +4.325e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +4.325e-04   displacement
+   Time [years]             +1.438e-02
+   p at X=0.25m [MPa abs]   +7.516e-01
+   p at X=0.75m [MPa abs]   +6.660e-01
+   p at X=1.25m [MPa abs]   +2.650e-01
+   p at X=5m [MPa abs]      +6.732e-01
+   p at X=9.75m [MPa abs]   +5.364e-01
+────────────────────────────────────────────────────────────────────
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.15e+05,  max=+7.15e+05)
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.25e+05,  max=+5.25e+05)
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.09e+05,  max=+1.09e+05)
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.19e+05,  max=+3.19e+05)
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.054e+06 s
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.48e-04,  max=+4.48e-04)
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.054e+06 s
+12:55:03 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 12.20 d · 15 queries ok ──────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.153e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +5.247e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +1.089e+05   p @ probe_x125
+   p' at X=5 m [Pa]         +5.719e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +3.191e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +4.477e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +4.477e-04   displacement
+   Time [years]             +3.340e-02
+   p at X=0.25m [MPa abs]   +8.166e-01
+   p at X=0.75m [MPa abs]   +6.260e-01
+   p at X=1.25m [MPa abs]   +2.102e-01
+   p at X=5m [MPa abs]      +6.732e-01
+   p at X=9.75m [MPa abs]   +4.204e-01
+────────────────────────────────────────────────────────────────────
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.46e+05,  max=+7.46e+05)
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.82e+05,  max=+4.82e+05)
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+8.32e+04,  max=+8.32e+04)
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.50e+05,  max=+2.50e+05)
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.849e+06 s
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.62e-04,  max=+4.62e-04)
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.849e+06 s
+12:55:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 21.40 d · 15 queries ok ──────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.464e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +4.816e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +8.316e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.719e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +2.503e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +4.622e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +4.622e-04   displacement
+   Time [years]             +5.858e-02
+   p at X=0.25m [MPa abs]   +8.477e-01
+   p at X=0.75m [MPa abs]   +5.829e-01
+   p at X=1.25m [MPa abs]   +1.845e-01
+   p at X=5m [MPa abs]      +6.732e-01
+   p at X=9.75m [MPa abs]   +3.516e-01
+────────────────────────────────────────────────────────────────────
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.54e+05,  max=+7.54e+05)
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.48e+05,  max=+4.48e+05)
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+6.83e+04,  max=+6.83e+04)
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.04e+05,  max=+2.04e+05)
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.9e+06 s
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.77e-04,  max=+4.77e-04)
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.9e+06 s
+12:55:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 33.57 d · 15 queries ok ──────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.540e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +4.481e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +6.834e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.719e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +2.036e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +4.771e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +4.771e-04   displacement
+   Time [years]             +9.191e-02
+   p at X=0.25m [MPa abs]   +8.553e-01
+   p at X=0.75m [MPa abs]   +5.494e-01
+   p at X=1.25m [MPa abs]   +1.696e-01
+   p at X=5m [MPa abs]      +6.732e-01
+   p at X=9.75m [MPa abs]   +3.049e-01
+────────────────────────────────────────────────────────────────────
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.49e+05,  max=+7.49e+05)
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.23e+05,  max=+4.23e+05)
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.91e+04,  max=+5.91e+04)
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.69e+05,  max=+1.69e+05)
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=4.292e+06 s
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.93e-04,  max=+4.93e-04)
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=4.292e+06 s
+12:55:17 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 49.68 d · 15 queries ok ──────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.487e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +4.229e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +5.906e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.719e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +1.692e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +4.927e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +4.927e-04   displacement
+   Time [years]             +1.360e-01
+   p at X=0.25m [MPa abs]   +8.500e-01
+   p at X=0.75m [MPa abs]   +5.242e-01
+   p at X=1.25m [MPa abs]   +1.604e-01
+   p at X=5m [MPa abs]      +6.732e-01
+   p at X=9.75m [MPa abs]   +2.705e-01
+────────────────────────────────────────────────────────────────────
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.40e+05,  max=+7.40e+05)
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.04e+05,  max=+4.04e+05)
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.27e+04,  max=+5.27e+04)
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.42e+05,  max=+1.42e+05)
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=6.135e+06 s
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.09e-04,  max=+5.09e-04)
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=6.135e+06 s
+12:55:19 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 71.00 d · 15 queries ok ──────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.398e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +4.038e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +5.268e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.719e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +1.425e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +5.093e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +5.093e-04   displacement
+   Time [years]             +1.944e-01
+   p at X=0.25m [MPa abs]   +8.411e-01
+   p at X=0.75m [MPa abs]   +5.051e-01
+   p at X=1.25m [MPa abs]   +1.540e-01
+   p at X=5m [MPa abs]      +6.732e-01
+   p at X=9.75m [MPa abs]   +2.438e-01
+────────────────────────────────────────────────────────────────────
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.32e+05,  max=+7.32e+05)
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.90e+05,  max=+3.90e+05)
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.80e+04,  max=+4.80e+04)
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.21e+05,  max=+1.21e+05)
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=8.573e+06 s
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.27e-04,  max=+5.27e-04)
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=8.573e+06 s
+12:55:23 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 99.22 d · 15 queries ok ──────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.324e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.903e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +4.800e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.719e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +1.210e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +5.270e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +5.270e-04   displacement
+   Time [years]             +2.717e-01
+   p at X=0.25m [MPa abs]   +8.337e-01
+   p at X=0.75m [MPa abs]   +4.916e-01
+   p at X=1.25m [MPa abs]   +1.493e-01
+   p at X=5m [MPa abs]      +6.732e-01
+   p at X=9.75m [MPa abs]   +2.223e-01
+────────────────────────────────────────────────────────────────────
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.28e+05,  max=+7.28e+05)
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.82e+05,  max=+3.82e+05)
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.45e+04,  max=+4.45e+04)
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+05,  max=+5.72e+05)
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.03e+05,  max=+1.03e+05)
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.18e+07 s
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.46e-04,  max=+5.46e-04)
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.18e+07 s
+12:55:28 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 136.57 d · 15 queries ok ─────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.278e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.819e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +4.452e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.716e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +1.035e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +5.461e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +5.461e-04   displacement
+   Time [years]             +3.739e-01
+   p at X=0.25m [MPa abs]   +8.291e-01
+   p at X=0.75m [MPa abs]   +4.832e-01
+   p at X=1.25m [MPa abs]   +1.458e-01
+   p at X=5m [MPa abs]      +6.729e-01
+   p at X=9.75m [MPa abs]   +2.048e-01
+────────────────────────────────────────────────────────────────────
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.25e+05,  max=+7.25e+05)
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.78e+05,  max=+3.78e+05)
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.19e+04,  max=+4.19e+04)
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.70e+05,  max=+5.70e+05)
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+8.89e+04,  max=+8.89e+04)
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.607e+07 s
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.67e-04,  max=+5.67e-04)
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.607e+07 s
+12:55:32 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 186.00 d · 15 queries ok ─────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.255e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.776e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +4.193e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.700e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +8.888e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +5.672e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +5.672e-04   displacement
+   Time [years]             +5.092e-01
+   p at X=0.25m [MPa abs]   +8.268e-01
+   p at X=0.75m [MPa abs]   +4.789e-01
+   p at X=1.25m [MPa abs]   +1.432e-01
+   p at X=5m [MPa abs]      +6.713e-01
+   p at X=9.75m [MPa abs]   +1.902e-01
+────────────────────────────────────────────────────────────────────
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.24e+05,  max=+7.24e+05)
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.76e+05,  max=+3.76e+05)
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.99e+04,  max=+3.99e+04)
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.65e+05,  max=+5.65e+05)
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.66e+04,  max=+7.66e+04)
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.172e+07 s
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.91e-04,  max=+5.91e-04)
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.172e+07 s
+12:55:36 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 251.41 d · 15 queries ok ─────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.245e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.756e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.995e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.652e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +7.656e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +5.909e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +5.909e-04   displacement
+   Time [years]             +6.883e-01
+   p at X=0.25m [MPa abs]   +8.258e-01
+   p at X=0.75m [MPa abs]   +4.769e-01
+   p at X=1.25m [MPa abs]   +1.412e-01
+   p at X=5m [MPa abs]      +6.665e-01
+   p at X=9.75m [MPa abs]   +1.779e-01
+────────────────────────────────────────────────────────────────────
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.24e+05,  max=+7.24e+05)
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.75e+05,  max=+3.75e+05)
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.83e+04,  max=+3.83e+04)
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.54e+05,  max=+5.54e+05)
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+6.61e+04,  max=+6.61e+04)
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.92e+07 s
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+6.18e-04,  max=+6.18e-04)
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.92e+07 s
+12:55:41 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 338.00 d · 15 queries ok ─────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.241e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.746e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.835e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.538e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +6.611e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +6.177e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +6.177e-04   displacement
+   Time [years]             +9.254e-01
+   p at X=0.25m [MPa abs]   +8.254e-01
+   p at X=0.75m [MPa abs]   +4.759e-01
+   p at X=1.25m [MPa abs]   +1.396e-01
+   p at X=5m [MPa abs]      +6.551e-01
+   p at X=9.75m [MPa abs]   +1.674e-01
+────────────────────────────────────────────────────────────────────
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.24e+05,  max=+7.24e+05)
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.74e+05,  max=+3.74e+05)
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.70e+04,  max=+3.70e+04)
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.32e+05,  max=+5.32e+05)
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.72e+04,  max=+5.72e+04)
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=3.91e+07 s
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+6.48e-04,  max=+6.48e-04)
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=3.91e+07 s
+12:55:45 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 452.58 d · 15 queries ok ─────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.238e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.740e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.701e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +5.323e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +5.717e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +6.482e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +6.482e-04   displacement
+   Time [years]             +1.239e+00
+   p at X=0.25m [MPa abs]   +8.251e-01
+   p at X=0.75m [MPa abs]   +4.753e-01
+   p at X=1.25m [MPa abs]   +1.383e-01
+   p at X=5m [MPa abs]      +6.336e-01
+   p at X=9.75m [MPa abs]   +1.585e-01
+────────────────────────────────────────────────────────────────────
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.24e+05,  max=+7.24e+05)
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.74e+05,  max=+3.74e+05)
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.59e+04,  max=+3.59e+04)
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.98e+05,  max=+4.98e+05)
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.94e+04,  max=+4.94e+04)
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=5.221e+07 s
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+6.83e-04,  max=+6.83e-04)
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:50 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=5.221e+07 s
+12:55:50 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 604.24 d · 15 queries ok ─────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.237e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.735e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.587e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +4.983e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +4.944e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +6.831e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +6.831e-04   displacement
+   Time [years]             +1.654e+00
+   p at X=0.25m [MPa abs]   +8.250e-01
+   p at X=0.75m [MPa abs]   +4.748e-01
+   p at X=1.25m [MPa abs]   +1.372e-01
+   p at X=5m [MPa abs]      +5.996e-01
+   p at X=9.75m [MPa abs]   +1.507e-01
+────────────────────────────────────────────────────────────────────
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.24e+05,  max=+7.24e+05)
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.73e+05,  max=+3.73e+05)
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.49e+04,  max=+3.49e+04)
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.51e+05,  max=+4.51e+05)
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+4.25e+04,  max=+4.25e+04)
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=6.955e+07 s
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e-04,  max=+7.23e-04)
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=6.955e+07 s
+12:55:51 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 804.96 d · 15 queries ok ─────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.235e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.731e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.485e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +4.510e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +4.254e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +7.229e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +7.229e-04   displacement
+   Time [years]             +2.204e+00
+   p at X=0.25m [MPa abs]   +8.248e-01
+   p at X=0.75m [MPa abs]   +4.744e-01
+   p at X=1.25m [MPa abs]   +1.362e-01
+   p at X=5m [MPa abs]      +5.523e-01
+   p at X=9.75m [MPa abs]   +1.438e-01
+────────────────────────────────────────────────────────────────────
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.73e+05,  max=+3.73e+05)
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.39e+04,  max=+3.39e+04)
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.92e+05,  max=+3.92e+05)
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.60e+04,  max=+3.60e+04)
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=9.25e+07 s
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.68e-04,  max=+7.68e-04)
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:55:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=9.25e+07 s
+12:55:56 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1070.60 d · 15 queries ok ────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.234e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.727e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.389e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +3.918e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +3.599e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +7.679e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +7.679e-04   displacement
+   Time [years]             +2.931e+00
+   p at X=0.25m [MPa abs]   +8.247e-01
+   p at X=0.75m [MPa abs]   +4.740e-01
+   p at X=1.25m [MPa abs]   +1.352e-01
+   p at X=5m [MPa abs]      +4.931e-01
+   p at X=9.75m [MPa abs]   +1.373e-01
+────────────────────────────────────────────────────────────────────
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.72e+05,  max=+3.72e+05)
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.29e+04,  max=+3.29e+04)
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.24e+05,  max=+3.24e+05)
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.94e+04,  max=+2.94e+04)
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.229e+08 s
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+8.17e-04,  max=+8.17e-04)
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.229e+08 s
+12:56:01 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1422.18 d · 15 queries ok ────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.233e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.723e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.292e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +3.240e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +2.940e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +8.172e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +8.172e-04   displacement
+   Time [years]             +3.894e+00
+   p at X=0.25m [MPa abs]   +8.246e-01
+   p at X=0.75m [MPa abs]   +4.736e-01
+   p at X=1.25m [MPa abs]   +1.342e-01
+   p at X=5m [MPa abs]      +4.253e-01
+   p at X=9.75m [MPa abs]   +1.307e-01
+────────────────────────────────────────────────────────────────────
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.72e+05,  max=+3.72e+05)
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.19e+04,  max=+3.19e+04)
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.52e+05,  max=+2.52e+05)
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.27e+04,  max=+2.27e+04)
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.631e+08 s
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+8.69e-04,  max=+8.69e-04)
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=1.631e+08 s
+12:56:05 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1887.49 d · 15 queries ok ────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.231e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.720e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.192e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +2.519e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +2.271e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +8.690e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +8.690e-04   displacement
+   Time [years]             +5.168e+00
+   p at X=0.25m [MPa abs]   +8.244e-01
+   p at X=0.75m [MPa abs]   +4.733e-01
+   p at X=1.25m [MPa abs]   +1.332e-01
+   p at X=5m [MPa abs]      +3.532e-01
+   p at X=9.75m [MPa abs]   +1.240e-01
+────────────────────────────────────────────────────────────────────
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.72e+05,  max=+3.72e+05)
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.10e+04,  max=+3.10e+04)
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.81e+05,  max=+1.81e+05)
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.62e+04,  max=+1.62e+04)
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.163e+08 s
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+9.20e-04,  max=+9.20e-04)
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.163e+08 s
+12:56:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2503.32 d · 15 queries ok ────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.230e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.716e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.095e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +1.813e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +1.622e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +9.196e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +9.196e-04   displacement
+   Time [years]             +6.854e+00
+   p at X=0.25m [MPa abs]   +8.243e-01
+   p at X=0.75m [MPa abs]   +4.729e-01
+   p at X=1.25m [MPa abs]   +1.323e-01
+   p at X=5m [MPa abs]      +2.826e-01
+   p at X=9.75m [MPa abs]   +1.175e-01
+────────────────────────────────────────────────────────────────────
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.71e+05,  max=+3.71e+05)
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.01e+04,  max=+3.01e+04)
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.19e+05,  max=+1.19e+05)
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.05e+04,  max=+1.05e+04)
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.867e+08 s
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+9.65e-04,  max=+9.65e-04)
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=2.867e+08 s
+12:56:14 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3318.37 d · 15 queries ok ────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.229e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.712e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.009e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +1.186e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +1.047e+04   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +9.645e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +9.645e-04   displacement
+   Time [years]             +9.085e+00
+   p at X=0.25m [MPa abs]   +8.242e-01
+   p at X=0.75m [MPa abs]   +4.725e-01
+   p at X=1.25m [MPa abs]   +1.314e-01
+   p at X=5m [MPa abs]      +2.199e-01
+   p at X=9.75m [MPa abs]   +1.118e-01
+────────────────────────────────────────────────────────────────────
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.71e+05,  max=+3.71e+05)
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.94e+04,  max=+2.94e+04)
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+6.94e+04,  max=+6.94e+04)
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+5.96e+03,  max=+5.96e+03)
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=3.799e+08 s
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.00e-03,  max=+1.00e-03)
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=3.799e+08 s
+12:56:19 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4397.07 d · 15 queries ok ────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.228e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.710e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +2.942e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +6.943e+04   p @ probe_x500
+   p' at X=9.75 m [Pa]      +5.963e+03   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +9.997e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +9.997e-04   displacement
+   Time [years]             +1.204e+01
+   p at X=0.25m [MPa abs]   +8.241e-01
+   p at X=0.75m [MPa abs]   +4.723e-01
+   p at X=1.25m [MPa abs]   +1.307e-01
+   p at X=5m [MPa abs]      +1.707e-01
+   p at X=9.75m [MPa abs]   +1.073e-01
+────────────────────────────────────────────────────────────────────
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.71e+05,  max=+3.71e+05)
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.90e+04,  max=+2.90e+04)
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.68e+04,  max=+3.68e+04)
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.97e+03,  max=+2.97e+03)
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=5.033e+08 s
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.02e-03,  max=+1.02e-03)
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=5.033e+08 s
+12:56:22 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5824.72 d · 15 queries ok ────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.227e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.708e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +2.897e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +3.676e+04   p @ probe_x500
+   p' at X=9.75 m [Pa]      +2.969e+03   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +1.023e-03   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +1.023e-03   displacement
+   Time [years]             +1.595e+01
+   p at X=0.25m [MPa abs]   +8.240e-01
+   p at X=0.75m [MPa abs]   +4.721e-01
+   p at X=1.25m [MPa abs]   +1.303e-01
+   p at X=5m [MPa abs]      +1.381e-01
+   p at X=9.75m [MPa abs]   +1.043e-01
+────────────────────────────────────────────────────────────────────
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.71e+05,  max=+3.71e+05)
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.87e+04,  max=+2.87e+04)
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.92e+04,  max=+1.92e+04)
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.36e+03,  max=+1.36e+03)
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=6.665e+08 s
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.04e-03,  max=+1.04e-03)
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=6.665e+08 s
+12:56:26 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 7714.21 d · 15 queries ok ────────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.227e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.707e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +2.873e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +1.921e+04   p @ probe_x500
+   p' at X=9.75 m [Pa]      +1.361e+03   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +1.036e-03   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +1.036e-03   displacement
+   Time [years]             +2.112e+01
+   p at X=0.25m [MPa abs]   +8.240e-01
+   p at X=0.75m [MPa abs]   +4.720e-01
+   p at X=1.25m [MPa abs]   +1.300e-01
+   p at X=5m [MPa abs]      +1.205e-01
+   p at X=9.75m [MPa abs]   +1.027e-01
+────────────────────────────────────────────────────────────────────
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.71e+05,  max=+3.71e+05)
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.86e+04,  max=+2.86e+04)
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.21e+04,  max=+1.21e+04)
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.05e+02,  max=+7.05e+02)
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=8.826e+08 s
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.04e-03,  max=+1.04e-03)
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:31 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=8.826e+08 s
+12:56:31 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 10214.91 d · 15 queries ok ───────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.227e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.707e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +2.863e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +1.205e+04   p @ probe_x500
+   p' at X=9.75 m [Pa]      +7.051e+02   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +1.041e-03   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +1.041e-03   displacement
+   Time [years]             +2.797e+01
+   p at X=0.25m [MPa abs]   +8.240e-01
+   p at X=0.75m [MPa abs]   +4.720e-01
+   p at X=1.25m [MPa abs]   +1.299e-01
+   p at X=5m [MPa abs]      +1.134e-01
+   p at X=9.75m [MPa abs]   +1.020e-01
+────────────────────────────────────────────────────────────────────
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+7.23e+05,  max=+7.23e+05)
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.71e+05,  max=+3.71e+05)
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+2.86e+04,  max=+2.86e+04)
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.12e+04,  max=+1.12e+04)
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+6.30e+02,  max=+6.30e+02)
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=9.467e+08 s
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+1.04e-03,  max=+1.04e-03)
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:56:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=9.467e+08 s
+12:56:33 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 10957.50 d · 15 queries ok ───────────────────────────────────
+   p' at X=0.25 m [Pa]      +7.227e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.707e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +2.862e+04   p @ probe_x125
+   p' at X=5 m [Pa]         +1.124e+04   p @ probe_x500
+   p' at X=9.75 m [Pa]      +6.304e+02   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +1.041e-03   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +1.041e-03   displacement
+   Time [years]             +3.000e+01
+   p at X=0.25m [MPa abs]   +8.240e-01
+   p at X=0.75m [MPa abs]   +4.720e-01
+   p at X=1.25m [MPa abs]   +1.299e-01
+   p at X=5m [MPa abs]      +1.125e-01
+   p at X=9.75m [MPa abs]   +1.019e-01
+────────────────────────────────────────────────────────────────────
+12:56:33 INFO     tools.simulations: VTU export: 465 file(s) -> debug/BenVaSim/1.1/output/OOFEM/vtu
+12:56:36 INFO     tools.simulations: Checkpoint saved -> debug/BenVaSim/1.1/output/OOFEM/checkpoint.h5  (9.3 MB)
+12:56:36 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 465/465 steps ok) ==

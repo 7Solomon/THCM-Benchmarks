@@ -1,0 +1,60 @@
+09:53:05 INFO     tools.simulations: Log file: debug/HITEC/cox-isotropic-temperature/oofem/output/OOFEM/logs/run_20260814_095305.log
+09:53:05 INFO     tools.simulations: == STARTING BENCHMARK: oofem ==
+09:53:05 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HITEC/cox-isotropic-temperature/oofem
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+09:53:05 INFO     tools.simulations: Loading benchmark config: debug/HITEC/cox-isotropic-temperature/oofem/benchmark.json
+09:53:05 INFO     tools.simulations: Benchmark: HITEC near-field benchmark - COx claystone, isotropic, heat conduction from gallery (10 y) (hitec-cox-isotropic-temperature)
+09:53:05 INFO     tools.simulations: Configurations loaded.
+09:53:05 INFO     tools.simulations: Loading mesh...
+09:53:06 INFO     tools.simulations: Mesh loaded: 11857 nodes, 23312 elements (triangle)
+09:53:06 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+09:53:06 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 11857
+  Total DOFs: 11857
+  Fields: 1
+    - temperature: 11857 DOFs (['T'])
+09:53:06 INFO     tools.simulations: Building oofem problem...
+09:53:06 INFO     tools.simulations: oofem problem built: 11857 nodes, 23312 elements, 3 steps (t=[0 -> 2.16e+04])
+09:53:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:53:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:53:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:53:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:53:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:53:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:53:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:53:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:53:07 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.08 d · 6 queries ok ────────────────────────────────────────
+   T at P1 [degC]   +2.200e+01   T @ P1
+   T at P2 [degC]   +2.200e+01   T @ P2
+   T at P3 [degC]   +2.200e+01   T @ P3
+   T at P4 [degC]   +2.200e+01   T @ P4
+   Time [days]      +8.333e-02
+────────────────────────────────────────────────────────────────────
+09:53:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:53:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:53:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:53:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:53:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:53:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:53:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+09:53:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+09:53:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.25 d · 6 queries ok ────────────────────────────────────────
+   T at P1 [degC]   +2.200e+01   T @ P1
+   T at P2 [degC]   +2.200e+01   T @ P2
+   T at P3 [degC]   +2.200e+01   T @ P3
+   T at P4 [degC]   +2.200e+01   T @ P4
+   Time [days]      +2.500e-01
+────────────────────────────────────────────────────────────────────
+09:53:08 INFO     tools.simulations: VTU export: 3 file(s) -> debug/HITEC/cox-isotropic-temperature/oofem/output/OOFEM/vtu
+09:53:08 INFO     tools.simulations: Checkpoint saved -> debug/HITEC/cox-isotropic-temperature/oofem/output/OOFEM/checkpoint.h5  (0.0 MB)
+09:53:08 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 3/3 steps ok) ==

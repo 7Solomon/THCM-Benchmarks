@@ -1,0 +1,185 @@
+14:58:41 INFO     tools.simulations: Log file: debug/ConCracksRestrainedBeam/OOFEM/output/OOFEM/logs/run_20260730_145841.log
+14:58:41 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+14:58:41 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/ConCracksRestrainedBeam/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+14:58:41 INFO     tools.simulations: Loading benchmark config: debug/ConCracksRestrainedBeam/OOFEM/benchmark.json
+14:58:41 INFO     tools.simulations: Benchmark: ConCrack's Restrained Beam (concrack-restrained-beam)
+14:58:41 INFO     tools.simulations: Configurations loaded.
+14:58:41 INFO     tools.simulations: Loading mesh...
+14:58:41 INFO     tools.simulations: Mesh loaded: 310 nodes, 846 elements (tetra)
+14:58:41 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+14:58:41 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 310
+  Total DOFs: 1550
+  Fields: 3
+    - temperature: 310 DOFs (['T'])
+    - displacement: 930 DOFs (['ux', 'uy', 'uz'])
+    - humidity: 310 DOFs (['h'])
+14:58:41 INFO     tools.simulations: Building oofem problem...
+14:58:41 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[117.9 -> 1473.5] s
+14:58:41 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 100 steps, dt=[639.5 -> 5115.8] s
+14:58:41 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[4374.3 -> 52491.3] s
+14:58:41 INFO     tools.simulations.oofem.src.builder.problem: 'temperature' sub-problem: skipping BC entries of other fields: displacement x3, humidity x1
+14:58:41 INFO     tools.simulations.oofem.src.builder.problem: 'humidity' sub-problem: skipping BC entries of other fields: displacement x3, temperature x1
+14:58:41 INFO     tools.simulations.oofem.src.builder.problem: 'displacement' sub-problem: skipping BC entries of other fields: temperature x1, humidity x1
+14:58:41 INFO     tools.simulations.oofem.src.builder.problem: mechanical robin: 40 nodalspring element(s) attached
+14:58:41 INFO     tools.simulations: Solution plan: STAGGERED lockstep (2 sources)
+14:58:41 INFO     tools.simulations: oofem problem built: 310 nodes, 846 elements, 300 steps (t=[0 -> 2.59e+06])
+14:58:42 INFO     tools.simulations.oofem.src.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+14:58:42 INFO     tools.simulations.oofem.src.step_loop: lockstep: FT_HumidityConcentration field registered in displacement FieldManager
+14:58:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+2.00e+01,  max=+2.00e+01)
+14:58:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:58:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+14:58:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:58:42 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +2.000e+01   T @ gage_core
+   Core humidity [-]      +1.000e+00   h @ gage_core
+   Time [days]            +1.364e-03
+   Displ. C-D [mm]        -8.878e-05
+   Core strain εzz [με]   -2.107e-02
+────────────────────────────────────────────────────────────────────
+14:58:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+2.00e+01,  max=+2.00e+01)
+14:58:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:58:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+14:58:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:58:57 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.05 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +1.997e+01   T @ gage_core
+   Core humidity [-]      +1.000e+00   h @ gage_core
+   Time [days]            +5.138e-02
+   Displ. C-D [mm]        +4.527e-05
+   Core strain εzz [με]   +3.034e-01
+────────────────────────────────────────────────────────────────────
+14:59:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.98e+01,  max=+1.98e+01)
+14:59:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:59:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+14:59:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:59:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.17 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +1.985e+01   T @ gage_core
+   Core humidity [-]      +1.000e+00   h @ gage_core
+   Time [days]            +1.657e-01
+   Displ. C-D [mm]        +6.593e-04
+   Core strain εzz [με]   +7.409e-01
+────────────────────────────────────────────────────────────────────
+14:59:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+3.60e+01,  max=+3.60e+01)
+14:59:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:59:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+14:59:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:59:29 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.42 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +3.601e+01   T @ gage_core
+   Core humidity [-]      +1.000e+00   h @ gage_core
+   Time [days]            +4.198e-01
+   Displ. C-D [mm]        -2.502e-02
+   Core strain εzz [με]   -1.134e+01
+────────────────────────────────────────────────────────────────────
+14:59:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+4.79e+01,  max=+4.79e+01)
+14:59:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:59:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+14:59:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:59:41 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.68 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +4.794e+01   T @ gage_core
+   Core humidity [-]      +1.000e+00   h @ gage_core
+   Time [days]            +6.818e-01
+   Displ. C-D [mm]        -5.108e-02
+   Core strain εzz [με]   -2.295e+01
+────────────────────────────────────────────────────────────────────
+14:59:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+4.62e+01,  max=+4.62e+01)
+14:59:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:59:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+14:59:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+14:59:54 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.05 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +4.624e+01   T @ gage_core
+   Core humidity [-]      +1.000e+00   h @ gage_core
+   Time [days]            +1.048e+00
+   Displ. C-D [mm]        -4.914e-02
+   Core strain εzz [με]   -2.184e+01
+────────────────────────────────────────────────────────────────────
+15:00:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+3.67e+01,  max=+3.67e+01)
+15:00:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+15:00:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:05 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.67 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +3.674e+01   T @ gage_core
+   Core humidity [-]      +1.000e+00   h @ gage_core
+   Time [days]            +1.668e+00
+   Displ. C-D [mm]        -3.406e-02
+   Core strain εzz [με]   -1.396e+01
+────────────────────────────────────────────────────────────────────
+15:00:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+2.54e+01,  max=+2.54e+01)
+15:00:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+15:00:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:14 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.72 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +2.544e+01   T @ gage_core
+   Core humidity [-]      +9.999e-01   h @ gage_core
+   Time [days]            +2.715e+00
+   Displ. C-D [mm]        -1.682e-02
+   Core strain εzz [με]   -5.073e+00
+────────────────────────────────────────────────────────────────────
+15:00:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.88e+01,  max=+1.88e+01)
+15:00:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+15:00:26 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:26 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.24 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +1.881e+01   T @ gage_core
+   Core humidity [-]      +9.999e-01   h @ gage_core
+   Time [days]            +4.242e+00
+   Displ. C-D [mm]        -7.797e-03
+   Core strain εzz [με]   -3.100e-01
+────────────────────────────────────────────────────────────────────
+15:00:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.62e+01,  max=+1.62e+01)
+15:00:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+15:00:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:38 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 6.74 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +1.621e+01   T @ gage_core
+   Core humidity [-]      +9.997e-01   h @ gage_core
+   Time [days]            +6.738e+00
+   Displ. C-D [mm]        -4.750e-03
+   Core strain εzz [με]   +1.758e+00
+────────────────────────────────────────────────────────────────────
+15:00:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.56e+01,  max=+1.56e+01)
+15:00:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+9.99e-01,  max=+9.99e-01)
+15:00:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:47 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 10.95 d · 10 queries ok ──────────────────────────────────────
+   Core temp [°C]         +1.557e+01   T @ gage_core
+   Core humidity [-]      +9.993e-01   h @ gage_core
+   Time [days]            +1.095e+01
+   Displ. C-D [mm]        -4.017e-03
+   Core strain εzz [με]   +3.158e+00
+────────────────────────────────────────────────────────────────────
+15:00:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.53e+01,  max=+1.53e+01)
+15:00:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+9.99e-01,  max=+9.99e-01)
+15:00:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:00:58 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 18.04 d · 10 queries ok ──────────────────────────────────────
+   Core temp [°C]         +1.532e+01   T @ gage_core
+   Core humidity [-]      +9.985e-01   h @ gage_core
+   Time [days]            +1.804e+01
+   Displ. C-D [mm]        -3.691e-03
+   Core strain εzz [με]   +3.929e+00
+────────────────────────────────────────────────────────────────────
+15:01:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.52e+01,  max=+1.52e+01)
+15:01:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:01:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+9.97e-01,  max=+9.97e-01)
+15:01:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+15:01:11 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 30.00 d · 10 queries ok ──────────────────────────────────────
+   Core temp [°C]         +1.517e+01   T @ gage_core
+   Core humidity [-]      +9.971e-01   h @ gage_core
+   Time [days]            +2.999e+01
+   Displ. C-D [mm]        -3.733e-03
+   Core strain εzz [με]   +3.131e+00
+────────────────────────────────────────────────────────────────────
+15:01:11 INFO     tools.simulations: VTU export: 900 file(s) -> debug/ConCracksRestrainedBeam/OOFEM/output/OOFEM/vtu
+15:01:11 INFO     tools.simulations: Checkpoint saved -> debug/ConCracksRestrainedBeam/OOFEM/output/OOFEM/checkpoint.h5  (3.3 MB)
+15:01:11 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 300/300 steps ok) ==

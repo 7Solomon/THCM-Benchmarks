@@ -1,0 +1,499 @@
+{
+  "metadata": {
+    "id": "faria-2006-restrained-slab-thermal",
+    "title": "Early-age temperature through a 0.35 m restrained floor slab",
+    "source": {
+      "authors": [
+        "Rui Faria",
+        "Miguel Azenha",
+        "Joaquim A. Figueiras"
+      ],
+      "year": 2006,
+      "journal": "Cement & Concrete Composites 28, 572-585",
+      "doi": "10.1016/j.cemconcomp.2006.02.012"
+    },
+    "dimension": 2,
+    "physics_class": "thermo-chemo",
+    "validation_method": "OOFEM 2D cross-section reproducing the paper's 1D through-thickness thermal idealization; comparison to temperatures digitized from Fig. 7",
+    "validation_target": "Temperature histories 0.05 m below the top and 0.05 m above the bottom over 220 h",
+    "notes": "RISKY: thermal-only benchmark. The paper's full thermo-mechanical validation cannot be reproduced faithfully by this OOFEM configuration because it uses a Multi-Component Hydration model, hydration-dependent stiffness, and Double Power Law creep; the paper does not publish numerical hydration-kinetics parameters or raw monitoring data. The affinity parameters here are CALIBRATED to an approximate digitization of Fig. 5, and the ambient/reference histories are user-exported from Fig. 7 and normalized into pipeline CSVs. The paper's own 1D model intentionally ignored a textile cover present during the first 24 h; this benchmark follows that published model. The paper prints volumetric heat capacity as 2400 J/(m3 K), which is physically implausible; it is interpreted as 2400 kJ/(m3 K) = 2.4e6 J/(m3 K). See ASSUMPTIONS.md. Updated pipeline element output is used for hydration equivalent age. The supplied updated schema still forbids a field query whose field is degree_of_hydration, despite the skill saying it is supported; that query is therefore withheld so this file remains schema-valid."
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "slab_section",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.05,
+            0.35
+          ]
+        },
+        "_comment": "PAPER_VALUE: slab thickness 0.35 m (Sec. 4.1 and Fig. 6). ASSUMED: 0.05 m in-plane width; side faces are adiabatic, so width does not affect the 1D thermal solution."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "concrete_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "slab_section"
+        ]
+      },
+      {
+        "name": "surface_bottom",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            0.050001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: P1-P2 soil-side boundary in Fig. 6."
+      },
+      {
+        "name": "surface_top",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            0.349999,
+            -1e-06,
+            0.050001,
+            0.350001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: P3-P4 air-side boundary in Fig. 6."
+      },
+      {
+        "name": "sensor_bottom",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.024999,
+            0.049999,
+            -1e-06,
+            0.025001,
+            0.050001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: 0.05 m above bottom; dim-0 group guarantees exact mesh vertex."
+      },
+      {
+        "name": "sensor_centre",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.024999,
+            0.174999,
+            -1e-06,
+            0.025001,
+            0.175001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: slab middle plane; dim-0 group guarantees exact mesh vertex."
+      },
+      {
+        "name": "sensor_top",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.024999,
+            0.299999,
+            -1e-06,
+            0.025001,
+            0.300001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: 0.05 m below top; dim-0 group guarantees exact mesh vertex."
+      }
+    ],
+    "mesh": {
+      "element_size": 0.05,
+      "order": 1,
+      "recombine": false,
+      "_comment": "PAPER_VALUE: seven finite elements through 0.35 m thickness (Sec. 4.2), corresponding to 0.05 m nominal size. The OOFEM pipeline uses 2D triangles rather than the paper's quadrilaterals."
+    }
+  },
+  "physics": {
+    "heat_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "temperature",
+        "symbol": "T",
+        "type": "scalar",
+        "components": [
+          "T"
+        ]
+      }
+    },
+    "hydration": {
+      "type": "ode_source",
+      "dependent_variable": {
+        "name": "degree_of_hydration",
+        "symbol": "alpha",
+        "type": "ode",
+        "components": [
+          "alpha"
+        ],
+        "managed_by": "hydration"
+      }
+    }
+  },
+  "materials": {
+    "concrete": {
+      "temperature": {
+        "k": 2.6,
+        "rho": 2400.0,
+        "cp": 1000.0,
+        "_comment_k": "PAPER_VALUE: k = 2.6 W/(m K), Table 1.",
+        "_comment_rho_cp": "INFERRED/ASSUMED decomposition: Table 1's volumetric heat capacity is interpreted as rho*cp = 2400 kJ/(m3 K) = 2.4e6 J/(m3 K). rho=2400 kg/m3 and cp=1000 J/(kg K) preserve that product exactly. Thermal response depends on the product, not this decomposition.",
+        "_comment_conductivity_gap": "MODEL_GAP: Eq. (2) proposes hydration-dependent conductivity, but Sec. 4 states an average conductivity was assumed in all application analyses. Constant k therefore follows the application."
+      },
+      "degree_of_hydration": {
+        "model": "affinity",
+        "B1": 2.1314e-05,
+        "B2": 1.0,
+        "alpha_inf": 0.93,
+        "eta": 2.9869,
+        "Ea": 50000.0,
+        "R": 8.314,
+        "T_ref": 298.15,
+        "Hu": 420.2,
+        "c_cement": 285.0,
+        "_comment_Ea": "PAPER_VALUE: activation energy 50 kJ/mol = 50000 J/mol, Table 1.",
+        "_comment_cement": "PAPER_VALUE: cement content 285 kg/m3, Sec. 4.1.",
+        "_comment_T_ref": "ASSUMED: 298.15 K, the OOFEM affinity model's reference temperature. This is KELVIN; all temperature IC/BC values below are degrees Celsius.",
+        "_comment_calibration": "CALIBRATED: B1, B2 and eta fit an approximate digitization of the pseudo-adiabatic curve in Fig. 5 using the OOFEM affinity equation and Ea=50 kJ/mol. B2 reached the imposed calibration bound 1.0, indicating model-form mismatch; do not treat these as independently measured kinetics.",
+        "_comment_alpha_inf": "INFERRED: alpha_inf=0.93 from the approximately 0.92-0.93 plateau at 9 days in Fig. 8b.",
+        "_comment_Hu": "INFERRED sanity calculation from Fig. 5: rise about 46.4 K, so Hu = 46.4*(2.4e6)/(285*0.93)/1000 = 420.2 J/g.",
+        "_comment_sanity": "Adiabatic rise = Hu*1000*c_cement*alpha_inf/(rho*cp) = 420.2e3*285*0.93/(2400*1000) = 46.4 K. Measured slab peak rise in Fig. 7 is about 14-15 K, so the adiabatic rise exceeds it by about 31-32 K, as required."
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "temperature",
+      "value": 17.25,
+      "location": "concrete_domain",
+      "_comment": "INFERRED from user-exported Fig. 7 values at t=0: top/bottom paper-analysis temperatures are 17.0/17.5 degC. The backend requires a uniform IC, so their mean 17.25 degC is used."
+    },
+    {
+      "field": "degree_of_hydration",
+      "value": 0.0,
+      "location": "concrete_domain",
+      "_comment": "ASSUMED/documentary OOFEM hydration start. Fig. 8b appears to begin near alpha=0.1, but the paper gives no numerical initial degree."
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "surface_bottom",
+      "alpha": 4.5,
+      "u_ref": 17.0,
+      "_comment": "PAPER_VALUE/CALIBRATED_BY_PAPER: h=4.5 W/(m2 K) and soil temperature 17 degC, Table 1. The authors obtained the lower coefficient and soil temperature by trial and error against cooling data (Sec. 4.2)."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "surface_top",
+      "alpha": 7.5,
+      "u_ref": {
+        "file": "input/ambient_temperature_fig7a.csv",
+        "column": "T_ambient_degC",
+        "time_column": "t_s",
+        "interp": "linear",
+        "_comment": "DIGITIZED: exact user-exported environmental-temperature series from Fig. 7a (data (7).csv), converted from days to absolute seconds."
+      },
+      "_comment": "PAPER_VALUE: h=7.5 W/(m2 K), Table 1. The published model did not account for the provisional textile cover during the first 24 h (Sec. 4.2), and this benchmark follows that choice."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "concrete_domain": {
+        "active_fields": [
+          "temperature",
+          "degree_of_hydration"
+        ],
+        "material": "concrete"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 792000.0,
+    "analysis_type": "transient",
+    "dt_strategy": {
+      "type": "uniform",
+      "n_steps": 220
+    },
+    "linear_solver": "dss",
+    "_comment": "PAPER_VALUE: 1 h steps over approximately 9.2 days (Sec. 4.2). 220 h = 9.167 days keeps exact 3600 s steps; the paper's rounded 9.2 days is not an integer number of hours."
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "fig7_top_sensor",
+        "file": "reference/fig7a_thermal_sensor.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "temperature_degC",
+        "label": "Top thermal sensor, 0.05 m from top (Fig. 7a)",
+        "_comment": "USER_EXPORTED: Thermal sensor series from data (7).csv; values preserved exactly, headers normalized."
+      },
+      {
+        "id": "fig7_top_paper_model",
+        "file": "reference/fig7a_thermal_analysis.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "temperature_degC",
+        "label": "Paper thermal analysis, 0.05 m from top (Fig. 7a)",
+        "_comment": "USER_EXPORTED: Thermal analysis series from data (7).csv; useful for model-vs-model comparison."
+      },
+      {
+        "id": "fig7_bottom_sensor",
+        "file": "reference/fig7b_thermal_sensor.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "temperature_degC",
+        "label": "Bottom thermal sensor, 0.05 m from bottom (Fig. 7b)",
+        "_comment": "USER_EXPORTED: Thermal sensor series from data (8).csv; values preserved exactly, headers normalized."
+      },
+      {
+        "id": "fig7_bottom_paper_model",
+        "file": "reference/fig7b_thermal_analysis.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "temperature_degC",
+        "label": "Paper thermal analysis, 0.05 m from bottom (Fig. 7b)",
+        "_comment": "USER_EXPORTED: Thermal analysis series from data (8).csv; useful for model-vs-model comparison."
+      },
+      {
+        "id": "fig7a_environment_reference",
+        "file": "reference/fig7a_environment.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "temperature_degC",
+        "label": "Environmental temperature exported from Fig. 7a",
+        "_comment": "The same values also drive the top Robin BC through input/ambient_temperature_fig7a.csv, where time is converted to seconds."
+      },
+      {
+        "id": "fig7b_environment_reference",
+        "file": "reference/fig7b_environment.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "temperature_degC",
+        "label": "Environmental temperature exported from Fig. 7b",
+        "_comment": "Retained for provenance. It differs from the Fig. 7a export even though both panels nominally show environmental temperature; it is not used as a second boundary input."
+      },
+      {
+        "id": "fig5_pseudo_adiabatic",
+        "file": "reference/fig5_pseudo_adiabatic.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "temperature_degC",
+        "label": "Pseudo-adiabatic characterization (Fig. 5)",
+        "_comment": "Earlier approximate digitization; calibration evidence only."
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_days",
+        "type": "formula",
+        "formula": "t / 86400.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [days]"
+      },
+      {
+        "id": "T_top",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "sensor_top",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Top sensor temperature [degC]",
+        "_comment": "Temperature field is already in degC; no Kelvin conversion."
+      },
+      {
+        "id": "T_bottom",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "sensor_bottom",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Bottom sensor temperature [degC]"
+      },
+      {
+        "id": "T_centre",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "sensor_centre",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Centre temperature [degC]"
+      },
+      {
+        "id": "hydration_equivalent_age_centre",
+        "type": "field",
+        "field": "equivalent_age",
+        "at": "sensor_centre",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Hydration equivalent age [s]",
+        "_comment": "NEW_PIPELINE_CAPABILITY: hydration material element field; scalar, so no component."
+      },
+      {
+        "id": "hydration_equivalent_age_days",
+        "type": "formula",
+        "formula": "hydration_equivalent_age_centre / 86400.0",
+        "depends_on": [
+          "hydration_equivalent_age_centre"
+        ],
+        "label": "Hydration equivalent age [days]"
+      }
+    ],
+    "plots": [
+      {
+        "name": "top_temperature_history",
+        "title": "Temperature 0.05 m from slab top",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Temperature [degC]"
+        },
+        "xlim": [
+          0.0,
+          9.2
+        ],
+        "ylim": [
+          10.0,
+          35.0
+        ],
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_top"
+            },
+            "label": "OOFEM"
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_top_paper_model",
+            "label": "Paper thermal analysis"
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_top_sensor",
+            "label": "Thermal sensor"
+          }
+        ]
+      },
+      {
+        "name": "bottom_temperature_history",
+        "title": "Temperature 0.05 m from slab bottom",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Temperature [degC]"
+        },
+        "xlim": [
+          0.0,
+          9.2
+        ],
+        "ylim": [
+          10.0,
+          35.0
+        ],
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_bottom"
+            },
+            "label": "OOFEM"
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_bottom_paper_model",
+            "label": "Paper thermal analysis"
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_bottom_sensor",
+            "label": "Thermal sensor"
+          }
+        ]
+      }
+    ],
+    "console": {
+      "summary_every_steps": 12,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_days",
+            "y": "T_top",
+            "ref_id": "fig7_top_sensor"
+          },
+          {
+            "x": "t_days",
+            "y": "T_top",
+            "ref_id": "fig7_top_paper_model"
+          },
+          {
+            "x": "t_days",
+            "y": "T_bottom",
+            "ref_id": "fig7_bottom_sensor"
+          },
+          {
+            "x": "t_days",
+            "y": "T_bottom",
+            "ref_id": "fig7_bottom_paper_model"
+          }
+        ]
+      }
+    },
+    "aux_fields": [
+      "*"
+    ],
+    "save_checkpoint": true,
+    "export_vtu": true,
+    "save_db": true
+  }
+}

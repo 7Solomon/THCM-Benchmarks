@@ -1,0 +1,546 @@
+    {
+        "metadata": {
+            "id": "havlasek-2017-oslo-wall",
+            "title": "Thermo-mechanical simulations of early-age concrete cracking \u2014 Oslo restrained wall",
+            "source": {
+                "authors": [
+                    "Petr Havl\u00e1sek",
+                    "V\u00edt \u0160milauer",
+                    "Karolina H\u00e1jkov\u00e1",
+                    "Luis Baquerizo"
+                ],
+                "year": 2017,
+                "journal": "IOP Conf. Ser.: Mater. Sci. Eng.",
+                "volume": 236,
+                "article": "012052",
+                "doi": "10.1088/1757-899X/236/1/012052"
+            },
+            "dimension": 3,
+            "physics_class": "thermo_mechanical",
+            "validation_method": "experimental_comparison",
+            "validation_target": "Temperature history at gage 15 (mid-wall, 1.2 m from bottom) and horizontal strain",
+            "notes": "Oslo restrained wall (Section 4.2). Geometry reduced by symmetry to 0.5 x 2.0 x 3.25 m. Staggered thermo-mechanical coupling with affinity hydration model. Concrete SV40 with CEM I 52.5."
+        },
+        "geometry": {
+            "entities": [
+                {
+                    "id": "wall_block",
+                    "type": "cube",
+                    "parameters": {
+                        "origin": [
+                            0.0,
+                            0.0,
+                            0.0
+                        ],
+                        "size": [
+                            0.5,
+                            2.0,
+                            3.25
+                        ]
+                    }
+                }
+            ],
+            "physical_groups": [
+                {
+                    "name": "concrete_domain",
+                    "dimension": 3,
+                    "entity_ids": [
+                        "wall_block"
+                    ]
+                },
+                {
+                    "name": "bottom_surface",
+                    "dimension": 2,
+                    "selection": {
+                        "box": [
+                            -1e-06,
+                            -1e-06,
+                            -1e-06,
+                            0.500001,
+                            1e-06,
+                            3.250001
+                        ]
+                    }
+                },
+                {
+                    "name": "top_surface",
+                    "dimension": 2,
+                    "selection": {
+                        "box": [
+                            -1e-06,
+                            1.999999,
+                            -1e-06,
+                            0.500001,
+                            2.000001,
+                            3.250001
+                        ]
+                    }
+                },
+                {
+                    "name": "exposed_surfaces",
+                    "dimension": 2,
+                    "selection": {
+                        "boxes": [
+                            [
+                                0.499999,
+                                -1e-06,
+                                -1e-06,
+                                0.500001,
+                                2.000001,
+                                3.250001
+                            ],
+                            [
+                                -1e-06,
+                                -1e-06,
+                                3.249999,
+                                0.500001,
+                                2.000001,
+                                3.250001
+                            ]
+                        ]
+                    }
+                },
+                {
+                    "name": "symmetry_face_x",
+                    "dimension": 2,
+                    "selection": {
+                        "box": [
+                            -1e-06,
+                            -1e-06,
+                            -1e-06,
+                            1e-06,
+                            2.000001,
+                            3.250001
+                        ]
+                    }
+                },
+                {
+                    "name": "symmetry_face_z",
+                    "dimension": 2,
+                    "selection": {
+                        "box": [
+                            -1e-06,
+                            -1e-06,
+                            -1e-06,
+                            0.500001,
+                            2.000001,
+                            1e-06
+                        ]
+                    }
+                }
+            ],
+            "points": [
+                {
+                    "name": "gage_15",
+                    "coordinates": [
+                        0.25,
+                        1.2,
+                        1.625
+                    ],
+                    "_comment": "x=0.25m: mid-thickness (half of 0.5m symmetry model, paper Sec 4.2 'middle of the wall'). y=1.2m: explicitly stated in paper Sec 4.2 ('1.2 m from the bottom'). z=1.625m: assumed mid-length of symmetry domain (3.25/2), not stated in paper."
+                }
+            ]
+        },
+        "physics": {
+            "heat_transport": {
+                "type": "field",
+                "dependent_variable": {
+                    "name": "temperature",
+                    "symbol": "T",
+                    "type": "scalar",
+                    "components": [
+                        "T"
+                    ]
+                },
+                "governing_equations": [
+                    "-div(lambda * grad(T)) + Q(x,t) = rho * c_v * dT/dt  (Eq. 1)",
+                    "q(x) = -lambda * grad(T)  (Fourier, Eq. 2)"
+                ]
+            },
+            "solid_mechanics": {
+                "type": "field",
+                "dependent_variable": {
+                    "name": "displacement",
+                    "symbol": "u",
+                    "type": "vector",
+                    "components": [
+                        "ux",
+                        "uy",
+                        "uz"
+                    ]
+                },
+                "governing_equations": [
+                    "div(sigma) = 0  (quasi-static equilibrium)",
+                    "sigma = (1 - omega) * sigma_eff  (damage, Eq. 6)",
+                    "Delta_sigma_eff = D_V * E'' * (Delta_eps - Delta_eps'' - Delta_eps_sh_aut - Delta_eps_T)  (Eq. 5, E'' IS age depandant from MPS-B3 model)",
+                    "Delta_eps_T = alpha_T * Delta_T * I  (thermal strain)",
+                    "w = L_ch * eps_I_red  (crack width, Eq. 7)"
+                ]
+            },
+            "thermal_strain": {
+                "type": "coupling",
+                "strategy": "staggered",
+                "source_field": "temperature",
+                "target_field": "displacement",
+                "governing_equations": [
+                    "f_th = C_mh * (T - T_ref)  (thermal load vector)",
+                    "C_mh = \u222b B\u1d40 (D\u00b7m) N\u1d40 dV  (coupling matrix)",
+                    "m = alpha_T * [1,1,1,0,0,0]\u1d40  (Voigt identity, 3D)"
+                ]
+            },
+            "b3_creep": {
+                "type": "coupling",
+                "target_field": "displacement",
+                "_comment": "No source_field \u2014 B3 reads stress_registry, not a FEM field"
+            },
+            "hydration": {
+                "type": "KA!",
+                "dependent_variable": {
+                    "name": "degree_of_hydration",
+                    "symbol": "alpha",
+                    "type": "ode",
+                    "components": [
+                        "alpha"
+                    ],
+                    "managed_by": "hydration"
+                },
+                "governing_equations": [
+                    "d(alpha)/dt = A_tilde_25(alpha) * exp(-Ea/R * (1/T_ref - 1/T))  (Arrhenius, Eq. 4)",
+                    "A_tilde_25(alpha) = B1 * (B2/alpha_inf + alpha) * (alpha_inf - alpha) * exp(-eta * alpha/alpha_inf)  (affinity, Eq. 3)"
+                ]
+            },
+            "autogenous_shrinkage": {
+                "type": "coupling",
+                "target_field": "displacement",
+                "_comment": "hydration-driven autogenous shrinkage (own coupling, split from thermal_strain)"
+            }
+        },
+        "materials": {
+            "sv40_concrete": {
+                "temperature": {
+                    "k": 2.1,
+                    "rho": 2350.0,
+                    "cp": 1000.0,
+                    "_comment": "Typical CEM I 52.5 concrete; \u03bb=2.1 W/(m\u00b7K), \u03c1=2350 kg/m\u00b3, cp=1000 J/(kg\u00b7K). Exact values not tabulated \u2014 standard for SV40 class."
+                },
+                "degree_of_hydration": {
+                    "model": "affinity",
+                    "B1": 0.0002542,
+                    "B2": 0.003475,
+                    "alpha_inf": 0.95,
+                    "eta": 6.99,
+                    "Ea": 38300.0,
+                    "R": 8.314,
+                    "T_ref": 298.15,
+                    "Hu": 461.0,
+                    "c_cement": 404.0,
+                    "_comment": "Affinity model (Eq. 3-4, Havl\u00e1sek 2017). B1/B2/alpha_inf/eta fitted to semi-adiabatic Fig. 4 data (RMSE=1.96\u00b0C). Ea fixed from literature."
+                },
+                "displacement": {
+                    "model": "fcm_viscoelastic",
+                    "E": 40000000000.0,
+                    "nu": 0.2,
+                    "rho": 2350.0,
+                    "ft": 3800000.0,
+                    "Gf": 150.0,
+                    "alpha_0": 0.1,
+                    "alpha_inf": 0.95,
+                    "E_min": 0.8,
+                    "a_E": 0.6,
+                    "_comment": "fc_28=77 MPa (paper Sec 4.2). E estimated from fc via ModelCode2010. ft from ModelCode2010 at 28d. alpha_T=10e-6 K\u207b\u00b9 (paper explicit). Autogenous shrinkage_max=-180 \u00b5\u03b5 (paper explicit). Reinforcement ratio 0.002 (smeared), the age deendeant params for E are jsut guessed hope it is correct for this."
+                },
+                "thermal_strain": {
+                    "T_strain_free_ref": 21.2,
+                    "alpha_T": 1e-05,
+                    "alpha_inf": 0.95
+                },
+                "b3_creep": {
+                    "q1": 1.5e-11,
+                    "q2": 9.8e-11,
+                    "q3": 3.5e-12,
+                    "q4": 7e-12,
+                    "E28": 40000000000.0,
+                    "n": 0.1,
+                    "m": 0.5,
+                    "r": 1.7,
+                    "age_at_start_days": 0.5,
+                    "_comment": "B3 basic creep parameters. q1-q4 in [1/Pa]. q1=1/E28 (instantaneous). Typical CEM I values \u2014 calibrate from creep test data.",
+                    "_comment_age": "ASSUMED (OOFEM backend, D9): concrete age at simulation start [days] for mps relMatAge \u2014 set to ~final setting (12 h). The legacy provider instead clamps loading ages to >= 1 day. TUNE if the early-age response matters."
+                },
+                "autogenous_shrinkage": {
+                    "shrinkage_max": -0.00018,
+                    "alpha_inf": 0.95
+                }
+            }
+        },
+        "initial_conditions": [
+            {
+                "field": "temperature",
+                "value": 15.0,
+                "location": "concrete_domain",
+                "_comment": "Ambient ~15\u00b0C at casting; 15 degC (OOFEM backend runs hydration in degC, D2)"
+            },
+            {
+                "field": "displacement",
+                "component": "ux",
+                "value": 0.0,
+                "location": "concrete_domain"
+            },
+            {
+                "field": "displacement",
+                "component": "uy",
+                "value": 0.0,
+                "location": "concrete_domain"
+            },
+            {
+                "field": "displacement",
+                "component": "uz",
+                "value": 0.0,
+                "location": "concrete_domain"
+            },
+            {
+                "field": "degree_of_hydration",
+                "value": 0.0,
+                "location": "concrete_domain",
+                "_comment": "Fresh concrete at casting time: alpha=0"
+            }
+        ],
+        "boundary_conditions": [
+            {
+                "type": "dirichlet",
+                "field": "temperature",
+                "value": 15.0,
+                "location": "bottom_surface",
+                "time_function": "constant",
+                "units": "K",
+                "_comment": "Fixed temperature 15 degC at bottom (degC per D2) (contact with hardened slab). Paper Sec 4.2."
+            },
+            {
+                "type": "robin",
+                "field": "temperature",
+                "location": "exposed_surfaces",
+                "alpha": 6.0,
+                "u_ref": 15.0,
+                "_comment": "Formwork-covered vertical surfaces: h=4.50 W/m\u00b2/K. Ambient 12-18 degC, mean 15 degC (degC per D2). Paper Sec 4.2."
+            },
+            {
+                "type": "robin",
+                "field": "temperature",
+                "location": "top_surface",
+                "alpha": 13.5,
+                "u_ref": 15.0,
+                "_comment": "Top covered with foil: h=13.50 W/m\u00b2/K. Paper Sec 4.2."
+            },
+            {
+                "type": "dirichlet",
+                "field": "displacement",
+                "component": "ux",
+                "value": 0.0,
+                "location": "bottom_surface",
+                "_comment": "Full restraint at bottom (hardened concrete slab). Paper Sec 4.2: fully restrained."
+            },
+            {
+                "type": "dirichlet",
+                "field": "displacement",
+                "component": "uy",
+                "value": 0.0,
+                "location": "bottom_surface",
+                "_comment": "Full restraint at bottom."
+            },
+            {
+                "type": "dirichlet",
+                "field": "displacement",
+                "component": "uz",
+                "value": 0.0,
+                "location": "bottom_surface",
+                "_comment": "Full restraint at bottom."
+            },
+            {
+                "type": "dirichlet",
+                "field": "displacement",
+                "component": "ux",
+                "value": 0.0,
+                "location": "symmetry_face_x",
+                "_comment": "Symmetry BC: no x-displacement on x=0 face"
+            },
+            {
+                "type": "dirichlet",
+                "field": "displacement",
+                "component": "uz",
+                "value": 0.0,
+                "location": "symmetry_face_z",
+                "_comment": "Symmetry BC: no z-displacement on z=0 face (half-length symmetry)"
+            }
+        ],
+        "assignment": {
+            "domains": {
+                "concrete_domain": {
+                    "active_fields": [
+                        "temperature",
+                        "displacement",
+                        "degree_of_hydration"
+                    ],
+                    "material": "sv40_concrete",
+                    "_comment": "ODE field degree_of_hydration managed by hydration solver, not listed here"
+                }
+            }
+        },
+        "time_stepping": {
+            "t_start": 0.0,
+            "t_end": 1080000.0,
+            "analysis_type": "transient",
+            "dt_strategy": {
+                "type": "piecewise",
+                "segments": [
+                    {
+                        "t_end": 43200,
+                        "strategy": {
+                            "type": "log",
+                            "dt_min": 144,
+                            "dt_max": 1800,
+                            "n_steps": 80
+                        }
+                    },
+                    {
+                        "_comment": "12h-48h fine window",
+                        "t_end": 172800,
+                        "dt": 900
+                    },
+                    {
+                        "_comment": "2d-3d moderate approach to cracking",
+                        "t_end": 259200,
+                        "strategy": {
+                            "type": "log",
+                            "dt_min": 1800,
+                            "dt_max": 3600,
+                            "n_steps": 30
+                        }
+                    },
+                    {
+                        "_comment": "3d-5d FINE window: straddles restrained shrinkage cracking (~day 4)",
+                        "t_end": 432000,
+                        "dt": 600
+                    },
+                    {
+                        "_comment": "5d-8d coarse-ish post-crack",
+                        "t_end": 691200,
+                        "dt": 1800
+                    },
+                    {
+                        "_comment": "8d-end coarse tail",
+                        "strategy": {
+                            "type": "log",
+                            "dt_min": 3600,
+                            "dt_max": 22932,
+                            "n_steps": 50
+                        }
+                    }
+                ]
+            }
+        },
+        "results": {
+            "reference_curves": [
+                {
+                    "id": "gage15_temperature_exp",
+                    "file": "reference_data/fig_6.csv",
+                    "has_header": true,
+                    "x_col": "Time of hydration (h)",
+                    "y_col": "Experiment",
+                    "label": "Gage 15 measured (Fig. 6)",
+                    "_source": "Fig. 6 (right), Havl\u00e1sek 2017: core temperature at gage 15, mid-wall 1.2 m from bottom",
+                    "_method": "manual_digitization"
+                },
+                {
+                    "id": "gage15_strain_exp",
+                    "file": "reference_data/fig_7.csv",
+                    "has_header": true,
+                    "x_col": "Time (h)",
+                    "y_col": "Experiment",
+                    "label": "Gage 15 measured (Fig. 7)",
+                    "_source": "Fig. 7 (right), Havl\u00e1sek 2017: horizontal strain at vibrating wire gage, mid-wall",
+                    "_method": "manual_digitization"
+                }
+            ],
+            "queries": [
+                {
+                    "id": "temperature_gage15",
+                    "type": "field",
+                    "field": "temperature",
+                    "component": "T",
+                    "at": "gage_15",
+                    "reduce": "value",
+                    "_note": "Core temperature at gage 15 \u2014 matches y-axis of Fig. 6"
+                },
+                {
+                    "id": "displacement_ux_gage15",
+                    "type": "field",
+                    "field": "displacement",
+                    "component": "ux",
+                    "at": "gage_15",
+                    "reduce": "value",
+                    "evaluate_in": "fem",
+                    "_note": "Raw horizontal displacement at gage 15 in metres"
+                },
+                {
+                    "id": "total_strain_gage15_ezz",
+                    "type": "field",
+                    "field": "total_strain",
+                    "component": "ezz",
+                    "at": "gage_15",
+                    "reduce": "value",
+                    "evaluate_in": "fem"
+                }
+            ],
+            "plots": [
+                {
+                    "name": "temperature_history_gage15",
+                    "title": "Core Temperature at Gage 15 (Fig. 6)",
+                    "curves": [
+                        {
+                            "source": "simulation",
+                            "x": {
+                                "key": "time",
+                                "scale": 0.000277778
+                            },
+                            "y": {
+                                "key": "temperature_gage15"
+                            },
+                            "label": "FEM simulation"
+                        },
+                        {
+                            "source": "reference",
+                            "ref_id": "gage15_temperature_exp",
+                            "label": "Experiment (Gage 15)"
+                        }
+                    ]
+                },
+                {
+                    "name": "strain_at_gage",
+                    "title": "Horizontal Strain? at Gage 15 (Fig. 7)",
+                    "curves": [
+                        {
+                            "source": "simulation",
+                            "x": {
+                                "key": "time",
+                                "scale": 0.000277778
+                            },
+                            "y": {
+                                "key": "total_strain_gage15_ezz",
+                                "scale": 1000000.0
+                            },
+                            "label": "Total Strain exx FEM"
+                        },
+                        {
+                            "source": "reference",
+                            "ref_id": "gage15_strain_exp",
+                            "label": "Experiment (Gage 15)"
+                        }
+                    ]
+                }
+            ],
+            "save_checkpoint": true,
+            "aux_fields": "*",
+            "export_vtu": true,
+            "save_db": true
+        }
+    }

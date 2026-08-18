@@ -1,0 +1,91 @@
+15:15:36 INFO     tools.simulations: Log file: benchmarks/klemczak-knoppik-wrobel-early-age-cracks/output/OOFEM/logs/run_20260817_151536.log
+15:15:36 INFO     tools.simulations: == STARTING BENCHMARK: klemczak-knoppik-wrobel-early-age-cracks ==
+15:15:36 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/klemczak-knoppik-wrobel-early-age-cracks
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+15:15:36 INFO     tools.simulations: Loading benchmark config: benchmarks/klemczak-knoppik-wrobel-early-age-cracks/benchmark.json
+15:15:36 INFO     tools.simulations: Benchmark: Early-age hydration heat in an externally restrained RC wall cast on a mature foundation (Klemczak & Knoppik-Wrobel 2011, Sec. 2.2) (klemczak-knoppik-wrobel-2011-rc-wall)
+15:15:36 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 45 steps, dt=[61.1 -> 917.0] s
+15:15:36 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[913.2 -> 3652.6] s
+15:15:36 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 130 steps, dt=[3544.5 -> 28356.2] s
+15:15:36 INFO     tools.simulations: Configurations loaded.
+15:15:36 INFO     tools.simulations: Loading mesh...
+15:15:36 INFO     tools.simulations: Mesh loaded: 2258 nodes, 4177 elements (triangle)
+15:15:37 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+15:15:37 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 2258
+  Total DOFs: 2258
+  Fields: 1
+    - temperature: 2258 DOFs (['T'])
+15:15:37 INFO     tools.simulations: Building oofem problem...
+15:15:37 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 45 steps, dt=[61.1 -> 917.0] s
+15:15:37 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[913.2 -> 3652.6] s
+15:15:37 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 130 steps, dt=[3544.5 -> 28356.2] s
+15:15:37 INFO     tools.simulations: oofem problem built: 2258 nodes, 4177 elements, 255 steps (t=[0 -> 1.73e+06])
+15:15:37 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'dT_section' failed: Component 'probe_interior' not in ['T'] for field 'temperature'.
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 162, in q_difference
+    val_a = _apply(ctx.field_values(field_name, cfg["at_a"]), reduce_op)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 94, in field_values
+    raise ValueError(f"Component '{component}' not in {comp_names} for field '{field}'.")
+ValueError: Component 'probe_interior' not in ['T'] for field 'temperature'.
+15:15:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.50e+01,  max=+2.50e+01)
+15:15:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+15:15:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.50e+01,  max=+2.50e+01)
+15:15:37 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+15:15:37 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 5 queries 1 FAILED ──────────────────────────────────
+   Wall interior temperature [degC]                +2.500e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.500e+01   T @ probe_surface
+ ✗ Interior - surface temperature difference [K]   +0.000e+00
+   Time [days]                                     +7.076e-04
+────────────────────────────────────────────────────────────────────
+15:15:37 WARNING  tools.simulations.post.evaluate.queries.display: Query 'dT_section': ValueError: Component 'probe_interior' not in ['T'] for field 'temperature'.
+15:15:38 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'dT_section' failed: Component 'probe_interior' not in ['T'] for field 'temperature'.
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 162, in q_difference
+    val_a = _apply(ctx.field_values(field_name, cfg["at_a"]), reduce_op)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 94, in field_values
+    raise ValueError(f"Component '{component}' not in {comp_names} for field '{field}'.")
+ValueError: Component 'probe_interior' not in ['T'] for field 'temperature'.
+15:15:38 WARNING  tools.simulations.post.evaluate.queries.display: Query 'dT_section': ValueError: Component 'probe_interior' not in ['T'] for field 'temperature'.
+15:15:39 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'dT_section' failed: Component 'probe_interior' not in ['T'] for field 'temperature'.
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 162, in q_difference
+    val_a = _apply(ctx.field_values(field_name, cfg["at_a"]), reduce_op)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 94, in field_values
+    raise ValueError(f"Component '{component}' not in {comp_names} for field '{field}'.")
+ValueError: Component 'probe_interior' not in ['T'] for field 'temperature'.
+15:15:39 WARNING  tools.simulations.post.evaluate.queries.display: Query 'dT_section': ValueError: Component 'probe_interior' not in ['T'] for field 'temperature'.
+15:15:39 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'dT_section' failed: Component 'probe_interior' not in ['T'] for field 'temperature'.
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 162, in q_difference
+    val_a = _apply(ctx.field_values(field_name, cfg["at_a"]), reduce_op)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 94, in field_values
+    raise ValueError(f"Component '{component}' not in {comp_names} for field '{field}'.")
+ValueError: Component 'probe_interior' not in ['T'] for field 'temperature'.
+15:15:39 WARNING  tools.simulations.post.evaluate.queries.display: Query 'dT_section': ValueError: Component 'probe_interior' not in ['T'] for field 'temperature'.

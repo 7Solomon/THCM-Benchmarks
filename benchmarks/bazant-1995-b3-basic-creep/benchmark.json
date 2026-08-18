@@ -1,0 +1,312 @@
+{
+  "metadata": {
+    "id": "bazant-1995-b3-basic-creep",
+    "title": "Model B3 basic creep - worked example Sec. 1.4.5 (sealed cylinder, t'=28 d, sigma=0.4*fc)",
+    "source": {
+      "authors": [
+        "Bazant, Z.P.",
+        "Baweja, S."
+      ],
+      "year": 1995,
+      "journal": "ACI SP-194, Adam Neville Symposium (2000), pp. 1-83"
+    },
+    "dimension": 2,
+    "physics_class": "viscoelasticity (basic creep)",
+    "validation_method": "analytical reference: B3 compliance function Eq. (1.7) with approximate Q, Eq. (1.35)",
+    "validation_target": "Axial strain history under sustained compression; J(112,28)=0.4107e-6/psi=59.56e-6/MPa -> strain 657e-6 at 84 d load duration",
+    "notes": "VERIFICATION case with analytical reference, not an experimental validation. Sealed specimen (h=1.0): drying creep Cd and shrinkage are identically zero, so no humidity field and no drying_shrinkage coupling. Simulation t=0 corresponds to concrete age 28 d (age_at_start_days=28). Geometry is a quarter of a D=6 in cylinder (v/s=0.75 in) but is immaterial: sealed + uniform uniaxial stress => no size effect. ASSUMED: specimen dimensions (not stated in paper; zero impact on target), plane-stress thickness (cancels for prescribed traction)."
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "specimen",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.075,
+            0.30
+          ]
+        },
+        "_comment": "ASSUMED: quarter-cylinder wedge, radius 0.075 m (D=6 in from v/s=0.75 in, Sec. 1.4.5), height 0.30 m. Sealed => geometry does not affect compliance."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "concrete_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "specimen"
+        ]
+      },
+      {
+        "name": "axis_left",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-6,
+            -1e-6,
+            -1e-6,
+            1e-6,
+            0.301,
+            1e-6
+          ]
+        },
+        "_comment": "symmetry axis"
+      },
+      {
+        "name": "base_bottom",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-6,
+            -1e-6,
+            -1e-6,
+            0.076,
+            1e-6,
+            1e-6
+          ]
+        }
+      },
+      {
+        "name": "load_top",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-6,
+            0.299,
+            -1e-6,
+            0.076,
+            0.301,
+            1e-6
+          ]
+        }
+      }
+    ],
+    "points": [
+      {
+        "name": "probe_top",
+        "coordinates": [
+          0.0375,
+          0.30,
+          0.0
+        ],
+        "_comment": "on the node grid for element_size 0.0075 (5 and 40 elements)"
+      }
+    ],
+    "mesh": {
+      "element_size": 0.0075,
+      "order": 1,
+      "recombine": true
+    }
+  },
+  "physics": {
+    "mechanics": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "displacement",
+        "symbol": "u",
+        "type": "vector",
+        "components": [
+          "ux",
+          "uy"
+        ]
+      }
+    },
+    "b3_creep": {
+      "type": "coupling",
+      "target_field": "displacement"
+    }
+  },
+  "materials": {
+    "concrete": {
+      "displacement": {
+        "E": 2.48614e10,
+        "nu": 0.18,
+        "rho": 1888.0,
+        "plane_stress": true,
+        "thickness": 0.075,
+        "_comment_rho": "INFERRED: c + w + a = 219.5 + 131.9 + 1536.2 kg/m3 from the Sec. 1.4.5 mix proportions. Quasi-static creep run with no gravity load and no dynamics, so rho has zero impact on the validation target — it is only a builder requirement.",
+        "_comment_E": "PAPER_VALUE: E28 = 4734*sqrt(27.58 MPa) = 24861 MPa (Eq. 1.16, SI)",
+        "_comment_nu": "PAPER_VALUE: creep Poisson ratio = instantaneous = 0.18 (Commentary C6)",
+        "_comment_thickness": "ASSUMED: cancels for prescribed traction; strain is the validation target"
+      },
+      "b3_creep": {
+        "q1": 2.41338e-11,
+        "q2": 1.387533e-10,
+        "q3": 5.2149e-12,
+        "q4": 5.1991e-12,
+        "E28": 2.48614e10,
+        "n": 0.1,
+        "m": 0.5,
+        "r": 1.7,
+        "age_at_start_days": 28.0,
+        "_comment_q": "PAPER_VALUE: Eq. 1.16-1.18 (SI) for fc=27.58 MPa, c=219.45 kg/m3, w/c=0.60, a/c=7.0, converted 1e-6/MPa -> 1/Pa. Paper's worked inch-pound values: q1=0.1664, q2=0.9564, q3=0.0359, q4=0.0358 x1e-6/psi",
+        "_comment_nmr": "PAPER_VALUE: m=0.5, n=0.1 (Eq. 1.6); r=1.7 is the coefficient in r(t')=1.7*t'^0.12+8 (Eq. 1.36)",
+        "_comment_age": "simulation t=0 = concrete age 28 d = age at loading t'"
+      }
+    }
+  },
+  "boundary_conditions": [
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "axis_left",
+      "_comment": "symmetry: fix normal component only"
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "base_bottom"
+    },
+    {
+      "type": "neumann",
+      "field": "displacement",
+      "component": "uy",
+      "value": -11032000.0,
+      "location": "load_top",
+      "_comment": "PAPER_VALUE: sigma = 1600 psi = 11.032 MPa = 0.4*fc, compression, applied at sim t=0 (age 28 d) and held constant"
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "concrete_domain": {
+        "active_fields": [
+          "displacement"
+        ],
+        "material": "concrete"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 7257600.0,
+    "analysis_type": "transient",
+    "dt_strategy": {
+      "type": "log",
+      "dt_min": 86.4,
+      "dt_max": 432000.0,
+      "n_steps": 60
+    },
+    "_comment_t_end": "7257600 s = 84 d = age 112 d - t' 28 d, the paper's worked endpoint",
+    "_comment_dt": "log spacing 0.001 d -> 5 d resolves the compliance curve over ~4 decades"
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "b3_analytical",
+        "file": "reference/compliance_curve.csv",
+        "has_header": true,
+        "x_col": "t_days",
+        "y_col": "strain",
+        "label": "B3 analytical, Eq. 1.7 (Sec. 1.4.5)",
+        "_comment": "computed from Eq. 1.7 with approximate Q (Eq. 1.35); strain = -J*sigma, compression negative; cross-check J(84 d)=59.56e-6/MPa vs paper 0.4107e-6/psi"
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_days",
+        "type": "formula",
+        "formula": "t / 86400.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Load duration [days]"
+      },
+      {
+        "id": "u_top",
+        "type": "field",
+        "field": "displacement",
+        "component": "uy",
+        "at": "probe_top",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "u_y at top [m]"
+      },
+      {
+        "id": "eps_axial",
+        "type": "formula",
+        "formula": "u_top / 0.30",
+        "depends_on": [
+          "u_top"
+        ],
+        "label": "Axial strain [-]",
+        "_comment": "uniform stress state: strain = u_top / height"
+      },
+      {
+        "id": "J_sim",
+        "type": "formula",
+        "formula": "-eps_axial / 1.1032e7 * 1.0e12",
+        "depends_on": [
+          "eps_axial"
+        ],
+        "label": "Compliance [1e-6/MPa]",
+        "_comment": "J = |eps|/sigma; target 59.56 at 84 d"
+      }
+    ],
+    "plots": [
+      {
+        "name": "strain_history",
+        "title": "Basic creep, sealed, t' = 28 d (B3 worked example Sec. 1.4.5)",
+        "grid": true,
+        "xscale": "log",
+        "x_axis": {
+          "label": "Load duration [days]"
+        },
+        "y_axis": {
+          "label": "Axial strain [-]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "eps_axial"
+            },
+            "label": "OOFEM"
+          },
+          {
+            "source": "reference",
+            "ref_id": "b3_analytical",
+            "label": "B3 analytical"
+          }
+        ]
+      }
+    ],
+    "console": {
+      "summary_every_steps": 10,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_days",
+            "y": "eps_axial",
+            "ref_id": "b3_analytical"
+          }
+        ]
+      }
+    },
+    "save_checkpoint": true,
+    "aux_fields": [
+      "*"
+    ],
+    "export_vtu": true,
+    "save_db": true
+  }
+}

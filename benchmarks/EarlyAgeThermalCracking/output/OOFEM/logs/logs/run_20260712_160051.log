@@ -1,0 +1,257 @@
+16:00:51 INFO     tools.simulations: Log file: debug/EarlyAgeThermalCracking/OOFEM/output/OOFEM/logs/logs/run_20260712_160051.log
+16:00:51 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+16:00:51 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/EarlyAgeThermalCracking/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+16:00:51 INFO     tools.simulations: Loading benchmark config: debug/EarlyAgeThermalCracking/OOFEM/benchmark.json
+16:00:51 INFO     tools.simulations: Benchmark: Thermo-mechanical simulations of early-age concrete cracking — Oslo restrained wall (havlasek-2017-oslo-wall)
+16:00:51 INFO     tools.simulations: Configurations loaded.
+16:00:51 INFO     tools.simulations: Loading mesh...
+16:00:51 INFO     tools.simulations: Mesh loaded: 204 nodes, 509 elements (tetra)
+16:00:51 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+16:00:51 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 204
+  Total DOFs: 816
+  Fields: 2
+    - temperature: 204 DOFs (['T'])
+    - displacement: 612 DOFs (['ux', 'uy', 'uz'])
+16:00:51 INFO     tools.simulations: Building COUPLED oofem problem (lockstep)...
+16:00:51 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[117.9 -> 1473.5] s
+16:00:51 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[1632.0 -> 20791.4] s
+16:00:51 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+16:00:51 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+16:00:51 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+16:00:51 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+16:00:51 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+16:00:51 WARNING  tools.simulations.oofem.problem_builder: thermal_strain keys ['alpha_inf', 'autogenous_shrinkage_max'] (domain 'concrete_domain') have NO oofem mapping and are IGNORED (D9 amendment)
+16:00:51 INFO     tools.simulations.oofem.problem_builder: BC for field 'temperature' skipped by the 'displacement' sub-problem
+16:00:51 INFO     tools.simulations.oofem.problem_builder: BC for field 'temperature' skipped by the 'displacement' sub-problem
+16:00:51 INFO     tools.simulations.oofem.problem_builder: BC for field 'temperature' skipped by the 'displacement' sub-problem
+16:00:51 INFO     tools.simulations: oofem problem built: 204 nodes, 509 elements, 344 steps (t=[0 -> 1.08e+06])
+16:00:51 INFO     tools.simulations.oofem.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+16:00:51 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=+1.50e+01,  max=+1.50e+01)
+16:00:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+16:00:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=+0.00e+00,  max=+0.00e+00)
+16:00:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+16:00:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=+2.44e-08,  max=+2.44e-08)
+16:00:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+16:00:51 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 5 queries 1 FAILED ──────────────────────────────────
+   temperature_gage15             +1.501e+01   T @ gage_15
+   displacement_ux_gage15         +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz        +2.437e-08   ezz @ gage_15
+ ✗ mechanical_strain_gage15_ezz   +0.000e+00
+   temperature_gage15_C           -2.581e+02
+────────────────────────────────────────────────────────────────────
+16:00:51 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:51 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:52 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:53 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:53 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:53 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:53 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:53 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'mechanical_strain_gage15_ezz' failed: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 95, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 70, in q_field
+    vals = ctx.field_values(field, component, location)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 76, in field_values
+    raise KeyError(
+KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"
+16:00:53 WARNING  tools.simulations.post.evaluate.queries.display: Query 'mechanical_strain_gage15_ezz': KeyError: "Unknown field 'mechanical_strain'. Fields: ['temperature', 'displacement'], DOF components: ['T', 'ux', 'uy', 'uz'], element fields: ['stress', 'mechanical_stress', 'total_strain', 'strain', 'damage']"

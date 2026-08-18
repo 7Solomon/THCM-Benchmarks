@@ -1,0 +1,187 @@
+12:18:22 INFO     tools.simulations: Log file: debug/OpenGeoSys/consolidation-with-staggered-scheme/output/OOFEM/logs/run_20260817_121822.log
+12:18:22 INFO     tools.simulations: == STARTING BENCHMARK: consolidation-with-staggered-scheme ==
+12:18:22 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/OpenGeoSys/consolidation-with-staggered-scheme
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+12:18:22 INFO     tools.simulations: Loading benchmark config: debug/OpenGeoSys/consolidation-with-staggered-scheme/benchmark.json
+12:18:22 INFO     tools.simulations: Benchmark: 1-D Biot consolidation of a laterally confined, singly drained column (OGS staggered-scheme consolidation benchmark) (ogs-consolidation-benchmark)
+12:18:22 INFO     tools.simulations: Configurations loaded.
+12:18:22 INFO     tools.simulations: Loading mesh...
+12:18:22 INFO     tools.simulations: Mesh loaded: 373 nodes, 316 elements (quad)
+12:18:22 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:18:22 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 373
+  Total DOFs: 1119
+  Fields: 2
+    - displacement: 746 DOFs (['ux', 'uy'])
+    - pore_pressure: 373 DOFs (['p'])
+12:18:22 INFO     tools.simulations: Building oofem problem...
+12:18:22 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: mobility = intrinsic_permeability/fluid_viscosity = 1e-10 / 0.001 = 1e-07 m2/(Pa.s)
+12:18:22 INFO     tools.simulations: oofem problem built: 373 nodes, 316 elements, 20 steps (t=[0 -> 10])
+12:18:23 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'sigma_yy_xD0p5' failed: 'FEMContextAdapter' object has no attribute 'stress_component'
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 119, in q_stress
+    vals = ctx.stress_component(location, component, coord_sys, cfg.get("domain_filter"))
+           ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'. Did you mean: '_resolve_component'?
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.04e+02,  max=+9.04e+02)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.92e+02,  max=+9.92e+02)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-1.23e-03,  max=-1.23e-03)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries 1 FAILED ─────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +9.039e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +9.925e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +1.000e+03   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +1.000e+03   p @ probe_xD0p8
+   Top settlement [m]                                    -1.228e-03   uy @ probe_top
+ ✗ sigma_yy at x_D = 0.5 [Pa]                            +0.000e+00
+   Time [s]                                              +5.000e-01
+   Dimensionless time t_D = c t / H^2                    +1.667e-03
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +4.094e-02
+   p_D at x_D = 0.5                                      +1.000e+00
+────────────────────────────────────────────────────────────────────
+12:18:23 WARNING  tools.simulations.post.evaluate.queries.display: Query 'sigma_yy_xD0p5': AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'
+12:18:23 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'sigma_yy_xD0p5' failed: 'FEMContextAdapter' object has no attribute 'stress_component'
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 119, in q_stress
+    vals = ctx.stress_component(location, component, coord_sys, cfg.get("domain_filter"))
+           ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'. Did you mean: '_resolve_component'?
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+7.87e+02,  max=+7.87e+02)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.73e+02,  max=+9.73e+02)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-1.84e-03,  max=-1.84e-03)
+12:18:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:23 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries 1 FAILED ─────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +7.871e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +9.733e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +1.000e+03   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +1.000e+03   p @ probe_xD0p8
+   Top settlement [m]                                    -1.840e-03   uy @ probe_top
+ ✗ sigma_yy at x_D = 0.5 [Pa]                            +0.000e+00
+   Time [s]                                              +1.000e+00
+   Dimensionless time t_D = c t / H^2                    +3.333e-03
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +6.132e-02
+   p_D at x_D = 0.5                                      +1.000e+00
+────────────────────────────────────────────────────────────────────
+12:18:23 WARNING  tools.simulations.post.evaluate.queries.display: Query 'sigma_yy_xD0p5': AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'
+12:18:24 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'sigma_yy_xD0p5' failed: 'FEMContextAdapter' object has no attribute 'stress_component'
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 119, in q_stress
+    vals = ctx.stress_component(location, component, coord_sys, cfg.get("domain_filter"))
+           ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'. Did you mean: '_resolve_component'?
+12:18:24 WARNING  tools.simulations.post.evaluate.queries.display: Query 'sigma_yy_xD0p5': AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'
+12:18:24 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'sigma_yy_xD0p5' failed: 'FEMContextAdapter' object has no attribute 'stress_component'
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 119, in q_stress
+    vals = ctx.stress_component(location, component, coord_sys, cfg.get("domain_filter"))
+           ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'. Did you mean: '_resolve_component'?
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+6.16e+02,  max=+6.16e+02)
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.11e+02,  max=+9.11e+02)
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-2.68e-03,  max=-2.68e-03)
+12:18:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:24 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries 1 FAILED ─────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +6.164e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +9.110e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.997e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +1.000e+03   p @ probe_xD0p8
+   Top settlement [m]                                    -2.681e-03   uy @ probe_top
+ ✗ sigma_yy at x_D = 0.5 [Pa]                            +0.000e+00
+   Time [s]                                              +2.000e+00
+   Dimensionless time t_D = c t / H^2                    +6.667e-03
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +8.935e-02
+   p_D at x_D = 0.5                                      +9.997e-01
+────────────────────────────────────────────────────────────────────
+12:18:24 WARNING  tools.simulations.post.evaluate.queries.display: Query 'sigma_yy_xD0p5': AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'
+12:18:24 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'sigma_yy_xD0p5' failed: 'FEMContextAdapter' object has no attribute 'stress_component'
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 119, in q_stress
+    vals = ctx.stress_component(location, component, coord_sys, cfg.get("domain_filter"))
+           ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'. Did you mean: '_resolve_component'?
+12:18:24 WARNING  tools.simulations.post.evaluate.queries.display: Query 'sigma_yy_xD0p5': AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'
+12:18:25 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'sigma_yy_xD0p5' failed: 'FEMContextAdapter' object has no attribute 'stress_component'
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 119, in q_stress
+    vals = ctx.stress_component(location, component, coord_sys, cfg.get("domain_filter"))
+           ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'. Did you mean: '_resolve_component'?
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+5.16e+02,  max=+5.16e+02)
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+8.42e+02,  max=+8.42e+02)
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+9.98e+02,  max=+9.98e+02)
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=+1.00e+03,  max=+1.00e+03)
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               (min=-3.32e-03,  max=-3.32e-03)
+12:18:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                               1 nodes
+12:18:25 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 11 queries 1 FAILED ─────────────────────────────────
+   p at x_D = 0.1 [Pa]                                   +5.158e+02   p @ probe_xD0p1
+   p at x_D = 0.2 [Pa]                                   +8.417e+02   p @ probe_xD0p2
+   p at x_D = 0.5 [Pa]                                   +9.984e+02   p @ probe_xD0p5
+   p at x_D = 0.8 [Pa]                                   +1.000e+03   p @ probe_xD0p8
+   Top settlement [m]                                    -3.317e-03   uy @ probe_top
+ ✗ sigma_yy at x_D = 0.5 [Pa]                            +0.000e+00
+   Time [s]                                              +3.000e+00
+   Dimensionless time t_D = c t / H^2                    +1.000e-02
+   Dimensionless settlement u_D = u (lambda+2G)/(p0 H)   +1.106e-01
+   p_D at x_D = 0.5                                      +9.984e-01
+────────────────────────────────────────────────────────────────────
+12:18:25 WARNING  tools.simulations.post.evaluate.queries.display: Query 'sigma_yy_xD0p5': AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'
+12:18:25 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'sigma_yy_xD0p5' failed: 'FEMContextAdapter' object has no attribute 'stress_component'
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 119, in q_stress
+    vals = ctx.stress_component(location, component, coord_sys, cfg.get("domain_filter"))
+           ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'. Did you mean: '_resolve_component'?
+12:18:25 WARNING  tools.simulations.post.evaluate.queries.display: Query 'sigma_yy_xD0p5': AttributeError: 'FEMContextAdapter' object has no attribute 'stress_component'

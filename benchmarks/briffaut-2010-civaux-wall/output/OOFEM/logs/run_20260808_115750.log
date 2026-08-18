@@ -1,0 +1,31 @@
+11:57:50 INFO     tools.simulations: Log file: debug/briffaut-2010-civaux-wall/GT/output/OOFEM/logs/run_20260808_115750.log
+11:57:50 INFO     tools.simulations: == STARTING BENCHMARK: GT ==
+11:57:50 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/briffaut-2010-civaux-wall/GT
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+11:57:50 INFO     tools.simulations: Loading benchmark config: debug/briffaut-2010-civaux-wall/GT/benchmark.json
+11:57:50 INFO     tools.simulations: Benchmark: Temperature prediction on Civaux Wall during hydration (briffaut-2010-civaux-wall)
+11:57:50 INFO     tools.simulations: Configurations loaded.
+11:57:50 INFO     tools.simulations: Loading mesh...
+11:57:50 INFO     tools.simulations: Mesh loaded: 1425 nodes, 2704 elements (triangle)
+11:57:50 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:57:50 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1425
+  Total DOFs: 1425
+  Fields: 1
+    - temperature: 1425 DOFs (['T'])
+11:57:50 INFO     tools.simulations: Building oofem problem...
+11:57:50 INFO     tools.simulations.oofem.src.builder.problem.solution_plan: physics declares ['displacement', 'temperature'] but assignment.active_fields excludes ['displacement'] -- not building an engine for it (dimension-pin fields are legacy-only; see active_field_names)
+11:57:50 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[40.2 -> 482.1] s
+11:57:50 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[389.4 -> 3894.3] s
+11:57:50 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[1843.1 -> 14745.1] s
+11:57:50 INFO     tools.simulations: oofem problem built: 1425 nodes, 2704 elements, 180 steps (t=[0 -> 5.04e+05])

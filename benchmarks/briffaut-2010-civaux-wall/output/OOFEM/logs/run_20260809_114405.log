@@ -1,0 +1,184 @@
+11:44:05 INFO     tools.simulations: Log file: debug/briffaut-2010-civaux-wall/OOFEM/output/OOFEM/logs/run_20260809_114405.log
+11:44:05 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+11:44:05 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/briffaut-2010-civaux-wall/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+11:44:05 INFO     tools.simulations: Loading benchmark config: debug/briffaut-2010-civaux-wall/OOFEM/benchmark.json
+11:44:05 INFO     tools.simulations: Benchmark: Temperature prediction on Civaux Wall during hydration (briffaut-2010-civaux-wall)
+11:44:05 INFO     tools.simulations: Configurations loaded.
+11:44:05 INFO     tools.simulations: Loading mesh...
+11:44:05 INFO     tools.simulations: Mesh loaded: 1137 nodes, 2148 elements (triangle)
+11:44:05 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:44:05 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1137
+  Total DOFs: 1137
+  Fields: 1
+    - temperature: 1137 DOFs (['T'])
+11:44:05 INFO     tools.simulations: Building oofem problem...
+11:44:05 INFO     tools.simulations.oofem.src.builder.problem.solution_plan: physics declares ['displacement', 'temperature'] but assignment.active_fields excludes ['displacement'] -- not building an engine for it (dimension-pin fields are legacy-only; see active_field_names)
+11:44:05 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[40.2 -> 482.1] s
+11:44:05 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[389.4 -> 3894.3] s
+11:44:05 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[1843.1 -> 14745.1] s
+11:44:06 INFO     tools.simulations: oofem problem built: 1137 nodes, 2148 elements, 180 steps (t=[0 -> 5.04e+05])
+11:44:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.00e+01,  max=+2.00e+01)
+11:44:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.00e+01,  max=+2.00e+01)
+11:44:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.00e+01,  max=+2.00e+01)
+11:44:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.00e+01,  max=+2.00e+01)
+11:44:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:06 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +2.000e+01   T @ gage_core
+   Near-surface temperature [°C]                     +2.000e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +2.000e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +2.000e+01   T @ gage_low_mid
+   Time [hours]                                      +1.116e-02
+────────────────────────────────────────────────────────────────────
+11:44:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.00e+01,  max=+2.00e+01)
+11:44:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+1.99e+01,  max=+1.99e+01)
+11:44:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.00e+01,  max=+2.00e+01)
+11:44:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+1.99e+01,  max=+1.99e+01)
+11:44:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:11 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.02 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +2.003e+01   T @ gage_core
+   Near-surface temperature [°C]                     +1.988e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +2.003e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +1.991e+01   T @ gage_low_mid
+   Time [hours]                                      +4.370e-01
+────────────────────────────────────────────────────────────────────
+11:44:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.04e+01,  max=+2.04e+01)
+11:44:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+1.93e+01,  max=+1.93e+01)
+11:44:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.04e+01,  max=+2.04e+01)
+11:44:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+1.93e+01,  max=+1.93e+01)
+11:44:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:16 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.08 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +2.036e+01   T @ gage_core
+   Near-surface temperature [°C]                     +1.934e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +2.036e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +1.927e+01   T @ gage_low_mid
+   Time [hours]                                      +2.000e+00
+────────────────────────────────────────────────────────────────────
+11:44:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.67e+01,  max=+2.67e+01)
+11:44:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.32e+01,  max=+2.32e+01)
+11:44:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.67e+01,  max=+2.67e+01)
+11:44:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.28e+01,  max=+2.28e+01)
+11:44:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:25 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.20 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +2.665e+01   T @ gage_core
+   Near-surface temperature [°C]                     +2.320e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +2.665e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +2.277e+01   T @ gage_low_mid
+   Time [hours]                                      +4.894e+00
+────────────────────────────────────────────────────────────────────
+11:44:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+5.23e+01,  max=+5.23e+01)
+11:44:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+4.30e+01,  max=+4.30e+01)
+11:44:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+5.23e+01,  max=+5.23e+01)
+11:44:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+4.11e+01,  max=+4.11e+01)
+11:44:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:32 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.42 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +5.232e+01   T @ gage_core
+   Near-surface temperature [°C]                     +4.296e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +5.234e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +4.112e+01   T @ gage_low_mid
+   Time [hours]                                      +1.008e+01
+────────────────────────────────────────────────────────────────────
+11:44:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+6.40e+01,  max=+6.40e+01)
+11:44:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+4.83e+01,  max=+4.83e+01)
+11:44:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+6.43e+01,  max=+6.43e+01)
+11:44:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+4.37e+01,  max=+4.37e+01)
+11:44:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:38 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.81 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +6.401e+01   T @ gage_core
+   Near-surface temperature [°C]                     +4.826e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +6.434e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +4.369e+01   T @ gage_low_mid
+   Time [hours]                                      +1.937e+01
+────────────────────────────────────────────────────────────────────
+11:44:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+6.07e+01,  max=+6.07e+01)
+11:44:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+4.37e+01,  max=+4.37e+01)
+11:44:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+6.24e+01,  max=+6.24e+01)
+11:44:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+3.61e+01,  max=+3.61e+01)
+11:44:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:43 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.50 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +6.072e+01   T @ gage_core
+   Near-surface temperature [°C]                     +4.374e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +6.235e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +3.607e+01   T @ gage_low_mid
+   Time [hours]                                      +3.600e+01
+────────────────────────────────────────────────────────────────────
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+5.33e+01,  max=+5.33e+01)
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+3.84e+01,  max=+3.84e+01)
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+5.61e+01,  max=+5.61e+01)
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+3.02e+01,  max=+3.02e+01)
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:48 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.11 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +5.330e+01   T @ gage_core
+   Near-surface temperature [°C]                     +3.843e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +5.613e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +3.017e+01   T @ gage_low_mid
+   Time [hours]                                      +5.061e+01
+────────────────────────────────────────────────────────────────────
+11:44:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+3.95e+01,  max=+3.95e+01)
+11:44:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.93e+01,  max=+2.93e+01)
+11:44:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+4.33e+01,  max=+4.33e+01)
+11:44:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.24e+01,  max=+2.24e+01)
+11:44:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:54 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.34 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +3.952e+01   T @ gage_core
+   Near-surface temperature [°C]                     +2.926e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +4.334e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +2.237e+01   T @ gage_low_mid
+   Time [hours]                                      +8.017e+01
+────────────────────────────────────────────────────────────────────
+11:44:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.32e+01,  max=+2.32e+01)
+11:44:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+1.86e+01,  max=+1.86e+01)
+11:44:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+2.58e+01,  max=+2.58e+01)
+11:44:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           (min=+1.51e+01,  max=+1.51e+01)
+11:44:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                           1 nodes
+11:44:58 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.83 d · 6 queries ok ────────────────────────────────────────
+   Core temperature [°C]                             +2.318e+01   T @ gage_core
+   Near-surface temperature [°C]                     +1.859e+01   T @ gage_surface
+   Base temperature, 0.15 m above joint [°C]         +2.583e+01   T @ gage_low
+   Lower-lift temperature, 0.50 m above joint [°C]   +1.513e+01   T @ gage_low_mid
+   Time [hours]                                      +1.400e+02
+────────────────────────────────────────────────────────────────────
+11:44:59 INFO     tools.simulations: VTU export: 180 file(s) -> debug/briffaut-2010-civaux-wall/OOFEM/output/OOFEM/vtu
+11:44:59 INFO     tools.simulations: Checkpoint saved -> debug/briffaut-2010-civaux-wall/OOFEM/output/OOFEM/checkpoint.h5  (1.4 MB)
+11:44:59 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 180/180 steps ok) ==

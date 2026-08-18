@@ -1,0 +1,176 @@
+10:46:57 INFO     tools.simulations: Log file: benchmarks/klemczak-knoppik-wrobel-early-age-cracks/output/OOFEM/logs/run_20260818_104657.log
+10:46:57 INFO     tools.simulations: == STARTING BENCHMARK: klemczak-knoppik-wrobel-early-age-cracks ==
+10:46:57 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/klemczak-knoppik-wrobel-early-age-cracks
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+10:46:57 INFO     tools.simulations: Loading benchmark config: benchmarks/klemczak-knoppik-wrobel-early-age-cracks/benchmark.json
+10:46:57 INFO     tools.simulations: Benchmark: Early-age hydration heat in an externally restrained RC wall cast on a mature foundation (Klemczak & Knoppik-Wrobel 2011, Sec. 2.2) (klemczak-knoppik-wrobel-2011-rc-wall)
+10:46:57 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 45 steps, dt=[61.1 -> 917.0] s
+10:46:57 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[913.2 -> 3652.6] s
+10:46:57 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 130 steps, dt=[3544.5 -> 28356.2] s
+10:46:57 INFO     tools.simulations: Configurations loaded.
+10:46:57 INFO     tools.simulations: Loading mesh...
+10:46:57 INFO     tools.simulations: Mesh loaded: 2258 nodes, 4177 elements (triangle)
+10:46:57 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+10:46:57 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 2258
+  Total DOFs: 2258
+  Fields: 1
+    - temperature: 2258 DOFs (['T'])
+10:46:57 INFO     tools.simulations: Building oofem problem...
+10:46:57 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 45 steps, dt=[61.1 -> 917.0] s
+10:46:57 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[913.2 -> 3652.6] s
+10:46:57 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 130 steps, dt=[3544.5 -> 28356.2] s
+10:46:57 INFO     tools.simulations: oofem problem built: 2258 nodes, 4177 elements, 255 steps (t=[0 -> 1.73e+06])
+10:46:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.50e+01,  max=+2.50e+01)
+10:46:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:46:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.50e+01,  max=+2.50e+01)
+10:46:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:46:58 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +2.500e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.500e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +4.190e-07
+   Time [days]                                     +7.076e-04
+────────────────────────────────────────────────────────────────────
+10:47:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.50e+01,  max=+2.50e+01)
+10:47:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.50e+01,  max=+2.50e+01)
+10:47:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.03 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +2.500e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.500e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +1.782e-04
+   Time [days]                                     +2.702e-02
+────────────────────────────────────────────────────────────────────
+10:47:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.50e+01,  max=+2.50e+01)
+10:47:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.50e+01,  max=+2.50e+01)
+10:47:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:20 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.12 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +2.502e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.502e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +2.940e-03
+   Time [days]                                     +1.196e-01
+────────────────────────────────────────────────────────────────────
+10:47:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.55e+01,  max=+2.55e+01)
+10:47:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.54e+01,  max=+2.54e+01)
+10:47:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:30 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.35 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +2.547e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.538e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +8.952e-02
+   Time [days]                                     +3.464e-01
+────────────────────────────────────────────────────────────────────
+10:47:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+3.85e+01,  max=+3.85e+01)
+10:47:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+3.50e+01,  max=+3.50e+01)
+10:47:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:44 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.67 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +3.850e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +3.504e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +3.459e+00
+   Time [days]                                     +6.730e-01
+────────────────────────────────────────────────────────────────────
+10:47:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+5.73e+01,  max=+5.73e+01)
+10:47:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+4.70e+01,  max=+4.70e+01)
+10:47:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:47:57 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.14 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +5.728e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +4.695e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +1.033e+01
+   Time [days]                                     +1.137e+00
+────────────────────────────────────────────────────────────────────
+10:48:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+5.63e+01,  max=+5.63e+01)
+10:48:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:48:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+4.58e+01,  max=+4.58e+01)
+10:48:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:48:09 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.80 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +5.628e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +4.582e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +1.046e+01
+   Time [days]                                     +1.796e+00
+────────────────────────────────────────────────────────────────────
+10:48:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+4.80e+01,  max=+4.80e+01)
+10:48:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:48:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+4.02e+01,  max=+4.02e+01)
+10:48:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:48:24 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.69 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +4.798e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +4.021e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +7.764e+00
+   Time [days]                                     +2.691e+00
+────────────────────────────────────────────────────────────────────
+10:48:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+3.87e+01,  max=+3.87e+01)
+10:48:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:48:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+3.41e+01,  max=+3.41e+01)
+10:48:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:48:39 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.91 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +3.873e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +3.408e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +4.648e+00
+   Time [days]                                     +3.914e+00
+────────────────────────────────────────────────────────────────────
+10:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+3.16e+01,  max=+3.16e+01)
+10:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.94e+01,  max=+2.94e+01)
+10:49:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:00 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.60 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +3.161e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.938e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +2.228e+00
+   Time [days]                                     +5.602e+00
+────────────────────────────────────────────────────────────────────
+10:49:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.77e+01,  max=+2.77e+01)
+10:49:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.68e+01,  max=+2.68e+01)
+10:49:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 7.93 d · 5 queries ok ────────────────────────────────────────
+   Wall interior temperature [degC]                +2.769e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.680e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +8.978e-01
+   Time [days]                                     +7.933e+00
+────────────────────────────────────────────────────────────────────
+10:49:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.62e+01,  max=+2.62e+01)
+10:49:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.58e+01,  max=+2.58e+01)
+10:49:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:21 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 11.15 d · 5 queries ok ───────────────────────────────────────
+   Wall interior temperature [degC]                +2.616e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.578e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +3.797e-01
+   Time [days]                                     +1.115e+01
+────────────────────────────────────────────────────────────────────
+10:49:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.57e+01,  max=+2.57e+01)
+10:49:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.54e+01,  max=+2.54e+01)
+10:49:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:33 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 15.59 d · 5 queries ok ───────────────────────────────────────
+   Wall interior temperature [degC]                +2.566e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.545e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +2.139e-01
+   Time [days]                                     +1.559e+01
+────────────────────────────────────────────────────────────────────
+10:49:40 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.55e+01,  max=+2.55e+01)
+10:49:40 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:40 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         (min=+2.53e+01,  max=+2.53e+01)
+10:49:40 DEBUG    tools.simulations.post.evaluate.queries.display:                                                         1 nodes
+10:49:40 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 20.00 d · 5 queries ok ───────────────────────────────────────
+   Wall interior temperature [degC]                +2.549e+01   T @ probe_interior
+   Wall surface temperature [degC]                 +2.533e+01   T @ probe_surface
+   Interior - surface temperature difference [K]   +1.571e-01
+   Time [days]                                     +2.000e+01
+────────────────────────────────────────────────────────────────────
+10:49:40 INFO     tools.simulations: VTU export: 255 file(s) -> benchmarks/klemczak-knoppik-wrobel-early-age-cracks/output/OOFEM/vtu
+10:49:40 INFO     tools.simulations: Checkpoint saved -> benchmarks/klemczak-knoppik-wrobel-early-age-cracks/output/OOFEM/checkpoint.h5  (3.6 MB)
+10:49:40 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 255/255 steps ok) ==

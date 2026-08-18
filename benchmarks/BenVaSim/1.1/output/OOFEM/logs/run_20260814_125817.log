@@ -1,0 +1,28 @@
+12:58:17 INFO     tools.simulations: Log file: debug/BenVaSim/1.1/output/OOFEM/logs/run_20260814_125817.log
+12:58:17 INFO     tools.simulations: == STARTING BENCHMARK: 1.1 ==
+12:58:17 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/BenVaSim/1.1
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+12:58:17 INFO     tools.simulations: Loading benchmark config: debug/BenVaSim/1.1/benchmark.json
+12:58:17 INFO     tools.simulations: Benchmark: BenVaSim Stage 1 / Model 1.1(a): 1D HM-coupled saturated column (Biot consolidation benchmark) (benvasim-model-1-1a)
+12:58:17 INFO     tools.simulations: Configurations loaded.
+12:58:17 INFO     tools.simulations: Loading mesh...
+12:58:17 INFO     tools.simulations: Mesh loaded: 9627 nodes, 9206 elements (quad)
+12:58:17 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:58:17 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 9627
+  Total DOFs: 28881
+  Fields: 2
+    - displacement: 19254 DOFs (['ux', 'uy'])
+    - pore_pressure: 9627 DOFs (['p'])
+12:58:17 INFO     tools.simulations: Building oofem problem...
+12:58:17 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 465 steps, dt=[999.7 -> 19993561.9] s

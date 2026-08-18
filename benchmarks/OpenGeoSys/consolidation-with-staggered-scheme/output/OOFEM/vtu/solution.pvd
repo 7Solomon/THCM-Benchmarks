@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<VTKFile type="Collection" version="0.1">
+<Collection>
+<DataSet timestep="0.5" group="" part="" file="solution.out.m1.1.vtu"/>
+<DataSet timestep="1" group="" part="" file="solution.out.m1.2.vtu"/>
+<DataSet timestep="1.5" group="" part="" file="solution.out.m1.3.vtu"/>
+<DataSet timestep="2" group="" part="" file="solution.out.m1.4.vtu"/>
+<DataSet timestep="2.5" group="" part="" file="solution.out.m1.5.vtu"/>
+<DataSet timestep="3" group="" part="" file="solution.out.m1.6.vtu"/>
+<DataSet timestep="3.5" group="" part="" file="solution.out.m1.7.vtu"/>
+<DataSet timestep="4" group="" part="" file="solution.out.m1.8.vtu"/>
+<DataSet timestep="4.5" group="" part="" file="solution.out.m1.9.vtu"/>
+<DataSet timestep="5" group="" part="" file="solution.out.m1.10.vtu"/>
+<DataSet timestep="5.5" group="" part="" file="solution.out.m1.11.vtu"/>
+<DataSet timestep="6" group="" part="" file="solution.out.m1.12.vtu"/>
+<DataSet timestep="6.5" group="" part="" file="solution.out.m1.13.vtu"/>
+<DataSet timestep="7" group="" part="" file="solution.out.m1.14.vtu"/>
+<DataSet timestep="7.5" group="" part="" file="solution.out.m1.15.vtu"/>
+<DataSet timestep="8" group="" part="" file="solution.out.m1.16.vtu"/>
+<DataSet timestep="8.5" group="" part="" file="solution.out.m1.17.vtu"/>
+<DataSet timestep="9" group="" part="" file="solution.out.m1.18.vtu"/>
+<DataSet timestep="9.5" group="" part="" file="solution.out.m1.19.vtu"/>
+<DataSet timestep="10" group="" part="" file="solution.out.m1.20.vtu"/>
+</Collection>
+</VTKFile>

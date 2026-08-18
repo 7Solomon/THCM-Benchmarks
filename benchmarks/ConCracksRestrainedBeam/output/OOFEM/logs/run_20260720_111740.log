@@ -1,0 +1,72 @@
+11:17:40 INFO     tools.simulations: Log file: debug/ConCracksRestrainedBeam/OOFEM/output/OOFEM/logs/run_20260720_111740.log
+11:17:40 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+11:17:40 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/ConCracksRestrainedBeam/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+11:17:40 INFO     tools.simulations: Loading benchmark config: debug/ConCracksRestrainedBeam/OOFEM/benchmark.json
+11:17:40 INFO     tools.simulations: Benchmark: ConCrack's Restrained Beam (concrack-restrained-beam)
+11:17:40 INFO     tools.simulations: Configurations loaded.
+11:17:40 INFO     tools.simulations: Loading mesh...
+11:17:40 INFO     tools.simulations: Mesh loaded: 310 nodes, 848 elements (tetra)
+11:17:40 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:17:40 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 310
+  Total DOFs: 1550
+  Fields: 3
+    - temperature: 310 DOFs (['T'])
+    - displacement: 930 DOFs (['ux', 'uy', 'uz'])
+    - humidity: 310 DOFs (['h'])
+11:17:40 INFO     tools.simulations: Building oofem problem...
+11:17:40 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[117.9 -> 1473.5] s
+11:17:40 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 100 steps, dt=[639.5 -> 5115.8] s
+11:17:40 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[4374.3 -> 52491.3] s
+11:17:40 INFO     tools.simulations.oofem.src.builder.problem: 'temperature' sub-problem: skipping BC entries of other fields: displacement x3, humidity x1
+11:17:40 INFO     tools.simulations.oofem.src.builder.problem: 'humidity' sub-problem: skipping BC entries of other fields: displacement x3, temperature x1
+11:17:40 INFO     tools.simulations.oofem.src.builder.problem: 'displacement' sub-problem: skipping BC entries of other fields: temperature x1, humidity x1
+11:17:40 INFO     tools.simulations.oofem.src.builder.problem: mechanical robin: 40 nodalspring element(s) attached
+11:17:40 INFO     tools.simulations: Solution plan: STAGGERED lockstep (2 sources)
+11:17:40 INFO     tools.simulations: oofem problem built: 310 nodes, 848 elements, 300 steps (t=[0 -> 2.59e+06])
+11:17:40 INFO     tools.simulations.oofem.src.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+11:17:40 INFO     tools.simulations.oofem.src.step_loop: lockstep: FT_HumidityConcentration field registered in displacement FieldManager
+11:17:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+2.00e+01,  max=+2.00e+01)
+11:17:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+11:17:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+9.90e-01,  max=+9.90e-01)
+11:17:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+11:17:41 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +2.004e+01   T @ gage_core
+   Core humidity [-]      +9.901e-01   h @ gage_core
+   Time [days]            +1.364e-03
+   Displ. C-D [mm]        -1.450e-04
+   Core strain εzz [με]   -7.911e-02
+────────────────────────────────────────────────────────────────────
+11:17:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+2.04e+01,  max=+2.04e+01)
+11:17:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+11:17:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+9.93e-01,  max=+9.93e-01)
+11:17:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+11:17:48 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.05 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +2.042e+01   T @ gage_core
+   Core humidity [-]      +9.932e-01   h @ gage_core
+   Time [days]            +5.138e-02
+   Displ. C-D [mm]        -3.324e-04
+   Core strain εzz [με]   -2.336e-01
+────────────────────────────────────────────────────────────────────
+11:17:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+2.03e+01,  max=+2.03e+01)
+11:17:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+11:17:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+1.00e+00,  max=+1.00e+00)
+11:17:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+11:17:58 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.17 d · 10 queries ok ───────────────────────────────────────
+   Core temp [°C]         +2.029e+01   T @ gage_core
+   Core humidity [-]      +1.000e+00   h @ gage_core
+   Time [days]            +1.657e-01
+   Displ. C-D [mm]        -2.474e-04
+   Core strain εzz [με]   -5.502e-01
+────────────────────────────────────────────────────────────────────

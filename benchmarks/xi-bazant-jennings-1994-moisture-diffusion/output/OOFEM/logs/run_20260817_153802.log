@@ -1,0 +1,216 @@
+15:38:02 INFO     tools.simulations: Log file: benchmarks/xi-bazant-jennings-1994-moisture-diffusion/output/OOFEM/logs/run_20260817_153802.log
+15:38:02 INFO     tools.simulations: == STARTING BENCHMARK: xi-bazant-jennings-1994-moisture-diffusion ==
+15:38:02 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/xi-bazant-jennings-1994-moisture-diffusion
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+15:38:02 INFO     tools.simulations: Loading benchmark config: benchmarks/xi-bazant-jennings-1994-moisture-diffusion/benchmark.json
+15:38:02 INFO     tools.simulations: Benchmark: Concrete drying - relative humidity history at several depths (Parrott 15 cm slab, w/c=0.58, Type I) (xi-bazant-jennings-1994-parrott-drying)
+15:38:02 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[40.6 -> 7316.8] s
+15:38:02 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[4614.1 -> 27684.7] s
+15:38:02 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[38250.9 -> 612015.0] s
+15:38:02 INFO     tools.simulations: Configurations loaded.
+15:38:02 INFO     tools.simulations: Loading mesh...
+15:38:02 INFO     tools.simulations: Mesh loaded: 2660 nodes, 5018 elements (triangle)
+15:38:02 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+15:38:02 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 2660
+  Total DOFs: 2660
+  Fields: 1
+    - humidity: 2660 DOFs (['H'])
+15:38:02 INFO     tools.simulations: Building oofem problem...
+15:38:02 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[40.6 -> 7316.8] s
+15:38:02 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[4614.1 -> 27684.7] s
+15:38:02 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[38250.9 -> 612015.0] s
+15:38:02 INFO     tools.simulations: oofem problem built: 2660 nodes, 5018 elements, 180 steps (t=[0 -> 1.73e+07])
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:03 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 7 queries ok ────────────────────────────────────────
+   RH @ 0.175 cm   +9.800e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +4.705e-04
+────────────────────────────────────────────────────────────────────
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:12 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.02 d · 7 queries ok ────────────────────────────────────────
+   RH @ 0.175 cm   +9.800e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +2.462e-02
+────────────────────────────────────────────────────────────────────
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:20 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:20 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.17 d · 7 queries ok ────────────────────────────────────────
+   RH @ 0.175 cm   +9.800e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +1.678e-01
+────────────────────────────────────────────────────────────────────
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:26 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:26 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.00 d · 7 queries ok ────────────────────────────────────────
+   RH @ 0.175 cm   +9.800e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +1.000e+00
+────────────────────────────────────────────────────────────────────
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:33 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:33 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.71 d · 7 queries ok ────────────────────────────────────────
+   RH @ 0.175 cm   +9.800e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +2.711e+00
+────────────────────────────────────────────────────────────────────
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:38 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:38 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 7.00 d · 7 queries ok ────────────────────────────────────────
+   RH @ 0.175 cm   +9.797e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +7.000e+00
+────────────────────────────────────────────────────────────────────
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.76e-01,  max=+9.76e-01)
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:46 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:46 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 19.61 d · 7 queries ok ───────────────────────────────────────
+   RH @ 0.175 cm   +9.755e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +1.961e+01
+────────────────────────────────────────────────────────────────────
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.55e-01,  max=+9.55e-01)
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:53 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:53 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 45.06 d · 7 queries ok ───────────────────────────────────────
+   RH @ 0.175 cm   +9.549e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +4.506e+01
+────────────────────────────────────────────────────────────────────
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.01e-01,  max=+9.01e-01)
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:38:59 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:38:59 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 96.41 d · 7 queries ok ───────────────────────────────────────
+   RH @ 0.175 cm   +9.008e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +9.641e+01
+────────────────────────────────────────────────────────────────────
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+8.21e-01,  max=+8.21e-01)
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=+9.80e-01,  max=+9.80e-01)
+15:39:05 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+15:39:05 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 200.00 d · 7 queries ok ──────────────────────────────────────
+   RH @ 0.175 cm   +8.210e-01   H @ p_d175
+   RH @ 1.56 cm    +9.800e-01   H @ p_d156
+   RH @ 3.36 cm    +9.800e-01   H @ p_d336
+   RH @ 5.66 cm    +9.800e-01   H @ p_d566
+   RH @ 12.5 cm    +9.800e-01   H @ p_d1250
+   Time [days]     +2.000e+02
+────────────────────────────────────────────────────────────────────
+15:39:05 INFO     tools.simulations: VTU export: 180 file(s) -> benchmarks/xi-bazant-jennings-1994-moisture-diffusion/output/OOFEM/vtu
+15:39:06 INFO     tools.simulations: Checkpoint saved -> benchmarks/xi-bazant-jennings-1994-moisture-diffusion/output/OOFEM/checkpoint.h5  (1.5 MB)
+15:39:06 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 180/180 steps ok) ==

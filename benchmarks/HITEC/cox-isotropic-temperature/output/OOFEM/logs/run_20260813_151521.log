@@ -1,0 +1,30 @@
+15:15:21 INFO     tools.simulations: Log file: debug/HITEC/cox-isotropic-temperature/oofem/output/OOFEM/logs/run_20260813_151521.log
+15:15:21 INFO     tools.simulations: == STARTING BENCHMARK: oofem ==
+15:15:21 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HITEC/cox-isotropic-temperature/oofem
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+15:15:21 INFO     tools.simulations: Loading benchmark config: debug/HITEC/cox-isotropic-temperature/oofem/benchmark.json
+15:15:21 INFO     tools.simulations: Benchmark: HITEC near-field benchmark - COx claystone, isotropic, heat conduction from gallery (10 y) (hitec-cox-isotropic-temperature)
+15:15:21 INFO     tools.simulations: Configurations loaded.
+15:15:21 INFO     tools.simulations: Loading mesh...
+15:15:23 INFO     tools.simulations: Mesh loaded: 46837 nodes, 92872 elements (triangle)
+15:15:23 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+15:15:23 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 46837
+  Total DOFs: 46837
+  Fields: 1
+    - temperature: 46837 DOFs (['T'])
+15:15:23 INFO     tools.simulations: Building oofem problem...
+15:15:23 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[20152.4 -> 2418289.9] s
+15:15:23 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[3375.0 -> 40499.8] s
+15:15:23 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[103604.3 -> 518021.3] s
+15:15:23 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 160 steps, dt=[399821.1 -> 4797853.2] s

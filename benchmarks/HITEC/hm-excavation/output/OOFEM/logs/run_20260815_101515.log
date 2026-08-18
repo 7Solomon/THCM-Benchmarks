@@ -1,0 +1,561 @@
+10:15:15 INFO     tools.simulations: Log file: debug/HITEC/hm-excavation/output/OOFEM/logs/run_20260815_101515.log
+10:15:15 INFO     tools.simulations: == STARTING BENCHMARK: hm-excavation ==
+10:15:15 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HITEC/hm-excavation
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+10:15:15 INFO     tools.simulations: Loading benchmark config: debug/HITEC/hm-excavation/benchmark.json
+10:15:15 INFO     tools.simulations: Benchmark: HITEC near-field benchmark - COx claystone, isotropic, hydro-mechanical excavation + 6-month waiting phase (hitec-cox-isotropic-hm-excavation)
+10:15:15 INFO     tools.simulations: Configurations loaded.
+10:15:15 INFO     tools.simulations: Loading mesh...
+10:15:15 INFO     tools.simulations: Mesh loaded: 1021 nodes, 944 elements (quad)
+10:15:15 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+10:15:15 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1021
+  Total DOFs: 3063
+  Fields: 2
+    - displacement: 2042 DOFs (['ux', 'uy'])
+    - pore_pressure: 1021 DOFs (['p'])
+10:15:15 INFO     tools.simulations: Building oofem problem...
+10:15:15 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[482.1 -> 5785.7] s
+10:15:15 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[13982.1 -> 167785.1] s
+10:15:15 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[88698.4 -> 443492.1] s
+10:15:15 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: mobility = intrinsic_permeability/fluid_viscosity = 2.3e-20 / 0.001 = 2.3e-17 m2/(Pa.s)
+10:15:15 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: storage 1/Q = 1.02314e-10 1/Pa (from porosity)
+10:15:15 INFO     tools.simulations: oofem problem built: 1021 nodes, 944 elements, 140 steps (t=[0 -> 1.59e+07])
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.57e+04,  max=-2.57e+04)
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.29e+02,  max=-3.29e+02)
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.51e+03,  max=-1.51e+03)
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.23e+02,  max=-1.23e+02)
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.51e-05,  max=-1.51e-05)
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-9.33e-06,  max=-9.33e-06)
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-7.80e-06,  max=-7.80e-06)
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.05e-06,  max=-3.05e-06)
+10:15:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:16 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.01 d · 18 queries ok ───────────────────────────────────────
+   excess p at P1 [Pa]            -2.567e+04   p @ P1
+   excess p at P2 [Pa]            -3.289e+02   p @ P2
+   excess p at P3 [Pa]            -1.512e+03   p @ P3
+   excess p at P4 [Pa]            -1.232e+02   p @ P4
+   ux at P1 [m]                   -1.512e-05   ux @ P1
+   ux at P2 [m]                   -9.335e-06   ux @ P2
+   ux at P3 [m]                   -7.798e-06   ux @ P3
+   ux at P4 [m]                   -3.050e-06   ux @ P4
+   Time [days]                    +5.580e-03
+   absolute p at P1 [MPa]         +4.674e+00
+   absolute p at P2 [MPa]         +4.700e+00
+   absolute p at P3 [MPa]         +4.698e+00
+   absolute p at P4 [MPa]         +4.700e+00
+   radial convergence at P1 [m]   +1.512e-05
+   radial convergence at P2 [m]   +9.335e-06
+   radial convergence at P3 [m]   +7.798e-06
+   radial convergence at P4 [m]   +3.050e-06
+────────────────────────────────────────────────────────────────────
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.57e+05,  max=-2.57e+05)
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.09e+03,  max=-3.09e+03)
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.48e+04,  max=-1.48e+04)
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.23e+03,  max=-1.23e+03)
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.51e-04,  max=-1.51e-04)
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-9.34e-05,  max=-9.34e-05)
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-7.81e-05,  max=-7.81e-05)
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.05e-05,  max=-3.05e-05)
+10:15:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:24 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.08 d · 18 queries ok ───────────────────────────────────────
+   excess p at P1 [Pa]            -2.567e+05   p @ P1
+   excess p at P2 [Pa]            -3.090e+03   p @ P2
+   excess p at P3 [Pa]            -1.477e+04   p @ P3
+   excess p at P4 [Pa]            -1.229e+03   p @ P4
+   ux at P1 [m]                   -1.512e-04   ux @ P1
+   ux at P2 [m]                   -9.344e-05   ux @ P2
+   ux at P3 [m]                   -7.806e-05   ux @ P3
+   ux at P4 [m]                   -3.053e-05   ux @ P4
+   Time [days]                    +7.558e-02
+   absolute p at P1 [MPa]         +4.443e+00
+   absolute p at P2 [MPa]         +4.697e+00
+   absolute p at P3 [MPa]         +4.685e+00
+   absolute p at P4 [MPa]         +4.699e+00
+   radial convergence at P1 [m]   +1.512e-04
+   radial convergence at P2 [m]   +9.344e-05
+   radial convergence at P3 [m]   +7.806e-05
+   radial convergence at P4 [m]   +3.053e-05
+────────────────────────────────────────────────────────────────────
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-5.13e+05,  max=-5.13e+05)
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-5.98e+03,  max=-5.98e+03)
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.87e+04,  max=-2.87e+04)
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.45e+03,  max=-2.45e+03)
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.03e-04,  max=-3.03e-04)
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.87e-04,  max=-1.87e-04)
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.56e-04,  max=-1.56e-04)
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-6.11e-05,  max=-6.11e-05)
+10:15:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:32 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.22 d · 18 queries ok ───────────────────────────────────────
+   excess p at P1 [Pa]            -5.134e+05   p @ P1
+   excess p at P2 [Pa]            -5.977e+03   p @ P2
+   excess p at P3 [Pa]            -2.872e+04   p @ P3
+   excess p at P4 [Pa]            -2.449e+03   p @ P4
+   ux at P1 [m]                   -3.026e-04   ux @ P1
+   ux at P2 [m]                   -1.871e-04   ux @ P2
+   ux at P3 [m]                   -1.563e-04   ux @ P3
+   ux at P4 [m]                   -6.111e-05   ux @ P4
+   Time [days]                    +2.185e-01
+   absolute p at P1 [MPa]         +4.187e+00
+   absolute p at P2 [MPa]         +4.694e+00
+   absolute p at P3 [MPa]         +4.671e+00
+   absolute p at P4 [MPa]         +4.698e+00
+   radial convergence at P1 [m]   +3.026e-04
+   radial convergence at P2 [m]   +1.871e-04
+   radial convergence at P3 [m]   +1.563e-04
+   radial convergence at P4 [m]   +6.111e-05
+────────────────────────────────────────────────────────────────────
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-7.70e+05,  max=-7.70e+05)
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-8.78e+03,  max=-8.78e+03)
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-4.18e+04,  max=-4.18e+04)
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.66e+03,  max=-3.66e+03)
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-4.54e-04,  max=-4.54e-04)
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.81e-04,  max=-2.81e-04)
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.35e-04,  max=-2.35e-04)
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-9.17e-05,  max=-9.17e-05)
+10:15:39 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:39 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.49 d · 18 queries ok ───────────────────────────────────────
+   excess p at P1 [Pa]            -7.701e+05   p @ P1
+   excess p at P2 [Pa]            -8.784e+03   p @ P2
+   excess p at P3 [Pa]            -4.185e+04   p @ P3
+   excess p at P4 [Pa]            -3.661e+03   p @ P4
+   ux at P1 [m]                   -4.540e-04   ux @ P1
+   ux at P2 [m]                   -2.808e-04   ux @ P2
+   ux at P3 [m]                   -2.346e-04   ux @ P3
+   ux at P4 [m]                   -9.174e-05   ux @ P4
+   Time [days]                    +4.888e-01
+   absolute p at P1 [MPa]         +3.930e+00
+   absolute p at P2 [MPa]         +4.691e+00
+   absolute p at P3 [MPa]         +4.658e+00
+   absolute p at P4 [MPa]         +4.696e+00
+   radial convergence at P1 [m]   +4.540e-04
+   radial convergence at P2 [m]   +2.808e-04
+   radial convergence at P3 [m]   +2.346e-04
+   radial convergence at P4 [m]   +9.174e-05
+────────────────────────────────────────────────────────────────────
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.03e+06,  max=-1.03e+06)
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.15e+04,  max=-1.15e+04)
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-5.42e+04,  max=-5.42e+04)
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-4.86e+03,  max=-4.86e+03)
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-6.05e-04,  max=-6.05e-04)
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.75e-04,  max=-3.75e-04)
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.13e-04,  max=-3.13e-04)
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.22e-04,  max=-1.22e-04)
+10:15:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:48 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.00 d · 18 queries ok ───────────────────────────────────────
+   excess p at P1 [Pa]            -1.027e+06   p @ P1
+   excess p at P2 [Pa]            -1.153e+04   p @ P2
+   excess p at P3 [Pa]            -5.421e+04   p @ P3
+   excess p at P4 [Pa]            -4.864e+03   p @ P4
+   ux at P1 [m]                   -6.054e-04   ux @ P1
+   ux at P2 [m]                   -3.746e-04   ux @ P2
+   ux at P3 [m]                   -3.130e-04   ux @ P3
+   ux at P4 [m]                   -1.224e-04   ux @ P4
+   Time [days]                    +1.000e+00
+   absolute p at P1 [MPa]         +3.673e+00
+   absolute p at P2 [MPa]         +4.688e+00
+   absolute p at P3 [MPa]         +4.646e+00
+   absolute p at P4 [MPa]         +4.695e+00
+   radial convergence at P1 [m]   +6.054e-04
+   radial convergence at P2 [m]   +3.746e-04
+   radial convergence at P3 [m]   +3.130e-04
+   radial convergence at P4 [m]   +1.224e-04
+────────────────────────────────────────────────────────────────────
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.28e+06,  max=-1.28e+06)
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.42e+04,  max=-1.42e+04)
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-6.58e+04,  max=-6.58e+04)
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-6.06e+03,  max=-6.06e+03)
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-7.57e-04,  max=-7.57e-04)
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-4.69e-04,  max=-4.69e-04)
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.91e-04,  max=-3.91e-04)
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.53e-04,  max=-1.53e-04)
+10:15:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:15:58 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.19 d · 18 queries ok ───────────────────────────────────────
+   excess p at P1 [Pa]            -1.283e+06   p @ P1
+   excess p at P2 [Pa]            -1.421e+04   p @ P2
+   excess p at P3 [Pa]            -6.585e+04   p @ P3
+   excess p at P4 [Pa]            -6.059e+03   p @ P4
+   ux at P1 [m]                   -7.568e-04   ux @ P1
+   ux at P2 [m]                   -4.686e-04   ux @ P2
+   ux at P3 [m]                   -3.914e-04   ux @ P3
+   ux at P4 [m]                   -1.531e-04   ux @ P4
+   Time [days]                    +3.192e+00
+   absolute p at P1 [MPa]         +3.417e+00
+   absolute p at P2 [MPa]         +4.686e+00
+   absolute p at P3 [MPa]         +4.634e+00
+   absolute p at P4 [MPa]         +4.694e+00
+   radial convergence at P1 [m]   +7.568e-04
+   radial convergence at P2 [m]   +4.686e-04
+   radial convergence at P3 [m]   +3.914e-04
+   radial convergence at P4 [m]   +1.531e-04
+────────────────────────────────────────────────────────────────────
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.54e+06,  max=-1.54e+06)
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.69e+04,  max=-1.69e+04)
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-7.68e+04,  max=-7.68e+04)
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-7.25e+03,  max=-7.25e+03)
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-9.08e-04,  max=-9.08e-04)
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-5.63e-04,  max=-5.63e-04)
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-4.70e-04,  max=-4.70e-04)
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.84e-04,  max=-1.84e-04)
+10:16:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 7.34 d · 18 queries ok ───────────────────────────────────────
+   excess p at P1 [Pa]            -1.540e+06   p @ P1
+   excess p at P2 [Pa]            -1.687e+04   p @ P2
+   excess p at P3 [Pa]            -7.681e+04   p @ P3
+   excess p at P4 [Pa]            -7.246e+03   p @ P4
+   ux at P1 [m]                   -9.082e-04   ux @ P1
+   ux at P2 [m]                   -5.626e-04   ux @ P2
+   ux at P3 [m]                   -4.700e-04   ux @ P3
+   ux at P4 [m]                   -1.838e-04   ux @ P4
+   Time [days]                    +7.337e+00
+   absolute p at P1 [MPa]         +3.160e+00
+   absolute p at P2 [MPa]         +4.683e+00
+   absolute p at P3 [MPa]         +4.623e+00
+   absolute p at P4 [MPa]         +4.693e+00
+   radial convergence at P1 [m]   +9.082e-04
+   radial convergence at P2 [m]   +5.626e-04
+   radial convergence at P3 [m]   +4.700e-04
+   radial convergence at P4 [m]   +1.838e-04
+────────────────────────────────────────────────────────────────────
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.80e+06,  max=-1.80e+06)
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.95e+04,  max=-1.95e+04)
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-8.71e+04,  max=-8.71e+04)
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-8.42e+03,  max=-8.42e+03)
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.06e-03,  max=-1.06e-03)
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-6.57e-04,  max=-6.57e-04)
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-5.49e-04,  max=-5.49e-04)
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.15e-04,  max=-2.15e-04)
+10:16:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:21 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 15.18 d · 18 queries ok ──────────────────────────────────────
+   excess p at P1 [Pa]            -1.797e+06   p @ P1
+   excess p at P2 [Pa]            -1.952e+04   p @ P2
+   excess p at P3 [Pa]            -8.714e+04   p @ P3
+   excess p at P4 [Pa]            -8.425e+03   p @ P4
+   ux at P1 [m]                   -1.060e-03   ux @ P1
+   ux at P2 [m]                   -6.568e-04   ux @ P2
+   ux at P3 [m]                   -5.486e-04   ux @ P3
+   ux at P4 [m]                   -2.146e-04   ux @ P4
+   Time [days]                    +1.518e+01
+   absolute p at P1 [MPa]         +2.903e+00
+   absolute p at P2 [MPa]         +4.680e+00
+   absolute p at P3 [MPa]         +4.613e+00
+   absolute p at P4 [MPa]         +4.692e+00
+   radial convergence at P1 [m]   +1.060e-03
+   radial convergence at P2 [m]   +6.568e-04
+   radial convergence at P3 [m]   +5.486e-04
+   radial convergence at P4 [m]   +2.146e-04
+────────────────────────────────────────────────────────────────────
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.05e+06,  max=-2.05e+06)
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.22e+04,  max=-2.22e+04)
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-9.69e+04,  max=-9.69e+04)
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-9.60e+03,  max=-9.60e+03)
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.21e-03,  max=-1.21e-03)
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-7.51e-04,  max=-7.51e-04)
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-6.27e-04,  max=-6.27e-04)
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.45e-04,  max=-2.45e-04)
+10:16:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:33 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 30.00 d · 18 queries ok ──────────────────────────────────────
+   excess p at P1 [Pa]            -2.054e+06   p @ P1
+   excess p at P2 [Pa]            -2.220e+04   p @ P2
+   excess p at P3 [Pa]            -9.688e+04   p @ P3
+   excess p at P4 [Pa]            -9.595e+03   p @ P4
+   ux at P1 [m]                   -1.211e-03   ux @ P1
+   ux at P2 [m]                   -7.509e-04   ux @ P2
+   ux at P3 [m]                   -6.273e-04   ux @ P3
+   ux at P4 [m]                   -2.453e-04   ux @ P4
+   Time [days]                    +3.000e+01
+   absolute p at P1 [MPa]         +2.646e+00
+   absolute p at P2 [MPa]         +4.678e+00
+   absolute p at P3 [MPa]         +4.603e+00
+   absolute p at P4 [MPa]         +4.690e+00
+   radial convergence at P1 [m]   +1.211e-03
+   radial convergence at P2 [m]   +7.509e-04
+   radial convergence at P3 [m]   +6.273e-04
+   radial convergence at P4 [m]   +2.453e-04
+────────────────────────────────────────────────────────────────────
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.31e+06,  max=-2.31e+06)
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.49e+04,  max=-2.49e+04)
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.06e+05,  max=-1.06e+05)
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.08e+04,  max=-1.08e+04)
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.36e-03,  max=-1.36e-03)
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-8.45e-04,  max=-8.45e-04)
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-7.06e-04,  max=-7.06e-04)
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.76e-04,  max=-2.76e-04)
+10:16:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:41 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 41.64 d · 18 queries ok ──────────────────────────────────────
+   excess p at P1 [Pa]            -2.310e+06   p @ P1
+   excess p at P2 [Pa]            -2.491e+04   p @ P2
+   excess p at P3 [Pa]            -1.060e+05   p @ P3
+   excess p at P4 [Pa]            -1.076e+04   p @ P4
+   ux at P1 [m]                   -1.363e-03   ux @ P1
+   ux at P2 [m]                   -8.452e-04   ux @ P2
+   ux at P3 [m]                   -7.060e-04   ux @ P3
+   ux at P4 [m]                   -2.761e-04   ux @ P4
+   Time [days]                    +4.164e+01
+   absolute p at P1 [MPa]         +2.390e+00
+   absolute p at P2 [MPa]         +4.675e+00
+   absolute p at P3 [MPa]         +4.594e+00
+   absolute p at P4 [MPa]         +4.689e+00
+   radial convergence at P1 [m]   +1.363e-03
+   radial convergence at P2 [m]   +8.452e-04
+   radial convergence at P3 [m]   +7.060e-04
+   radial convergence at P4 [m]   +2.761e-04
+────────────────────────────────────────────────────────────────────
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.57e+06,  max=-2.57e+06)
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.77e+04,  max=-2.77e+04)
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.15e+05,  max=-1.15e+05)
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.19e+04,  max=-1.19e+04)
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.51e-03,  max=-1.51e-03)
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-9.40e-04,  max=-9.40e-04)
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-7.85e-04,  max=-7.85e-04)
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.07e-04,  max=-3.07e-04)
+10:16:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:48 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 56.94 d · 18 queries ok ──────────────────────────────────────
+   excess p at P1 [Pa]            -2.567e+06   p @ P1
+   excess p at P2 [Pa]            -2.768e+04   p @ P2
+   excess p at P3 [Pa]            -1.147e+05   p @ P3
+   excess p at P4 [Pa]            -1.191e+04   p @ P4
+   ux at P1 [m]                   -1.514e-03   ux @ P1
+   ux at P2 [m]                   -9.395e-04   ux @ P2
+   ux at P3 [m]                   -7.848e-04   ux @ P3
+   ux at P4 [m]                   -3.069e-04   ux @ P4
+   Time [days]                    +5.694e+01
+   absolute p at P1 [MPa]         +2.133e+00
+   absolute p at P2 [MPa]         +4.672e+00
+   absolute p at P3 [MPa]         +4.585e+00
+   absolute p at P4 [MPa]         +4.688e+00
+   radial convergence at P1 [m]   +1.514e-03
+   radial convergence at P2 [m]   +9.395e-04
+   radial convergence at P3 [m]   +7.848e-04
+   radial convergence at P4 [m]   +3.069e-04
+────────────────────────────────────────────────────────────────────
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.82e+06,  max=-2.82e+06)
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.05e+04,  max=-3.05e+04)
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.23e+05,  max=-1.23e+05)
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.31e+04,  max=-1.31e+04)
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.67e-03,  max=-1.67e-03)
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.03e-03,  max=-1.03e-03)
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-8.64e-04,  max=-8.64e-04)
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.38e-04,  max=-3.38e-04)
+10:16:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:16:56 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 77.03 d · 18 queries ok ──────────────────────────────────────
+   excess p at P1 [Pa]            -2.824e+06   p @ P1
+   excess p at P2 [Pa]            -3.050e+04   p @ P2
+   excess p at P3 [Pa]            -1.228e+05   p @ P3
+   excess p at P4 [Pa]            -1.306e+04   p @ P4
+   ux at P1 [m]                   -1.666e-03   ux @ P1
+   ux at P2 [m]                   -1.034e-03   ux @ P2
+   ux at P3 [m]                   -8.637e-04   ux @ P3
+   ux at P4 [m]                   -3.378e-04   ux @ P4
+   Time [days]                    +7.703e+01
+   absolute p at P1 [MPa]         +1.876e+00
+   absolute p at P2 [MPa]         +4.669e+00
+   absolute p at P3 [MPa]         +4.577e+00
+   absolute p at P4 [MPa]         +4.687e+00
+   radial convergence at P1 [m]   +1.666e-03
+   radial convergence at P2 [m]   +1.034e-03
+   radial convergence at P3 [m]   +8.637e-04
+   radial convergence at P4 [m]   +3.378e-04
+────────────────────────────────────────────────────────────────────
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.08e+06,  max=-3.08e+06)
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.34e+04,  max=-3.34e+04)
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.31e+05,  max=-1.31e+05)
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.42e+04,  max=-1.42e+04)
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.82e-03,  max=-1.82e-03)
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.13e-03,  max=-1.13e-03)
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-9.43e-04,  max=-9.43e-04)
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.69e-04,  max=-3.69e-04)
+10:17:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:03 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 103.42 d · 18 queries ok ─────────────────────────────────────
+   excess p at P1 [Pa]            -3.080e+06   p @ P1
+   excess p at P2 [Pa]            -3.338e+04   p @ P2
+   excess p at P3 [Pa]            -1.305e+05   p @ P3
+   excess p at P4 [Pa]            -1.420e+04   p @ P4
+   ux at P1 [m]                   -1.817e-03   ux @ P1
+   ux at P2 [m]                   -1.128e-03   ux @ P2
+   ux at P3 [m]                   -9.426e-04   ux @ P3
+   ux at P4 [m]                   -3.686e-04   ux @ P4
+   Time [days]                    +1.034e+02
+   absolute p at P1 [MPa]         +1.620e+00
+   absolute p at P2 [MPa]         +4.667e+00
+   absolute p at P3 [MPa]         +4.569e+00
+   absolute p at P4 [MPa]         +4.686e+00
+   radial convergence at P1 [m]   +1.817e-03
+   radial convergence at P2 [m]   +1.128e-03
+   radial convergence at P3 [m]   +9.426e-04
+   radial convergence at P4 [m]   +3.686e-04
+────────────────────────────────────────────────────────────────────
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.34e+06,  max=-3.34e+06)
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.63e+04,  max=-3.63e+04)
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.38e+05,  max=-1.38e+05)
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.53e+04,  max=-1.53e+04)
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.97e-03,  max=-1.97e-03)
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.22e-03,  max=-1.22e-03)
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.02e-03,  max=-1.02e-03)
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.99e-04,  max=-3.99e-04)
+10:17:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:11 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 138.08 d · 18 queries ok ─────────────────────────────────────
+   excess p at P1 [Pa]            -3.337e+06   p @ P1
+   excess p at P2 [Pa]            -3.632e+04   p @ P2
+   excess p at P3 [Pa]            -1.378e+05   p @ P3
+   excess p at P4 [Pa]            -1.533e+04   p @ P4
+   ux at P1 [m]                   -1.969e-03   ux @ P1
+   ux at P2 [m]                   -1.223e-03   ux @ P2
+   ux at P3 [m]                   -1.022e-03   ux @ P3
+   ux at P4 [m]                   -3.995e-04   ux @ P4
+   Time [days]                    +1.381e+02
+   absolute p at P1 [MPa]         +1.363e+00
+   absolute p at P2 [MPa]         +4.664e+00
+   absolute p at P3 [MPa]         +4.562e+00
+   absolute p at P4 [MPa]         +4.685e+00
+   radial convergence at P1 [m]   +1.969e-03
+   radial convergence at P2 [m]   +1.223e-03
+   radial convergence at P3 [m]   +1.022e-03
+   radial convergence at P4 [m]   +3.995e-04
+────────────────────────────────────────────────────────────────────
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.59e+06,  max=-3.59e+06)
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-3.93e+04,  max=-3.93e+04)
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.45e+05,  max=-1.45e+05)
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.65e+04,  max=-1.65e+04)
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-2.12e-03,  max=-2.12e-03)
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.32e-03,  max=-1.32e-03)
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-1.10e-03,  max=-1.10e-03)
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        (min=-4.30e-04,  max=-4.30e-04)
+10:17:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                        1 nodes
+10:17:18 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 183.62 d · 18 queries ok ─────────────────────────────────────
+   excess p at P1 [Pa]            -3.594e+06   p @ P1
+   excess p at P2 [Pa]            -3.930e+04   p @ P2
+   excess p at P3 [Pa]            -1.446e+05   p @ P3
+   excess p at P4 [Pa]            -1.646e+04   p @ P4
+   ux at P1 [m]                   -2.120e-03   ux @ P1
+   ux at P2 [m]                   -1.317e-03   ux @ P2
+   ux at P3 [m]                   -1.101e-03   ux @ P3
+   ux at P4 [m]                   -4.304e-04   ux @ P4
+   Time [days]                    +1.836e+02
+   absolute p at P1 [MPa]         +1.106e+00
+   absolute p at P2 [MPa]         +4.661e+00
+   absolute p at P3 [MPa]         +4.555e+00
+   absolute p at P4 [MPa]         +4.684e+00
+   radial convergence at P1 [m]   +2.120e-03
+   radial convergence at P2 [m]   +1.317e-03
+   radial convergence at P3 [m]   +1.101e-03
+   radial convergence at P4 [m]   +4.304e-04
+────────────────────────────────────────────────────────────────────
+10:17:18 INFO     tools.simulations: VTU export: 140 file(s) -> debug/HITEC/hm-excavation/output/OOFEM/vtu
+10:17:18 INFO     tools.simulations: Checkpoint saved -> debug/HITEC/hm-excavation/output/OOFEM/checkpoint.h5  (3.2 MB)
+10:17:18 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 140/140 steps ok) ==

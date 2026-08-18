@@ -1,0 +1,338 @@
+{
+    "entities": [
+        {
+            "id": "plate",
+            "type": "rectangle",
+            "parameters": {
+                "origin": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    100.0,
+                    100.0
+                ]
+            }
+        },
+        {
+            "id": "gallery",
+            "type": "prism",
+            "parameters": {
+                "base_polygon": [
+                    [
+                        1.25,
+                        0.0
+                    ],
+                    [
+                        1.225982,
+                        0.243863
+                    ],
+                    [
+                        1.154849,
+                        0.478354
+                    ],
+                    [
+                        1.039337,
+                        0.694463
+                    ],
+                    [
+                        0.883883,
+                        0.883883
+                    ],
+                    [
+                        0.694463,
+                        1.039337
+                    ],
+                    [
+                        0.478354,
+                        1.154849
+                    ],
+                    [
+                        0.243863,
+                        1.225982
+                    ],
+                    [
+                        0.0,
+                        1.25
+                    ],
+                    [
+                        0.0,
+                        0.0
+                    ]
+                ],
+                "height": 1.0
+            },
+            "transform": [
+                {
+                    "type": "translate",
+                    "vector": [
+                        0.0,
+                        0.0,
+                        -0.5
+                    ]
+                }
+            ],
+            "_comment": "8-chord polygonal approximation of the 1.25 m quarter gallery (area error ~0.2%); chords enable global-component Neumann tractions"
+        }
+    ],
+    "operations": [
+        {
+            "type": "cut",
+            "targets": [
+                "plate"
+            ],
+            "tools": [
+                "gallery"
+            ],
+            "remove_tools": true,
+            "result_id": "host_rock"
+        }
+    ],
+    "physical_groups": [
+        {
+            "name": "host_domain",
+            "dimension": 2,
+            "selection": {
+                "box": [
+                    -1e-06,
+                    -1e-06,
+                    -1e-06,
+                    100.000001,
+                    100.000001,
+                    1e-06
+                ]
+            }
+        },
+        {
+            "name": "gallery_wall",
+            "dimension": 1,
+            "selection": {
+                "type": "distance_from_axis",
+                "axis_point": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "radius": 1.25,
+                "tolerance": 0.01
+            },
+            "_comment": "hydraulic wall BC target; tolerance 0.01 spans chord midpoints (r=1.244) to vertices (r=1.25)"
+        },
+        {
+            "name": "sym_bottom",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    0.0,
+                    -1e-06,
+                    -1e-06,
+                    100.000001,
+                    1e-06,
+                    1e-06
+                ]
+            }
+        },
+        {
+            "name": "sym_left",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    -1e-06,
+                    0.0,
+                    -1e-06,
+                    1e-06,
+                    100.000001,
+                    1e-06
+                ]
+            }
+        },
+        {
+            "name": "far_right",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    99.999999,
+                    -1e-06,
+                    -1e-06,
+                    100.000001,
+                    100.000001,
+                    1e-06
+                ]
+            }
+        },
+        {
+            "name": "far_top",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    -1e-06,
+                    99.999999,
+                    -1e-06,
+                    100.000001,
+                    100.000001,
+                    1e-06
+                ]
+            }
+        },
+        {
+            "name": "wall_chord_0",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    1.148,
+                    0.0319,
+                    -1e-06,
+                    1.328,
+                    0.2119,
+                    1e-06
+                ]
+            },
+            "_comment": "center-selecting box; verify in mesh log that each chord group reports >=1 edge and no duplicates"
+        },
+        {
+            "name": "wall_chord_1",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    1.1004,
+                    0.2711,
+                    -1e-06,
+                    1.2804,
+                    0.4511,
+                    1e-06
+                ]
+            },
+            "_comment": "center-selecting box; verify in mesh log that each chord group reports >=1 edge and no duplicates"
+        },
+        {
+            "name": "wall_chord_2",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    1.0071,
+                    0.4964,
+                    -1e-06,
+                    1.1871,
+                    0.6764,
+                    1e-06
+                ]
+            },
+            "_comment": "center-selecting box; verify in mesh log that each chord group reports >=1 edge and no duplicates"
+        },
+        {
+            "name": "wall_chord_3",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    0.8716,
+                    0.6992,
+                    -1e-06,
+                    1.0516,
+                    0.8792,
+                    1e-06
+                ]
+            },
+            "_comment": "center-selecting box; verify in mesh log that each chord group reports >=1 edge and no duplicates"
+        },
+        {
+            "name": "wall_chord_4",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    0.6992,
+                    0.8716,
+                    -1e-06,
+                    0.8792,
+                    1.0516,
+                    1e-06
+                ]
+            },
+            "_comment": "center-selecting box; verify in mesh log that each chord group reports >=1 edge and no duplicates"
+        },
+        {
+            "name": "wall_chord_5",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    0.4964,
+                    1.0071,
+                    -1e-06,
+                    0.6764,
+                    1.1871,
+                    1e-06
+                ]
+            },
+            "_comment": "center-selecting box; verify in mesh log that each chord group reports >=1 edge and no duplicates"
+        },
+        {
+            "name": "wall_chord_6",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    0.2711,
+                    1.1004,
+                    -1e-06,
+                    0.4511,
+                    1.2804,
+                    1e-06
+                ]
+            },
+            "_comment": "center-selecting box; verify in mesh log that each chord group reports >=1 edge and no duplicates"
+        },
+        {
+            "name": "wall_chord_7",
+            "dimension": 1,
+            "selection": {
+                "box": [
+                    0.0319,
+                    1.148,
+                    -1e-06,
+                    0.2119,
+                    1.328,
+                    1e-06
+                ]
+            },
+            "_comment": "center-selecting box; verify in mesh log that each chord group reports >=1 edge and no duplicates"
+        }
+    ],
+    "points": [
+        {
+            "name": "P1",
+            "coordinates": [
+                1.25,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "P2",
+            "coordinates": [
+                1.9,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "P3",
+            "coordinates": [
+                2.5,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "P4",
+            "coordinates": [
+                6.25,
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "mesh": {
+        "element_size": 0.5,
+        "recombine": true,
+        "_comment": "recombine=true MANDATORY: hydro_mechanical runs on quads only (upquad11), plane strain, unit depth. 0.5 m nominal -> ~40k quads; coarsen via --mesh-size preset if slow, refine if pressure checkerboards."
+    }
+}

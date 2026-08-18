@@ -1,0 +1,28 @@
+14:35:52 INFO     tools.simulations: Log file: debug/ConCracksRestrainedBeam/OOFEM/output/OOFEM/logs/run_20260713_143552.log
+14:35:52 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+14:35:52 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/ConCracksRestrainedBeam/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+14:35:52 INFO     tools.simulations: Loading benchmark config: debug/ConCracksRestrainedBeam/OOFEM/benchmark.json
+14:35:52 INFO     tools.simulations: Benchmark: ConCrack's Restrained Beam (concrack-restrained-beam)
+14:35:52 INFO     tools.simulations: Configurations loaded.
+14:35:52 INFO     tools.simulations: Loading mesh...
+14:35:52 INFO     tools.simulations: Mesh loaded: 92 nodes, 208 elements (tetra)
+14:35:53 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+14:35:53 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 92
+  Total DOFs: 460
+  Fields: 3
+    - temperature: 92 DOFs (['T'])
+    - displacement: 276 DOFs (['ux', 'uy', 'uz'])
+    - humidity: 92 DOFs (['h'])
+14:35:53 INFO     tools.simulations: Building COUPLED oofem problem (lockstep)...

@@ -1,0 +1,74 @@
+14:02:57 INFO     tools.simulations: Log file: benchmarks/ATENA/TPBB/output/OOFEM/logs/run_20260817_140257.log
+14:02:57 INFO     tools.simulations: == STARTING BENCHMARK: TPBB ==
+14:02:57 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/ATENA/TPBB
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+14:02:57 INFO     tools.simulations: Loading benchmark config: benchmarks/ATENA/TPBB/benchmark.json
+14:02:57 INFO     tools.simulations: Benchmark: Three-Point Bending Beam — Tensile Strength Determination (tpbb-atena-three-point-bending)
+14:02:57 INFO     tools.simulations: Configurations loaded.
+14:02:57 INFO     tools.simulations: Loading mesh...
+14:02:57 INFO     tools.simulations: Mesh loaded: 220 nodes, 368 elements (triangle)
+14:02:57 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+14:02:57 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 220
+  Total DOFs: 440
+  Fields: 1
+    - displacement: 440 DOFs (['ux', 'uy'])
+14:02:57 INFO     tools.simulations: Building oofem problem...
+14:02:57 INFO     tools.simulations: oofem problem built: 220 nodes, 368 elements, 64 steps (t=[0 -> 1])
+14:02:58 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=-1.00e-05,  max=-1.00e-05)
+14:02:58 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+14:02:58 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=-1.79e+03,  max=-1.79e+03)
+14:02:58 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+14:02:58 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 5 queries ok ────────────────────────────────────────
+   t               +2.500e-02
+   uy_loadpoint    -1.000e-05   uy @ load_point_gage
+   reaction_load   -1.787e+03   uy @ load_point_gage
+   deflection_mm   +1.000e-02
+   load_kN         +1.787e+00
+────────────────────────────────────────────────────────────────────
+14:03:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=-1.38e-04,  max=-1.38e-04)
+14:03:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+14:03:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=-8.25e+03,  max=-8.25e+03)
+14:03:03 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+14:03:03 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 5 queries ok ────────────────────────────────────────
+   t               +3.438e-01
+   uy_loadpoint    -1.375e-04   uy @ load_point_gage
+   reaction_load   -8.248e+03   uy @ load_point_gage
+   deflection_mm   +1.375e-01
+   load_kN         +8.248e+00
+────────────────────────────────────────────────────────────────────
+14:03:06 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=-2.60e-04,  max=-2.60e-04)
+14:03:06 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+14:03:06 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=-1.21e+03,  max=-1.21e+03)
+14:03:06 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+14:03:06 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 5 queries ok ────────────────────────────────────────
+   t               +6.500e-01
+   uy_loadpoint    -2.600e-04   uy @ load_point_gage
+   reaction_load   -1.211e+03   uy @ load_point_gage
+   deflection_mm   +2.600e-01
+   load_kN         +1.211e+00
+────────────────────────────────────────────────────────────────────
+14:03:09 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=-4.00e-04,  max=-4.00e-04)
+14:03:09 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+14:03:09 DEBUG    tools.simulations.post.evaluate.queries.display:                         (min=-3.43e+02,  max=-3.43e+02)
+14:03:09 DEBUG    tools.simulations.post.evaluate.queries.display:                         1 nodes
+14:03:09 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 5 queries ok ────────────────────────────────────────
+   t               +1.000e+00
+   uy_loadpoint    -4.000e-04   uy @ load_point_gage
+   reaction_load   -3.427e+02   uy @ load_point_gage
+   deflection_mm   +4.000e-01
+   load_kN         +3.427e-01
+────────────────────────────────────────────────────────────────────
+14:03:09 INFO     tools.simulations: VTU export: 64 file(s) -> benchmarks/ATENA/TPBB/output/OOFEM/vtu
+14:03:09 INFO     tools.simulations: Checkpoint saved -> benchmarks/ATENA/TPBB/output/OOFEM/checkpoint.h5  (0.2 MB)
+14:03:09 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 64/64 steps ok) ==

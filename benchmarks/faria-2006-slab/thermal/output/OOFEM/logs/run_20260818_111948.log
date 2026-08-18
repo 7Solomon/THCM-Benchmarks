@@ -1,0 +1,15 @@
+11:19:48 INFO     tools.simulations: Log file: benchmarks/externally-restrained-slab/output/OOFEM/logs/run_20260818_111948.log
+11:19:48 INFO     tools.simulations: == STARTING BENCHMARK: externally-restrained-slab ==
+11:19:48 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/externally-restrained-slab
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+11:19:48 INFO     tools.simulations: Loading benchmark config: benchmarks/externally-restrained-slab/benchmark.json
+11:19:48 INFO     tools.simulations: Benchmark: Early-age temperature through a 0.35 m restrained floor slab (faria-2006-restrained-slab-thermal)

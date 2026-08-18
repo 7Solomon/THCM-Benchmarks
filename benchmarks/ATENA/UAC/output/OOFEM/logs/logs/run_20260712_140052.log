@@ -1,0 +1,27 @@
+14:00:52 INFO     tools.simulations: Log file: debug/ATENA/UAC/OOFEM/output/OOFEM/logs/logs/run_20260712_140052.log
+14:00:52 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+14:00:52 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/ATENA/UAC/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+14:00:52 INFO     tools.simulations: Loading benchmark config: debug/ATENA/UAC/OOFEM/benchmark.json
+14:00:52 INFO     tools.simulations: Benchmark: Uniaxial Compression Test — Size Effect (Van Mier) (uac-van-mier-uniaxial-compression)
+14:00:52 INFO     tools.simulations: Configurations loaded.
+14:00:52 INFO     tools.simulations: Loading mesh...
+14:00:52 INFO     tools.simulations: Mesh loaded: 55 nodes, 84 elements (triangle)
+14:00:52 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+14:00:52 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 55
+  Total DOFs: 110
+  Fields: 1
+    - displacement: 110 DOFs (['ux', 'uy'])
+14:00:52 INFO     tools.simulations: Building oofem problem...
+14:00:52 INFO     tools.simulations.fem.solver.utils: dt from config: 5.00e-03

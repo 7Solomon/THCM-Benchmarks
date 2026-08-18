@@ -1,0 +1,49 @@
+10:19:36 INFO     tools.simulations: Log file: debug/HAMSTAD/B2/output/OOFEM/logs/run_20260815_101936.log
+10:19:36 INFO     tools.simulations: == STARTING BENCHMARK: B2 ==
+10:19:36 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HAMSTAD/B2
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+10:19:36 INFO     tools.simulations: Loading benchmark config: debug/HAMSTAD/B2/benchmark.json
+10:19:36 INFO     tools.simulations: Benchmark: HAMSTAD WP2 Benchmark 2: isothermal moisture redistribution in a homogeneous wall (analytical case) (hamstad-benchmark-2-analytical)
+10:19:36 INFO     tools.simulations: Configurations loaded.
+10:19:36 INFO     tools.simulations: Loading mesh...
+10:19:36 INFO     tools.simulations: Mesh loaded: 1345 nodes, 1232 elements (quad)
+10:19:36 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+10:19:36 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1345
+  Total DOFs: 1345
+  Fields: 1
+    - humidity: 1345 DOFs (['h'])
+10:19:36 INFO     tools.simulations: Building oofem problem...
+10:19:36 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 369 steps, dt=[300.0 -> 49997.3] s
+10:19:36 INFO     tools.simulations: oofem problem built: 1345 nodes, 1232 elements, 369 steps (t=[0 -> 3.6e+06])
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:19:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:19:36 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +8.477e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.477e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.477e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +8.333e-02
+────────────────────────────────────────────────────────────────────

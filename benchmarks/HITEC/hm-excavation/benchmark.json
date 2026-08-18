@@ -1,0 +1,2882 @@
+{
+ "metadata": {
+  "id": "hitec-cox-isotropic-hm-excavation",
+  "title": "HITEC near-field benchmark - COx claystone, isotropic, hydro-mechanical excavation + 6-month waiting phase",
+  "source": {
+   "authors": [
+    "Simo",
+    "de Lesquen",
+    "Leon-Vargas",
+    "Vu",
+    "Raude",
+    "El Tabbal",
+    "Dizier",
+    "Seetharam",
+    "Narkuniene",
+    "Collin",
+    "Song",
+    "Gens",
+    "Song",
+    "Tatomir",
+    "Nagel",
+    "Buchwald"
+   ],
+   "year": 2025,
+   "journal": "Acta Geotechnica 20:1621-1642",
+   "doi": "10.1007/s11440-024-02502-w"
+  },
+  "dimension": 2,
+  "physics_class": "hydro-mechanical (Biot poroelasticity)",
+  "validation_method": "Digitized pore-pressure and radial-displacement histories at P1-P4, Fig. 7, early segment (0-183.6 d)",
+  "validation_target": "Radial convergence at P1 reaching 2.749-2.758 m/1000 at t=183.6 d (all seven teams; closed form 0.95*sigma0*a/(2G) = 2.757 mm) and the p drawdown at P2/P3 during the waiting phase, with P4 undisturbed",
+  "notes": "(1) EXCESS formulation - p and stress are measured from the equilibrated in-situ state (p0 = 4.7 MPa, sigma0 = 12.5 MPa); far-field boundaries are excess-traction-free and excess-p = 0, which exactly reproduces the paper's constant far-field conditions. (2) Both 24 h ramps of paper Table 3 - the stress release to 5% of in-situ and the wall drainage P0 -> Patm - are absolute time_tables. The earlier 'step deconfinement, no piecewise time_function available' workaround is gone. (3) Gallery wall is an 8-chord polygon because Neumann tractions need global components on straight edges (skill BC table). (4) Heating phase NOT included: thermal pressurization needs the u-p-T coupling this backend lacks, so this benchmark stops at the end of the waiting phase (183.6 d).\nRESOLVED 2026-08-16 (was: 'OPEN DEFECT - drawdown penetrates only ~0.27 m, ur(P1) 2.12 of 2.757 mm'). Two independent causes, neither of them the upquad11 inf-sup condition the note suspected:\n (a) THE TIME GRID NEVER REACHED OOFEM. builder/physics/hydro_mechanical.make_engine passed BOTH deltaT and prescribedTimes to mpmProblem, but MPMProblem::initializeFrom (src/mpm/mpmproblem.C) reads them as an if/else-if chain with deltat FIRST - unlike transientTransport and staticStructural, which read prescribedTimes first. prescribedTimes was silently dropped and the solver stepped at a constant dt = grid.step_dt(1) = 482.14 s, so 140 steps covered 67500 s = 0.78 d while the DB and the plots were labelled up to 183.6 d. Signature of the bug: every result is EXACTLY linear in the step index (p_P1 = -25669.542 Pa x step to 12 digits). Fixed in the builder: deltaT is now only passed when prescribedTimes is empty.\n (b) dt WAS BELOW THE u-p MONOTONICITY FLOOR. upquad11 is equal-order and unstabilized, so a step is only monotone for dt >= h^2/(6c); with c = 1.35e-7 m2/s and the old 0.1 m wall mesh that floor is 12337 s, against a dt_min of 600 s. The drawdown front rang and the excess pressure overshot POSITIVE a few elements out, which is what made P3 read more drawdown than P2. Fixed by 0.04 m at the wall + dt_min 3600 s (see geometry.mesh.refinement._comment_stability).\nVALIDATED after both fixes (114/114 steps, 1465 nodes, 107 s): p(P1) reaches Patm = 0.100 MPa at t = 1.16 d and holds; ur(P1) = 2.738 mm vs the teams' 2.749-2.758 and the closed form 0.95*sigma0*a/(2G) = 2.757 mm (-0.6%); p(r) at t_end is monotone with max positive excess +3.1 kPa (0.07%). Sampled at the TRUE probe radii the run sits INSIDE the seven-team band at every point: ur = 2.738/1.975/1.604/0.724 mm and p = 0.100/1.849/2.923/4.673 MPa at P1-P4.\nREMAINING ERROR SOURCE - probe snapping (ANALYSIS.md PROBLEM 4, still open): geometry.points snaps to the nearest EXISTING node and P2/P3/P4 land at r = 1.830/2.444/6.448 instead of 1.9/2.5/6.25. Because ur ~ 1/r that alone accounts for the whole residual in the query columns (+3.1%/+3.0%/-5.0% vs the band-centre, all in the direction of the offset). NOT fixable in this JSON: gmsh_backend._embed_measurement_points returns early when the model has no 3D volume, so a 2D benchmark gets no forced nodes; a dim-0 physical group cannot help either because no CAD vertex exists at those coordinates. Fix belongs in the mesh generator (embed into the containing CURVE - all four probes lie on the sym_bottom edge)."
+ },
+ "geometry": {
+  "entities": [
+   {
+    "id": "plate",
+    "type": "rectangle",
+    "parameters": {
+     "origin": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "size": [
+      100.0,
+      100.0
+     ]
+    }
+   },
+   {
+    "id": "gallery",
+    "type": "prism",
+    "parameters": {
+     "base_polygon": [
+      [
+       1.25,
+       0.0
+      ],
+      [
+       1.225982,
+       0.243863
+      ],
+      [
+       1.154849,
+       0.478354
+      ],
+      [
+       1.039337,
+       0.694463
+      ],
+      [
+       0.883883,
+       0.883883
+      ],
+      [
+       0.694463,
+       1.039337
+      ],
+      [
+       0.478354,
+       1.154849
+      ],
+      [
+       0.243863,
+       1.225982
+      ],
+      [
+       0.0,
+       1.25
+      ],
+      [
+       0.0,
+       0.0
+      ]
+     ],
+     "height": 1.0
+    },
+    "transform": [
+     {
+      "type": "translate",
+      "vector": [
+       0.0,
+       0.0,
+       -0.5
+      ]
+     }
+    ],
+    "_comment": "8-chord polygonal approximation of the 1.25 m quarter gallery (area error ~0.2%); chords enable global-component Neumann tractions"
+   }
+  ],
+  "operations": [
+   {
+    "type": "cut",
+    "targets": [
+     "plate"
+    ],
+    "tools": [
+     "gallery"
+    ],
+    "remove_tools": true,
+    "result_id": "host_rock"
+   }
+  ],
+  "physical_groups": [
+   {
+    "name": "host_domain",
+    "dimension": 2,
+    "selection": {
+     "box": [
+      -1e-06,
+      -1e-06,
+      -1e-06,
+      100.000001,
+      100.000001,
+      1e-06
+     ]
+    }
+   },
+   {
+    "name": "sym_bottom",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      0.0,
+      -1e-06,
+      -1e-06,
+      100.000001,
+      1e-06,
+      1e-06
+     ]
+    }
+   },
+   {
+    "name": "sym_left",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      -1e-06,
+      0.0,
+      -1e-06,
+      1e-06,
+      100.000001,
+      1e-06
+     ]
+    }
+   },
+   {
+    "name": "far_right",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      99.999999,
+      -1e-06,
+      -1e-06,
+      100.000001,
+      100.000001,
+      1e-06
+     ]
+    }
+   },
+   {
+    "name": "far_top",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      -1e-06,
+      99.999999,
+      -1e-06,
+      100.000001,
+      100.000001,
+      1e-06
+     ]
+    }
+   },
+   {
+    "name": "wall_chord_0",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      1.220982,
+      -0.005,
+      -1e-06,
+      1.255,
+      0.248863,
+      1e-06
+     ]
+    },
+    "_comment": "VERIFIED: box CONTAINS the whole chord (gmsh getEntitiesInBoundingBox requires containment, not overlap). Chord length 0.245 m; a 0.18 m 'center-selecting' box matched nothing."
+   },
+   {
+    "name": "wall_chord_1",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      1.1498490000000001,
+      0.238863,
+      -1e-06,
+      1.2309819999999998,
+      0.483354,
+      1e-06
+     ]
+    },
+    "_comment": "VERIFIED: box CONTAINS the whole chord (gmsh getEntitiesInBoundingBox requires containment, not overlap). Chord length 0.245 m; a 0.18 m 'center-selecting' box matched nothing."
+   },
+   {
+    "name": "wall_chord_2",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      1.034337,
+      0.473354,
+      -1e-06,
+      1.159849,
+      0.6994630000000001,
+      1e-06
+     ]
+    },
+    "_comment": "VERIFIED: box CONTAINS the whole chord (gmsh getEntitiesInBoundingBox requires containment, not overlap). Chord length 0.245 m; a 0.18 m 'center-selecting' box matched nothing."
+   },
+   {
+    "name": "wall_chord_3",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      0.878883,
+      0.689463,
+      -1e-06,
+      1.0443369999999998,
+      0.888883,
+      1e-06
+     ]
+    },
+    "_comment": "VERIFIED: box CONTAINS the whole chord (gmsh getEntitiesInBoundingBox requires containment, not overlap). Chord length 0.245 m; a 0.18 m 'center-selecting' box matched nothing."
+   },
+   {
+    "name": "wall_chord_4",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      0.689463,
+      0.878883,
+      -1e-06,
+      0.888883,
+      1.0443369999999998,
+      1e-06
+     ]
+    },
+    "_comment": "VERIFIED: box CONTAINS the whole chord (gmsh getEntitiesInBoundingBox requires containment, not overlap). Chord length 0.245 m; a 0.18 m 'center-selecting' box matched nothing."
+   },
+   {
+    "name": "wall_chord_5",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      0.473354,
+      1.034337,
+      -1e-06,
+      0.6994630000000001,
+      1.159849,
+      1e-06
+     ]
+    },
+    "_comment": "VERIFIED: box CONTAINS the whole chord (gmsh getEntitiesInBoundingBox requires containment, not overlap). Chord length 0.245 m; a 0.18 m 'center-selecting' box matched nothing."
+   },
+   {
+    "name": "wall_chord_6",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      0.238863,
+      1.1498490000000001,
+      -1e-06,
+      0.483354,
+      1.2309819999999998,
+      1e-06
+     ]
+    },
+    "_comment": "VERIFIED: box CONTAINS the whole chord (gmsh getEntitiesInBoundingBox requires containment, not overlap). Chord length 0.245 m; a 0.18 m 'center-selecting' box matched nothing."
+   },
+   {
+    "name": "wall_chord_7",
+    "dimension": 1,
+    "selection": {
+     "box": [
+      -0.005,
+      1.220982,
+      -1e-06,
+      0.248863,
+      1.255,
+      1e-06
+     ]
+    },
+    "_comment": "VERIFIED: box CONTAINS the whole chord (gmsh getEntitiesInBoundingBox requires containment, not overlap). Chord length 0.245 m; a 0.18 m 'center-selecting' box matched nothing."
+   }
+  ],
+  "points": [
+   {
+    "name": "P1",
+    "coordinates": [
+     1.25,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "name": "P2",
+    "coordinates": [
+     1.9,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "name": "P3",
+    "coordinates": [
+     2.5,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "name": "P4",
+    "coordinates": [
+     6.25,
+     0.0,
+     0.0
+    ]
+   }
+  ],
+  "mesh": {
+   "element_size": 4.0,
+   "recombine": true,
+   "_comment": "recombine=true MANDATORY: hydro_mechanical runs on quads only (upquad11), plane strain, unit depth. element_size is the FAR-FIELD size; the near field comes from mesh.refinement.",
+   "refinement": [
+    {
+     "around": [
+      "wall_chord_0",
+      "wall_chord_1",
+      "wall_chord_2",
+      "wall_chord_3",
+      "wall_chord_4",
+      "wall_chord_5",
+      "wall_chord_6",
+      "wall_chord_7"
+     ],
+     "element_size": 0.04,
+     "transition": 20.0,
+     "_comment": "0.04 m at the gallery wall grading to 4 m by r=20 m. Sized from the physics: hydraulic diffusion length sqrt(c_v*t_end) = 1.46 m, so the pore-pressure field lives inside ~2 m; the elastic stress perturbation is (a/r)^2 = 0.4% at r=20 m. A UNIFORM mesh fine enough for the wall would refine 100x100 m of far field that never changes.",
+     "_comment_stability": "h IS COUPLED TO dt. upquad11 is an equal-order u-p element with no stabilization, so a consolidation step is only monotone for dt >= h^2/(6c); below that the drawdown front rings and the excess pressure OVERSHOOTS TO POSITIVE a few elements out (measured 2026-08-15: p(r) = -3.59e6, -5.3e5, +8.9e4, +9.1e4, -3.9e4 ... which is why P3 showed MORE drawdown than P2). With c = (k/mu)/S = 2.3e-17/1.70e-10 = 1.35e-7 m2/s: h=0.1 needs dt >= 12337 s (too coarse to resolve the 24 h ramps), h=0.04 needs dt >= 1974 s, which the first dt_strategy segment (dt_min 3600 -> 3364 s after normalization) clears with 70% margin. Do not lower this without also raising time_stepping.dt_strategy.segments[0]."
+    }
+   ]
+  }
+ },
+ "physics": {
+  "mechanics": {
+   "type": "field",
+   "dependent_variable": {
+    "name": "displacement",
+    "symbol": "u",
+    "type": "vector",
+    "components": [
+     "ux",
+     "uy"
+    ]
+   }
+  },
+  "flow": {
+   "type": "field",
+   "dependent_variable": {
+    "name": "pore_pressure",
+    "symbol": "p",
+    "type": "scalar",
+    "components": [
+     "p"
+    ]
+   }
+  },
+  "hydro_mechanical": {
+   "type": "coupling"
+  }
+ },
+ "materials": {
+  "cox": {
+   "displacement": {
+    "E": 7000000000.0,
+    "nu": 0.3,
+    "rho": 2386.0,
+    "_comment_E": "PAPER_VALUE Tab. 1: 7000 MPa",
+    "_comment_nu": "PAPER_VALUE Tab. 1: 0.3",
+    "_comment_rho": "PAPER_VALUE Tab. 1: saturated bulk density"
+   },
+   "pore_pressure": {
+    "model": "biot",
+    "biot_alpha": 0.8,
+    "intrinsic_permeability": 2.3e-20,
+    "fluid_viscosity": 0.001,
+    "porosity": 0.18,
+    "fluid_bulk_modulus": 2220000000.0,
+    "solid_bulk_modulus": 29200000000.0,
+    "_comment_biot_alpha": "PAPER_VALUE Tab. 1: b = 0.8",
+    "_comment_perm": "PAPER_VALUE Tab. 1: K = 2.3e-20 m2; named route so the pipeline converts to mobility (never feed m2 into 'mobility' directly)",
+    "_comment_Kf": "INFERRED: water compressibility 4.5e-4 1/MPa (Sec. 3) -> K_f = 2.22e9 Pa",
+    "_comment_Ks": "INFERRED: b = 1 - K_d/K_s with K_d = E/(3(1-2nu)) = 5.83e9 -> K_s = 2.92e10 Pa; gives 1/Q = n/K_f + (b-n)/K_s = 1.02e-10 1/Pa"
+   }
+  }
+ },
+ "initial_conditions": [
+  {
+   "field": "pore_pressure",
+   "value": 0.0,
+   "location": "host_domain",
+   "_comment": "Excess over the p0 = 4.7 MPa datum. Zero IC + BC-driven field avoids the inadmissible uniform-p/zero-u state (skill trap)."
+  }
+ ],
+ "boundary_conditions": [
+  {
+   "type": "dirichlet",
+   "field": "displacement",
+   "component": "ux",
+   "value": 0.0,
+   "location": "sym_left"
+  },
+  {
+   "type": "dirichlet",
+   "field": "displacement",
+   "component": "uy",
+   "value": 0.0,
+   "location": "sym_bottom"
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": 0.0,
+   "location": "far_right",
+   "_comment": "EXCESS pressure datum: far field held at p0 = 4.7 MPa absolute = 0 excess (PAPER_VALUE Tab. 3)"
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": 0.0,
+   "location": "far_top"
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -4600000.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_0",
+   "_comment": "PAPER_VALUE Table 3: the wall drains from P0 to Patm (0.1 MPa) IN 24 H, i.e. 0 -> -4.6 MPa excess. Now a time_table -- dirichlet takes absolute time_tables, so the old 'applied as a step because no piecewise time_function exists' workaround is obsolete.\nSplit across the 8 chord groups: one 'gallery_wall' group covered the SAME curves, and a mesh element carries ONE physical tag in MSH 2.2 -- overlapping groups silently lose the later one."
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -4600000.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_1"
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -4600000.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_2"
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -4600000.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_3"
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -4600000.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_4"
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -4600000.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_5"
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -4600000.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_6"
+  },
+  {
+   "type": "dirichlet",
+   "field": "pore_pressure",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -4600000.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_7"
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "ux",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -11817818.6
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_0",
+   "_comment": "EXCAVATION STRESS RELEASE, paper Table 3: the wall traction goes from 100% to 5% OF THE IN-SITU STRESS over 24 h, then holds. In this EXCESS formulation that is an applied excess traction of 0 -> -0.95*sigma0*n (sigma0 = 12.5 MPa), i.e. the table below. CONFIRMED against the paper 2026-08-14: 5% is the COx/OPA value, 50% is Boom Clay only.\nThe table used to run BACKWARDS (full release at t=0 decaying to 5% OF THE RELEASE at 24 h). That inverted the physics -- convergence PEAKED at excavation and decayed, where the paper (p.1634) and all seven teams show it rising throughout the waiting phase -- and left the final load 20x too small. Closed form for the isotropic hole, 0.95*sigma0*a/(2G) = 2.757 mm, matches the teams' 2.749-2.758 mm; do not let this table regress."
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "uy",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -1163953.5
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_0",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "ux",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -11363666.5
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_1",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "uy",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -3447130.5
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_1",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "ux",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -10472815.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_2",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "uy",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -5597836.2
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_2",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "ux",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -9179499.1
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_3",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "uy",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -7533420.2
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_3",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "ux",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -7533420.2
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_4",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "uy",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -9179499.1
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_4",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "ux",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -5597836.2
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_5",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "uy",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -10472815.0
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_5",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "ux",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -3447130.5
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_6",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "uy",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -11363666.5
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_6",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "ux",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -1163953.5
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_7",
+   "_comment": null
+  },
+  {
+   "type": "neumann",
+   "field": "displacement",
+   "component": "uy",
+   "value": {
+    "time_table": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      86400.0,
+      -11817818.6
+     ]
+    ],
+    "interp": "linear"
+   },
+   "location": "wall_chord_7",
+   "_comment": null
+  }
+ ],
+ "assignment": {
+  "domains": {
+   "host_domain": {
+    "active_fields": [
+     "displacement",
+     "pore_pressure"
+    ],
+    "material": "cox"
+   }
+  }
+ },
+ "time_stepping": {
+  "t_start": 0.0,
+  "t_end": 15865200.0,
+  "analysis_type": "transient",
+  "_comment": "transient is mandatory for hydro_mechanical - consolidation IS the time evolution",
+  "dt_strategy": {
+   "type": "piecewise",
+   "segments": [
+    {
+     "t_end": 86400.0,
+     "strategy": {
+      "type": "log",
+      "dt_min": 3600.0,
+      "dt_max": 10800.0,
+      "n_steps": 14
+     },
+     "_comment": "excavation day; resolves both 24 h ramps. Hydraulic diffusivity c ~ 1.35e-7 m2/s -> 6-month drainage length ~1.5 m: drawdown reaches P2/P3 but not P4, matching the paper. dt_min is NOT free: it is bounded BELOW by the u-p monotonicity floor h^2/(6c) = 1974 s for the 0.04 m wall mesh (see geometry.mesh.refinement._comment_stability). The old 600 s was 20x under that floor and produced positive excess pressure a few elements off the wall. Normalized dt here: 3364 -> 10093 s, 14 steps."
+    },
+    {
+     "t_end": 2592000.0,
+     "strategy": {
+      "type": "log",
+      "dt_min": 7200.0,
+      "dt_max": 86400.0,
+      "n_steps": 40
+     }
+    },
+    {
+     "t_end": 15865200.0,
+     "strategy": {
+      "type": "log",
+      "dt_min": 86400.0,
+      "dt_max": 432000.0,
+      "n_steps": 60
+     },
+     "_comment": "explicit final segment, to 183.6 d"
+    }
+   ]
+  },
+  "linear_solver": "dss",
+  "_comment_linear_solver": "46378 nodes x 3 DOF ~ 139k unknowns on an unstructured gmsh mesh: skyline is bandwidth-bound and unusable here (107 s/step measured on a 11.6k-unknown mesh). DSS reorders internally. Safe: this model is externally loaded, not the free/unloaded case where DSS's accuracy floor shows."
+ },
+ "results": {
+  "reference_curves": [
+   {
+    "id": "fig7_pw_P1_AND_COMSOL",
+    "file": "reference/PW/fig7_cox_pw_P1_AND_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P1 ANDRA COMSOL",
+    "_comment": "Fig. 7 (p.1634), read from the figure's VECTOR geometry with tools/extract, not digitised: 7 teams x 4 points x 2 quantities = 56 files under reference/PW and reference/UR. One file per entry -- the loader has no glob or file-list form.\nSAMPLING WARNING: the pore-pressure panel of Fig. 7 uses a LINEAR 0-3500 d axis, so this benchmark's whole 0-183.6 d window is ~5% of its width -- PW/P1 has only 7 of 84 samples in range. The radial-displacement panel is LOG time (39 of 47 in range). Validate against UR; treat PW as indicative, PW/P1 especially."
+   },
+   {
+    "id": "fig7_pw_P1_AND_Code_Aster",
+    "file": "reference/PW/fig7_cox_pw_P1_AND_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P1 ANDRA Code_Aster"
+   },
+   {
+    "id": "fig7_pw_P1_BGE_OpenGeoSys",
+    "file": "reference/PW/fig7_cox_pw_P1_BGE_OpenGeoSys.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P1 BGE OpenGeoSys"
+   },
+   {
+    "id": "fig7_pw_P1_EDF_Code_Aster",
+    "file": "reference/PW/fig7_cox_pw_P1_EDF_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P1 EDF Code_Aster"
+   },
+   {
+    "id": "fig7_pw_P1_LEI_COMSOL",
+    "file": "reference/PW/fig7_cox_pw_P1_LEI_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P1 LEI COMSOL"
+   },
+   {
+    "id": "fig7_pw_P1_ULG_LAGAMINE",
+    "file": "reference/PW/fig7_cox_pw_P1_ULG_LAGAMINE.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P1 ULg LAGAMINE"
+   },
+   {
+    "id": "fig7_pw_P1_UPC_Code_Bright",
+    "file": "reference/PW/fig7_cox_pw_P1_UPC_Code_Bright.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P1 UPC Code_Bright"
+   },
+   {
+    "id": "fig7_pw_P2_AND_COMSOL",
+    "file": "reference/PW/fig7_cox_pw_P2_AND_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P2 ANDRA COMSOL"
+   },
+   {
+    "id": "fig7_pw_P2_AND_Code_Aster",
+    "file": "reference/PW/fig7_cox_pw_P2_AND_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P2 ANDRA Code_Aster"
+   },
+   {
+    "id": "fig7_pw_P2_BGE_OpenGeoSys",
+    "file": "reference/PW/fig7_cox_pw_P2_BGE_OpenGeoSys.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P2 BGE OpenGeoSys"
+   },
+   {
+    "id": "fig7_pw_P2_EDF_Code_Aster",
+    "file": "reference/PW/fig7_cox_pw_P2_EDF_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P2 EDF Code_Aster"
+   },
+   {
+    "id": "fig7_pw_P2_LEI_COMSOL",
+    "file": "reference/PW/fig7_cox_pw_P2_LEI_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P2 LEI COMSOL"
+   },
+   {
+    "id": "fig7_pw_P2_ULG_LAGAMINE",
+    "file": "reference/PW/fig7_cox_pw_P2_ULG_LAGAMINE.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P2 ULg LAGAMINE"
+   },
+   {
+    "id": "fig7_pw_P2_UPC_Code_Bright",
+    "file": "reference/PW/fig7_cox_pw_P2_UPC_Code_Bright.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P2 UPC Code_Bright"
+   },
+   {
+    "id": "fig7_pw_P3_AND_COMSOL",
+    "file": "reference/PW/fig7_cox_pw_P3_AND_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P3 ANDRA COMSOL"
+   },
+   {
+    "id": "fig7_pw_P3_AND_Code_Aster",
+    "file": "reference/PW/fig7_cox_pw_P3_AND_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P3 ANDRA Code_Aster"
+   },
+   {
+    "id": "fig7_pw_P3_BGE_OpenGeoSys",
+    "file": "reference/PW/fig7_cox_pw_P3_BGE_OpenGeoSys.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P3 BGE OpenGeoSys"
+   },
+   {
+    "id": "fig7_pw_P3_EDF_Code_Aster",
+    "file": "reference/PW/fig7_cox_pw_P3_EDF_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P3 EDF Code_Aster"
+   },
+   {
+    "id": "fig7_pw_P3_LEI_COMSOL",
+    "file": "reference/PW/fig7_cox_pw_P3_LEI_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P3 LEI COMSOL"
+   },
+   {
+    "id": "fig7_pw_P3_ULG_LAGAMINE",
+    "file": "reference/PW/fig7_cox_pw_P3_ULG_LAGAMINE.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P3 ULg LAGAMINE"
+   },
+   {
+    "id": "fig7_pw_P3_UPC_Code_Bright",
+    "file": "reference/PW/fig7_cox_pw_P3_UPC_Code_Bright.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P3 UPC Code_Bright"
+   },
+   {
+    "id": "fig7_pw_P4_AND_COMSOL",
+    "file": "reference/PW/fig7_cox_pw_P4_AND_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P4 ANDRA COMSOL"
+   },
+   {
+    "id": "fig7_pw_P4_AND_Code_Aster",
+    "file": "reference/PW/fig7_cox_pw_P4_AND_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P4 ANDRA Code_Aster"
+   },
+   {
+    "id": "fig7_pw_P4_BGE_OpenGeoSys",
+    "file": "reference/PW/fig7_cox_pw_P4_BGE_OpenGeoSys.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P4 BGE OpenGeoSys"
+   },
+   {
+    "id": "fig7_pw_P4_EDF_Code_Aster",
+    "file": "reference/PW/fig7_cox_pw_P4_EDF_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P4 EDF Code_Aster"
+   },
+   {
+    "id": "fig7_pw_P4_LEI_COMSOL",
+    "file": "reference/PW/fig7_cox_pw_P4_LEI_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P4 LEI COMSOL"
+   },
+   {
+    "id": "fig7_pw_P4_ULG_LAGAMINE",
+    "file": "reference/PW/fig7_cox_pw_P4_ULG_LAGAMINE.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P4 ULg LAGAMINE"
+   },
+   {
+    "id": "fig7_pw_P4_UPC_Code_Bright",
+    "file": "reference/PW/fig7_cox_pw_P4_UPC_Code_Bright.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "pw_MPa",
+    "label": "P4 UPC Code_Bright"
+   },
+   {
+    "id": "fig7_ur_P1_AND_COMSOL",
+    "file": "reference/UR/fig7_cox_ur_P1_AND_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P1 ANDRA COMSOL"
+   },
+   {
+    "id": "fig7_ur_P1_AND_Code_Aster",
+    "file": "reference/UR/fig7_cox_ur_P1_AND_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P1 ANDRA Code_Aster"
+   },
+   {
+    "id": "fig7_ur_P1_BGE_OpenGeoSys",
+    "file": "reference/UR/fig7_cox_ur_P1_BGE_OpenGeoSys.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P1 BGE OpenGeoSys"
+   },
+   {
+    "id": "fig7_ur_P1_EDF_Code_Aster",
+    "file": "reference/UR/fig7_cox_ur_P1_EDF_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P1 EDF Code_Aster"
+   },
+   {
+    "id": "fig7_ur_P1_LEI_COMSOL",
+    "file": "reference/UR/fig7_cox_ur_P1_LEI_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P1 LEI COMSOL"
+   },
+   {
+    "id": "fig7_ur_P1_ULG_LAGAMINE",
+    "file": "reference/UR/fig7_cox_ur_P1_ULG_LAGAMINE.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P1 ULg LAGAMINE"
+   },
+   {
+    "id": "fig7_ur_P1_UPC_Code_Bright",
+    "file": "reference/UR/fig7_cox_ur_P1_UPC_Code_Bright.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P1 UPC Code_Bright"
+   },
+   {
+    "id": "fig7_ur_P2_AND_COMSOL",
+    "file": "reference/UR/fig7_cox_ur_P2_AND_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P2 ANDRA COMSOL"
+   },
+   {
+    "id": "fig7_ur_P2_AND_Code_Aster",
+    "file": "reference/UR/fig7_cox_ur_P2_AND_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P2 ANDRA Code_Aster"
+   },
+   {
+    "id": "fig7_ur_P2_BGE_OpenGeoSys",
+    "file": "reference/UR/fig7_cox_ur_P2_BGE_OpenGeoSys.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P2 BGE OpenGeoSys"
+   },
+   {
+    "id": "fig7_ur_P2_EDF_Code_Aster",
+    "file": "reference/UR/fig7_cox_ur_P2_EDF_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P2 EDF Code_Aster"
+   },
+   {
+    "id": "fig7_ur_P2_LEI_COMSOL",
+    "file": "reference/UR/fig7_cox_ur_P2_LEI_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P2 LEI COMSOL"
+   },
+   {
+    "id": "fig7_ur_P2_ULG_LAGAMINE",
+    "file": "reference/UR/fig7_cox_ur_P2_ULG_LAGAMINE.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P2 ULg LAGAMINE"
+   },
+   {
+    "id": "fig7_ur_P2_UPC_Code_Bright",
+    "file": "reference/UR/fig7_cox_ur_P2_UPC_Code_Bright.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P2 UPC Code_Bright"
+   },
+   {
+    "id": "fig7_ur_P3_AND_COMSOL",
+    "file": "reference/UR/fig7_cox_ur_P3_AND_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P3 ANDRA COMSOL"
+   },
+   {
+    "id": "fig7_ur_P3_AND_Code_Aster",
+    "file": "reference/UR/fig7_cox_ur_P3_AND_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P3 ANDRA Code_Aster"
+   },
+   {
+    "id": "fig7_ur_P3_BGE_OpenGeoSys",
+    "file": "reference/UR/fig7_cox_ur_P3_BGE_OpenGeoSys.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P3 BGE OpenGeoSys"
+   },
+   {
+    "id": "fig7_ur_P3_EDF_Code_Aster",
+    "file": "reference/UR/fig7_cox_ur_P3_EDF_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P3 EDF Code_Aster"
+   },
+   {
+    "id": "fig7_ur_P3_LEI_COMSOL",
+    "file": "reference/UR/fig7_cox_ur_P3_LEI_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P3 LEI COMSOL"
+   },
+   {
+    "id": "fig7_ur_P3_ULG_LAGAMINE",
+    "file": "reference/UR/fig7_cox_ur_P3_ULG_LAGAMINE.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P3 ULg LAGAMINE"
+   },
+   {
+    "id": "fig7_ur_P3_UPC_Code_Bright",
+    "file": "reference/UR/fig7_cox_ur_P3_UPC_Code_Bright.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P3 UPC Code_Bright"
+   },
+   {
+    "id": "fig7_ur_P4_AND_COMSOL",
+    "file": "reference/UR/fig7_cox_ur_P4_AND_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P4 ANDRA COMSOL"
+   },
+   {
+    "id": "fig7_ur_P4_AND_Code_Aster",
+    "file": "reference/UR/fig7_cox_ur_P4_AND_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P4 ANDRA Code_Aster"
+   },
+   {
+    "id": "fig7_ur_P4_BGE_OpenGeoSys",
+    "file": "reference/UR/fig7_cox_ur_P4_BGE_OpenGeoSys.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P4 BGE OpenGeoSys"
+   },
+   {
+    "id": "fig7_ur_P4_EDF_Code_Aster",
+    "file": "reference/UR/fig7_cox_ur_P4_EDF_Code_Aster.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P4 EDF Code_Aster"
+   },
+   {
+    "id": "fig7_ur_P4_LEI_COMSOL",
+    "file": "reference/UR/fig7_cox_ur_P4_LEI_COMSOL.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P4 LEI COMSOL"
+   },
+   {
+    "id": "fig7_ur_P4_ULG_LAGAMINE",
+    "file": "reference/UR/fig7_cox_ur_P4_ULG_LAGAMINE.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P4 ULg LAGAMINE"
+   },
+   {
+    "id": "fig7_ur_P4_UPC_Code_Bright",
+    "file": "reference/UR/fig7_cox_ur_P4_UPC_Code_Bright.csv",
+    "has_header": true,
+    "x_col": "time_d",
+    "y_col": "ur_m",
+    "label": "P4 UPC Code_Bright"
+   }
+  ],
+  "queries": [
+   {
+    "id": "t",
+    "type": "time",
+    "display": false
+   },
+   {
+    "id": "t_days",
+    "type": "formula",
+    "formula": "t / 86400.0",
+    "depends_on": [
+     "t"
+    ],
+    "label": "Time [days]"
+   },
+   {
+    "id": "p_P1",
+    "type": "field",
+    "field": "pore_pressure",
+    "component": "p",
+    "at": "P1",
+    "reduce": "avg",
+    "evaluate_in": "fem",
+    "label": "excess p at P1 [Pa]",
+    "_comment": "P1-P4 all sit on y=0, so the radial direction is +x and ur = -ux exactly -- the paper's sign convention is positive toward the gallery."
+   },
+   {
+    "id": "p_P2",
+    "type": "field",
+    "field": "pore_pressure",
+    "component": "p",
+    "at": "P2",
+    "reduce": "avg",
+    "evaluate_in": "fem",
+    "label": "excess p at P2 [Pa]"
+   },
+   {
+    "id": "p_P3",
+    "type": "field",
+    "field": "pore_pressure",
+    "component": "p",
+    "at": "P3",
+    "reduce": "avg",
+    "evaluate_in": "fem",
+    "label": "excess p at P3 [Pa]"
+   },
+   {
+    "id": "p_P4",
+    "type": "field",
+    "field": "pore_pressure",
+    "component": "p",
+    "at": "P4",
+    "reduce": "avg",
+    "evaluate_in": "fem",
+    "label": "excess p at P4 [Pa]"
+   },
+   {
+    "id": "ux_P1",
+    "type": "field",
+    "field": "displacement",
+    "component": "ux",
+    "at": "P1",
+    "reduce": "avg",
+    "evaluate_in": "fem",
+    "label": "ux at P1 [m]"
+   },
+   {
+    "id": "ux_P2",
+    "type": "field",
+    "field": "displacement",
+    "component": "ux",
+    "at": "P2",
+    "reduce": "avg",
+    "evaluate_in": "fem",
+    "label": "ux at P2 [m]"
+   },
+   {
+    "id": "ux_P3",
+    "type": "field",
+    "field": "displacement",
+    "component": "ux",
+    "at": "P3",
+    "reduce": "avg",
+    "evaluate_in": "fem",
+    "label": "ux at P3 [m]"
+   },
+   {
+    "id": "ux_P4",
+    "type": "field",
+    "field": "displacement",
+    "component": "ux",
+    "at": "P4",
+    "reduce": "avg",
+    "evaluate_in": "fem",
+    "label": "ux at P4 [m]"
+   },
+   {
+    "id": "p_P1_MPa",
+    "type": "formula",
+    "formula": "(p_P1 + 4700000.0) / 1000000.0",
+    "depends_on": [
+     "p_P1"
+    ],
+    "label": "absolute p at P1 [MPa]"
+   },
+   {
+    "id": "p_P2_MPa",
+    "type": "formula",
+    "formula": "(p_P2 + 4700000.0) / 1000000.0",
+    "depends_on": [
+     "p_P2"
+    ],
+    "label": "absolute p at P2 [MPa]"
+   },
+   {
+    "id": "p_P3_MPa",
+    "type": "formula",
+    "formula": "(p_P3 + 4700000.0) / 1000000.0",
+    "depends_on": [
+     "p_P3"
+    ],
+    "label": "absolute p at P3 [MPa]"
+   },
+   {
+    "id": "p_P4_MPa",
+    "type": "formula",
+    "formula": "(p_P4 + 4700000.0) / 1000000.0",
+    "depends_on": [
+     "p_P4"
+    ],
+    "label": "absolute p at P4 [MPa]"
+   },
+   {
+    "id": "ur_P1",
+    "type": "formula",
+    "formula": "-ux_P1",
+    "depends_on": [
+     "ux_P1"
+    ],
+    "label": "radial convergence at P1 [m]"
+   },
+   {
+    "id": "ur_P2",
+    "type": "formula",
+    "formula": "-ux_P2",
+    "depends_on": [
+     "ux_P2"
+    ],
+    "label": "radial convergence at P2 [m]"
+   },
+   {
+    "id": "ur_P3",
+    "type": "formula",
+    "formula": "-ux_P3",
+    "depends_on": [
+     "ux_P3"
+    ],
+    "label": "radial convergence at P3 [m]"
+   },
+   {
+    "id": "ur_P4",
+    "type": "formula",
+    "formula": "-ux_P4",
+    "depends_on": [
+     "ux_P4"
+    ],
+    "label": "radial convergence at P4 [m]"
+   }
+  ],
+  "plots": [
+   {
+    "name": "pw_P1",
+    "title": "HITEC COx isotropic HM - pore pressure at P1 (gallery wall, r = 1.25 m)",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Absolute pore pressure [MPa]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "p_P1_MPa"
+      },
+      "label": "FEM (this backend)",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P1_AND_COMSOL",
+      "label": "ANDRA COMSOL",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P1_AND_Code_Aster",
+      "label": "ANDRA Code_Aster",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P1_BGE_OpenGeoSys",
+      "label": "BGE OpenGeoSys",
+      "style": {
+       "color": "#eda100",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P1_EDF_Code_Aster",
+      "label": "EDF Code_Aster",
+      "style": {
+       "color": "#e87ba4",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "^",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P1_LEI_COMSOL",
+      "label": "LEI COMSOL",
+      "style": {
+       "color": "#008300",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P1_ULG_LAGAMINE",
+      "label": "ULg LAGAMINE",
+      "style": {
+       "color": "#4a3aa7",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P1_UPC_Code_Bright",
+      "label": "UPC Code_Bright",
+      "style": {
+       "color": "#e34948",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     }
+    ],
+    "_comment": "One plot per point per quantity: 8 lines is the documented ceiling for a line chart. Colour identifies the TEAM and is the same mapping the cox-isotropic-temperature benchmark uses.\nxlim is MANDATORY on every plot here: the reference curves run to 3500 d (the paper's full THM run) while this benchmark stops at 183.625 d, so without it the entire comparison window is a 5%-wide sliver at the left edge. ur uses a LOG time axis, as Fig. 7's own displacement panel does - the excavation day and the 6-month waiting phase are three decades apart and a linear axis hides the first.",
+    "xlim": [
+     0.0,
+     183.625
+    ]
+   },
+   {
+    "name": "pw_P2",
+    "title": "HITEC COx isotropic HM - pore pressure at P2 (r = 1.90 m)",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Absolute pore pressure [MPa]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "p_P2_MPa"
+      },
+      "label": "FEM (this backend)",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P2_AND_COMSOL",
+      "label": "ANDRA COMSOL",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P2_AND_Code_Aster",
+      "label": "ANDRA Code_Aster",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P2_BGE_OpenGeoSys",
+      "label": "BGE OpenGeoSys",
+      "style": {
+       "color": "#eda100",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P2_EDF_Code_Aster",
+      "label": "EDF Code_Aster",
+      "style": {
+       "color": "#e87ba4",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "^",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P2_LEI_COMSOL",
+      "label": "LEI COMSOL",
+      "style": {
+       "color": "#008300",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P2_ULG_LAGAMINE",
+      "label": "ULg LAGAMINE",
+      "style": {
+       "color": "#4a3aa7",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P2_UPC_Code_Bright",
+      "label": "UPC Code_Bright",
+      "style": {
+       "color": "#e34948",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     }
+    ],
+    "xlim": [
+     0.0,
+     183.625
+    ]
+   },
+   {
+    "name": "pw_P3",
+    "title": "HITEC COx isotropic HM - pore pressure at P3 (r = 2.50 m)",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Absolute pore pressure [MPa]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "p_P3_MPa"
+      },
+      "label": "FEM (this backend)",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P3_AND_COMSOL",
+      "label": "ANDRA COMSOL",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P3_AND_Code_Aster",
+      "label": "ANDRA Code_Aster",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P3_BGE_OpenGeoSys",
+      "label": "BGE OpenGeoSys",
+      "style": {
+       "color": "#eda100",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P3_EDF_Code_Aster",
+      "label": "EDF Code_Aster",
+      "style": {
+       "color": "#e87ba4",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "^",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P3_LEI_COMSOL",
+      "label": "LEI COMSOL",
+      "style": {
+       "color": "#008300",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P3_ULG_LAGAMINE",
+      "label": "ULg LAGAMINE",
+      "style": {
+       "color": "#4a3aa7",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P3_UPC_Code_Bright",
+      "label": "UPC Code_Bright",
+      "style": {
+       "color": "#e34948",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     }
+    ],
+    "xlim": [
+     0.0,
+     183.625
+    ]
+   },
+   {
+    "name": "pw_P4",
+    "title": "HITEC COx isotropic HM - pore pressure at P4 (r = 6.25 m)",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Absolute pore pressure [MPa]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "p_P4_MPa"
+      },
+      "label": "FEM (this backend)",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P4_AND_COMSOL",
+      "label": "ANDRA COMSOL",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P4_AND_Code_Aster",
+      "label": "ANDRA Code_Aster",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P4_BGE_OpenGeoSys",
+      "label": "BGE OpenGeoSys",
+      "style": {
+       "color": "#eda100",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P4_EDF_Code_Aster",
+      "label": "EDF Code_Aster",
+      "style": {
+       "color": "#e87ba4",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "^",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P4_LEI_COMSOL",
+      "label": "LEI COMSOL",
+      "style": {
+       "color": "#008300",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P4_ULG_LAGAMINE",
+      "label": "ULg LAGAMINE",
+      "style": {
+       "color": "#4a3aa7",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P4_UPC_Code_Bright",
+      "label": "UPC Code_Bright",
+      "style": {
+       "color": "#e34948",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     }
+    ],
+    "xlim": [
+     0.0,
+     183.625
+    ]
+   },
+   {
+    "name": "ur_P1",
+    "title": "HITEC COx isotropic HM - radial convergence at P1 (gallery wall, r = 1.25 m)",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Radial displacement [m]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "ur_P1"
+      },
+      "label": "FEM (this backend)",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P1_AND_COMSOL",
+      "label": "ANDRA COMSOL",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P1_AND_Code_Aster",
+      "label": "ANDRA Code_Aster",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P1_BGE_OpenGeoSys",
+      "label": "BGE OpenGeoSys",
+      "style": {
+       "color": "#eda100",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P1_EDF_Code_Aster",
+      "label": "EDF Code_Aster",
+      "style": {
+       "color": "#e87ba4",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "^",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P1_LEI_COMSOL",
+      "label": "LEI COMSOL",
+      "style": {
+       "color": "#008300",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P1_ULG_LAGAMINE",
+      "label": "ULg LAGAMINE",
+      "style": {
+       "color": "#4a3aa7",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P1_UPC_Code_Bright",
+      "label": "UPC Code_Bright",
+      "style": {
+       "color": "#e34948",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     }
+    ],
+    "xscale": "log",
+    "xlim": [
+     0.01,
+     183.625
+    ]
+   },
+   {
+    "name": "ur_P2",
+    "title": "HITEC COx isotropic HM - radial convergence at P2 (r = 1.90 m)",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Radial displacement [m]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "ur_P2"
+      },
+      "label": "FEM (this backend)",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P2_AND_COMSOL",
+      "label": "ANDRA COMSOL",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P2_AND_Code_Aster",
+      "label": "ANDRA Code_Aster",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P2_BGE_OpenGeoSys",
+      "label": "BGE OpenGeoSys",
+      "style": {
+       "color": "#eda100",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P2_EDF_Code_Aster",
+      "label": "EDF Code_Aster",
+      "style": {
+       "color": "#e87ba4",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "^",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P2_LEI_COMSOL",
+      "label": "LEI COMSOL",
+      "style": {
+       "color": "#008300",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P2_ULG_LAGAMINE",
+      "label": "ULg LAGAMINE",
+      "style": {
+       "color": "#4a3aa7",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P2_UPC_Code_Bright",
+      "label": "UPC Code_Bright",
+      "style": {
+       "color": "#e34948",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     }
+    ],
+    "xscale": "log",
+    "xlim": [
+     0.01,
+     183.625
+    ]
+   },
+   {
+    "name": "ur_P3",
+    "title": "HITEC COx isotropic HM - radial convergence at P3 (r = 2.50 m)",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Radial displacement [m]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "ur_P3"
+      },
+      "label": "FEM (this backend)",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P3_AND_COMSOL",
+      "label": "ANDRA COMSOL",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P3_AND_Code_Aster",
+      "label": "ANDRA Code_Aster",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P3_BGE_OpenGeoSys",
+      "label": "BGE OpenGeoSys",
+      "style": {
+       "color": "#eda100",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P3_EDF_Code_Aster",
+      "label": "EDF Code_Aster",
+      "style": {
+       "color": "#e87ba4",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "^",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P3_LEI_COMSOL",
+      "label": "LEI COMSOL",
+      "style": {
+       "color": "#008300",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P3_ULG_LAGAMINE",
+      "label": "ULg LAGAMINE",
+      "style": {
+       "color": "#4a3aa7",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P3_UPC_Code_Bright",
+      "label": "UPC Code_Bright",
+      "style": {
+       "color": "#e34948",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     }
+    ],
+    "xscale": "log",
+    "xlim": [
+     0.01,
+     183.625
+    ]
+   },
+   {
+    "name": "ur_P4",
+    "title": "HITEC COx isotropic HM - radial convergence at P4 (r = 6.25 m)",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Radial displacement [m]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "ur_P4"
+      },
+      "label": "FEM (this backend)",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P4_AND_COMSOL",
+      "label": "ANDRA COMSOL",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P4_AND_Code_Aster",
+      "label": "ANDRA Code_Aster",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P4_BGE_OpenGeoSys",
+      "label": "BGE OpenGeoSys",
+      "style": {
+       "color": "#eda100",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P4_EDF_Code_Aster",
+      "label": "EDF Code_Aster",
+      "style": {
+       "color": "#e87ba4",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "^",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P4_LEI_COMSOL",
+      "label": "LEI COMSOL",
+      "style": {
+       "color": "#008300",
+       "linestyle": "-.",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P4_ULG_LAGAMINE",
+      "label": "ULg LAGAMINE",
+      "style": {
+       "color": "#4a3aa7",
+       "linestyle": ":",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P4_UPC_Code_Bright",
+      "label": "UPC Code_Bright",
+      "style": {
+       "color": "#e34948",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     }
+    ],
+    "xscale": "log",
+    "xlim": [
+     0.01,
+     183.625
+    ]
+   },
+   {
+    "name": "pw_overview",
+    "title": "HITEC COx isotropic HM - pore pressure, P1-P4",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Absolute pore pressure [MPa]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "p_P1_MPa"
+      },
+      "label": "FEM P1",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "p_P2_MPa"
+      },
+      "label": "FEM P2",
+      "style": {
+       "color": "#eb6834",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "p_P3_MPa"
+      },
+      "label": "FEM P3",
+      "style": {
+       "color": "#1baf7a",
+       "linewidth": 2.6,
+       "zorder": 20,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "p_P4_MPa"
+      },
+      "label": "FEM P4",
+      "style": {
+       "color": "#eda100",
+       "linewidth": 2.6,
+       "zorder": 20,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P1_EDF_Code_Aster",
+      "label": "EDF Code_Aster P1",
+      "style": {
+       "color": "#2a78d6",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P2_EDF_Code_Aster",
+      "label": "EDF Code_Aster P2",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P3_EDF_Code_Aster",
+      "label": "EDF Code_Aster P3",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_pw_P4_EDF_Code_Aster",
+      "label": "EDF Code_Aster P4",
+      "style": {
+       "color": "#eda100",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     }
+    ],
+    "_comment": "Colour = the POINT, linestyle = the SOURCE (solid FEM, dashed reference).",
+    "xlim": [
+     0.0,
+     183.625
+    ]
+   },
+   {
+    "name": "ur_overview",
+    "title": "HITEC COx isotropic HM - convergence, P1-P4",
+    "grid": true,
+    "x_axis": {
+     "label": "Time [days]"
+    },
+    "y_axis": {
+     "label": "Radial displacement [m]"
+    },
+    "curves": [
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "ur_P1"
+      },
+      "label": "FEM P1",
+      "style": {
+       "color": "#2a78d6",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "ur_P2"
+      },
+      "label": "FEM P2",
+      "style": {
+       "color": "#eb6834",
+       "linewidth": 2.6,
+       "zorder": 20
+      }
+     },
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "ur_P3"
+      },
+      "label": "FEM P3",
+      "style": {
+       "color": "#1baf7a",
+       "linewidth": 2.6,
+       "zorder": 20,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "simulation",
+      "x": {
+       "key": "t_days"
+      },
+      "y": {
+       "key": "ur_P4"
+      },
+      "label": "FEM P4",
+      "style": {
+       "color": "#eda100",
+       "linewidth": 2.6,
+       "zorder": 20,
+       "marker": "s",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P1_EDF_Code_Aster",
+      "label": "EDF Code_Aster P1",
+      "style": {
+       "color": "#2a78d6",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P2_EDF_Code_Aster",
+      "label": "EDF Code_Aster P2",
+      "style": {
+       "color": "#eb6834",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P3_EDF_Code_Aster",
+      "label": "EDF Code_Aster P3",
+      "style": {
+       "color": "#1baf7a",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "o",
+       "markersize": 3
+      }
+     },
+     {
+      "source": "reference",
+      "ref_id": "fig7_ur_P4_EDF_Code_Aster",
+      "label": "EDF Code_Aster P4",
+      "style": {
+       "color": "#eda100",
+       "linestyle": "--",
+       "linewidth": 1.3,
+       "alpha": 0.9,
+       "zorder": 5,
+       "marker": "s",
+       "markersize": 3
+      }
+     }
+    ],
+    "_comment": "Colour = the POINT, linestyle = the SOURCE (solid FEM, dashed reference).",
+    "xscale": "log",
+    "xlim": [
+     0.01,
+     183.625
+    ]
+   }
+  ],
+  "console": {
+   "summary_every_steps": 10,
+   "reference_deviation": {
+    "enabled": true,
+    "show_in_progress_bar": true,
+    "pairs": [
+     {
+      "x": "t_days",
+      "y": "ur_P1",
+      "ref_id": "fig7_ur_P1_EDF_Code_Aster"
+     },
+     {
+      "x": "t_days",
+      "y": "p_P2_MPa",
+      "ref_id": "fig7_pw_P2_EDF_Code_Aster"
+     }
+    ]
+   }
+  },
+  "save_checkpoint": true,
+  "aux_fields": [
+   "*"
+  ],
+  "export_vtu": true,
+  "save_db": true
+ }
+}

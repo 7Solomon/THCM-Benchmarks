@@ -1,0 +1,93 @@
+11:13:06 INFO     tools.simulations: Log file: debug/HITEC/hm-excavation/output/OOFEM/logs/run_20260814_111306.log
+11:13:06 INFO     tools.simulations: == STARTING BENCHMARK: hm-excavation ==
+11:13:06 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HITEC/hm-excavation
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+11:13:06 INFO     tools.simulations: Loading benchmark config: debug/HITEC/hm-excavation/benchmark.json
+11:13:06 INFO     tools.simulations: Benchmark: HITEC near-field benchmark - COx claystone, isotropic, hydro-mechanical excavation + 6-month waiting phase (hitec-cox-isotropic-hm-excavation)
+11:13:06 INFO     tools.simulations: Configurations loaded.
+11:13:06 INFO     tools.simulations: Loading mesh...
+11:13:06 INFO     tools.simulations: Mesh loaded: 46378 nodes, 45975 elements (quad)
+11:13:06 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:13:06 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 46378
+  Total DOFs: 139134
+  Fields: 2
+    - displacement: 92756 DOFs (['ux', 'uy'])
+    - pore_pressure: 46378 DOFs (['p'])
+11:13:06 INFO     tools.simulations: Building oofem problem...
+11:13:06 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[482.1 -> 5785.7] s
+11:13:06 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[13982.1 -> 167785.1] s
+11:13:06 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[88698.4 -> 443492.1] s
+11:13:06 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: mobility = intrinsic_permeability/fluid_viscosity = 2.3e-20 / 0.001 = 2.3e-17 m2/(Pa.s)
+11:13:06 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: storage 1/Q = 1.02314e-10 1/Pa (from porosity)
+11:13:18 INFO     tools.simulations: oofem problem built: 46378 nodes, 45975 elements, 140 steps (t=[0 -> 1.59e+07])
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=-4.60e+06,  max=-4.60e+06)
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=+1.13e+06,  max=+1.13e+06)
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=+2.47e+05,  max=+2.47e+05)
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=-2.64e+04,  max=-2.64e+04)
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=-2.72e-03,  max=-2.72e-03)
+11:13:38 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:13:38 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.01 d · 9 queries ok ────────────────────────────────────────
+   excess p at P1 [Pa]                                                             -4.600e+06   p @ P1
+   excess p at P2 [Pa]                                                             +1.132e+06   p @ P2
+   excess p at P3 [Pa]                                                             +2.467e+05   p @ P3
+   excess p at P4 [Pa]                                                             -2.637e+04   p @ P4
+   ux at P1 [m]                                                                    -2.722e-03   ux @ P1
+   Time [days]                                                                     +5.580e-03
+   absolute p at P2 [MPa] - paper plots absolute                                   +5.832e+00
+   radial convergence at P1 [m] - paper sign convention: positive toward gallery   +2.722e-03
+────────────────────────────────────────────────────────────────────
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=-4.60e+06,  max=-4.60e+06)
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=+1.14e+06,  max=+1.14e+06)
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=+2.34e+05,  max=+2.34e+05)
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=-2.54e+04,  max=-2.54e+04)
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=-2.72e-03,  max=-2.72e-03)
+11:16:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:16:17 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.08 d · 9 queries ok ────────────────────────────────────────
+   excess p at P1 [Pa]                                                             -4.600e+06   p @ P1
+   excess p at P2 [Pa]                                                             +1.139e+06   p @ P2
+   excess p at P3 [Pa]                                                             +2.340e+05   p @ P3
+   excess p at P4 [Pa]                                                             -2.539e+04   p @ P4
+   ux at P1 [m]                                                                    -2.723e-03   ux @ P1
+   Time [days]                                                                     +7.558e-02
+   absolute p at P2 [MPa] - paper plots absolute                                   +5.839e+00
+   radial convergence at P1 [m] - paper sign convention: positive toward gallery   +2.723e-03
+────────────────────────────────────────────────────────────────────
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=-4.60e+06,  max=-4.60e+06)
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=+1.14e+06,  max=+1.14e+06)
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=+2.20e+05,  max=+2.20e+05)
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=-2.43e+04,  max=-2.43e+04)
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         (min=-2.72e-03,  max=-2.72e-03)
+11:24:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                                                         1 nodes
+11:24:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.22 d · 9 queries ok ────────────────────────────────────────
+   excess p at P1 [Pa]                                                             -4.600e+06   p @ P1
+   excess p at P2 [Pa]                                                             +1.140e+06   p @ P2
+   excess p at P3 [Pa]                                                             +2.199e+05   p @ P3
+   excess p at P4 [Pa]                                                             -2.432e+04   p @ P4
+   ux at P1 [m]                                                                    -2.723e-03   ux @ P1
+   Time [days]                                                                     +2.185e-01
+   absolute p at P2 [MPa] - paper plots absolute                                   +5.840e+00
+   radial convergence at P1 [m] - paper sign convention: positive toward gallery   +2.723e-03
+────────────────────────────────────────────────────────────────────

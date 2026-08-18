@@ -1,0 +1,31 @@
+13:01:17 INFO     tools.simulations: Log file: debug/BenVaSim/1.1/output/OOFEM/logs/run_20260814_130117.log
+13:01:17 INFO     tools.simulations: == STARTING BENCHMARK: 1.1 ==
+13:01:17 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/BenVaSim/1.1
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+13:01:17 INFO     tools.simulations: Loading benchmark config: debug/BenVaSim/1.1/benchmark.json
+13:01:17 INFO     tools.simulations: Benchmark: BenVaSim Stage 1 / Model 1.1(a): 1D HM-coupled saturated column (Biot consolidation benchmark) (benvasim-model-1-1a)
+13:01:17 INFO     tools.simulations: Configurations loaded.
+13:01:17 INFO     tools.simulations: Loading mesh...
+13:01:17 INFO     tools.simulations: Mesh loaded: 9637 nodes, 9216 elements (quad)
+13:01:17 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+13:01:17 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 9637
+  Total DOFs: 28911
+  Fields: 2
+    - displacement: 19274 DOFs (['ux', 'uy'])
+    - pore_pressure: 9637 DOFs (['p'])
+13:01:17 INFO     tools.simulations: Building oofem problem...
+13:01:17 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 465 steps, dt=[999.7 -> 19993561.9] s
+13:01:17 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: mobility = intrinsic_permeability/fluid_viscosity = 1e-20 / 0.001 = 1e-17 m2/(Pa.s)
+13:01:17 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: storage 1/Q = 7.14286e-11 1/Pa (from porosity)
+13:01:18 INFO     tools.simulations: oofem problem built: 9637 nodes, 9216 elements, 465 steps (t=[0 -> 9.47e+08])

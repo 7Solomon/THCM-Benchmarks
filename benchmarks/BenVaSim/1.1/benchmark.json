@@ -1,0 +1,3741 @@
+{
+  "metadata": {
+    "id": "benvasim-model-1-1a",
+    "title": "BenVaSim Stage 1 / Model 1.1(a): 1D HM-coupled saturated column (Biot consolidation benchmark)",
+    "source": {
+      "authors": [
+        "Lux",
+        "Rutenberg",
+        "Feierabend",
+        "Czaikowski",
+        "Friedenberg",
+        "Massmann",
+        "Pitz",
+        "Lorenzo Sentis",
+        "Graupner",
+        "Hansmann",
+        "Hotzel",
+        "Kock",
+        "Rutqvist",
+        "Hu",
+        "Rinaldi"
+      ],
+      "year": 2021,
+      "journal": "Synthesis report, BMWi joint research project BenVaSim (02E11567A-B), TU Clausthal",
+      "doi": ""
+    },
+    "dimension": 2,
+    "physics_class": "hydro-mechanical (Biot poroelasticity)",
+    "validation_method": "analytical solution (transient + steady state), Lux et al. (2021)",
+    "validation_target": "Pore-pressure evolution at X=0.25/0.75/1.25/5/9.75 m and lhs displacement over 30 a",
+    "notes": "v5 (2026-08-17): LATERAL CONFINEMENT ADDED - the fix for the v4 'pipeline storage bug', which was a MISDIAGNOSIS. v4 clamped uy only on edge_bottom, leaving the top edge y=0.5 traction-free, and argued that nu=0 makes the transverse direction inert. That is true for pure mechanics but FALSE under Biot coupling: sigma_yy = M*eps_yy - b*p, so a free top gives eps_yy = b*p/M regardless of nu. Consequences measured on the 2026-08-16 run: undrained jump p_u = sigma/(2+E/Q) = 3.4949e5 Pa instead of the 1D sigma/(1+E/Q) = 5.7181e5 Pa (ratio 0.6112, predicted 0.6111); u_lhs/L = 6.8633e-5 instead of 4.086e-5 = exactly (sigma-p_u)/E; and the top edge really moved, uy = 2.184e-5 m = (p_u/E)*0.5 to 4 digits. Momentum was exact (E*eps+p = 898559 vs 898700 Pa), so load, moduli and coupling were all correct - only the kinematic BC was wrong. The v4 fingerprint S_used = eps_xx/p = 1.9638e-10 = 1/Q + b^2/E is what you get when you invert the storage from eps_xx ALONE while eps_yy is free; there is NO spurious b^2/M in the assembly and no OOFEM source change is warranted. Second symptom of the same cause: a spurious 2D near-field at the pressure boundary (at 30 a, x=0.25 m read 787001 Pa at y=0 vs 668015 Pa at y=0.5) decaying over ~0.5 m = one strip height, with the probes at y=0.25 sitting inside it. Also raised dt_min 1e3 -> 6e3 s to clear the upquad11 monotonicity floor dt >= h^2/(6c) = 0.0415^2/(6*5.09e-8) = 5.6e3 s; v4 rang on both boundaries at step 1 (29 nodes undershooting the interior plateau). Full evidence in ANALYSIS.md. v4: results{} rewired onto reference data digitised from the report's Figs 4.7-4.11 (see reference/README.md). PLOT UNITS ARE THE REPORT'S OWN: absolute MPa and years, not excess Pa - simulation curves carry scale/offset to match, references need none. NOTE reference/transient_probes.csv is EMPTY (header only); the old an_transient ref pointed at it, so the transient plot and console.reference_deviation were silently comparing against nothing. Both now use the digitised Fig. 4.8 analytical curves. v3: line_profile start/end now 2 coordinates (backend requirement); displacement sign corrected - compaction is positive, lhs moves toward the clamped end, u_lhs ss = +5.617e-4 m. v2: added displacement.rho (required by builder; quasi-static -> no physical effect); probes as dim-0 groups for exact nodes. 1D model mapped to 2D plane strain; nu=0 makes M=E, so the mapping is EXACT (Sec. 2.2) PROVIDED eps_yy is suppressed by clamping BOTH lateral edges. Pressures are EXCESS values relative to the 0.1013 MPa initial datum (exact shift). No 1-day BC ramp available (BGR/ENSI used one) - expect small early-time boundary oscillations, as observed in the report itself (Fig. 4.9). Equal-order u/p: check pressure profile for checkerboarding near t=0+."
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "column",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            10.0,
+            0.1
+          ]
+        },
+        "_comment": "PAPER_VALUE: 10 m column length (Sec. 4.1.1). ASSUMED: 0.1 m transverse width = TWO elements at element_size 0.05. The 1D model has no transverse dimension and, with both lateral edges clamped in uy, eps_yy=0, so the width has zero physical effect - it is pure DOF cost. Was 0.5 m (10 elements) until v6. NOT 0.05 m (one element): gmsh's Blossom recombination needs an EVEN number of divisions on every boundary curve and fails with '1D mesh cannot be divided by 2', so two elements is the minimum for a quad mesh."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "column_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "column"
+        ]
+      },
+      {
+        "name": "face_left",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            1e-06,
+            0.100001,
+            1e-06
+          ]
+        }
+      },
+      {
+        "name": "face_right",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            9.999999,
+            -1e-06,
+            -1e-06,
+            10.000001,
+            0.100001,
+            1e-06
+          ]
+        }
+      },
+      {
+        "name": "edge_bottom",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            10.000001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "Lower lateral edge. Clamped in uy together with edge_top to enforce the 1D oedometric kinematics eps_yy=0. NOTE the v4 comment here was wrong: 'nu=0 so it does not perturb the x-solution' holds for pure mechanics only - see metadata.notes."
+      },
+      {
+        "name": "edge_top",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            0.099999,
+            -1e-06,
+            10.000001,
+            0.100001,
+            1e-06
+          ]
+        },
+        "_comment": "Upper lateral edge, added in v5. Must be clamped in uy: leaving it traction-free lets the Biot coupling generate eps_yy = b*p/M even at nu=0, which halves the undrained pressure jump and adds b^2/M to the effective storage."
+      },
+      {
+        "name": "probe_x025",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.249999,
+            0.049999,
+            -1e-06,
+            0.250001,
+            0.050001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: evaluation point X=0.25 m (Fig. 4.1). dim-0 group -> exact mesh vertex at box centre."
+      },
+      {
+        "name": "probe_x075",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.749999,
+            0.049999,
+            -1e-06,
+            0.750001,
+            0.050001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: evaluation point X=0.75 m"
+      },
+      {
+        "name": "probe_x125",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            1.249999,
+            0.049999,
+            -1e-06,
+            1.250001,
+            0.050001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: evaluation point X=1.25 m"
+      },
+      {
+        "name": "probe_x500",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            4.999999,
+            0.049999,
+            -1e-06,
+            5.000001,
+            0.050001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: evaluation point X=5 m"
+      },
+      {
+        "name": "probe_x975",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            9.749999,
+            0.049999,
+            -1e-06,
+            9.750001,
+            0.050001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: evaluation point X=9.75 m"
+      },
+      {
+        "name": "probe_lhs",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            -1e-06,
+            0.049999,
+            -1e-06,
+            1e-06,
+            0.050001,
+            1e-06
+          ]
+        },
+        "_comment": "lhs free boundary midpoint for displacement query"
+      }
+    ],
+    "mesh": {
+      "element_size": 0.05,
+      "order": 1,
+      "recombine": true,
+      "_comment": "recombine=true -> quads, REQUIRED for hydro_mechanical (upquad11). With a 0.1 m strip height this gives a STRUCTURED 200x2 grid of 400 quads - which also removes the unstructured corner patch that hosted the DSS dead-node failure (see ANALYSIS.md). Report's own mesh study (BGR, Figs. 4.2-4.3) showed ~256 elements converged, so 200 along the column is right. u-p monotonicity floor dt >= h^2/(6c) = 0.05^2/(6*5.09e-8) = 8.2e3 s at this h."
+    }
+  },
+  "physics": {
+    "mechanics": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "displacement",
+        "symbol": "u",
+        "type": "vector",
+        "components": [
+          "ux",
+          "uy"
+        ]
+      }
+    },
+    "flow": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "pore_pressure",
+        "symbol": "p",
+        "type": "scalar",
+        "components": [
+          "p"
+        ]
+      }
+    },
+    "hydro_mechanical": {
+      "type": "coupling",
+      "_comment": "monolithic Biot u-p solve; no source/target fields by design"
+    }
+  },
+  "materials": {
+    "porous_medium": {
+      "displacement": {
+        "E": 8000000000.0,
+        "nu": 0.0,
+        "rho": 2000.0,
+        "_comment_E": "PAPER_VALUE: drained Young's modulus 8000 MPa (Table 4.1)",
+        "_comment_nu": "PAPER_VALUE: nu=0 by model definition - 1D model, transverse stresses vanish (Table 4.1, Sec. 2.2)",
+        "_comment_rho": "ASSUMED: 2000 kg/m3 generic geomaterial bulk density. REQUIRED by the hydro_mechanical builder. Quasi-static analysis -> zero impact on results."
+      },
+      "pore_pressure": {
+        "model": "biot",
+        "biot_alpha": 1.0,
+        "intrinsic_permeability": 1e-20,
+        "fluid_viscosity": 0.001,
+        "porosity": 0.15,
+        "fluid_bulk_modulus": 2100000000.0,
+        "_comment_biot_alpha": "PAPER_VALUE: alpha=1 for scenario 1.1(a) (Table 4.1)",
+        "_comment_perm": "PAPER_VALUE: K=1e-20 m2 (Table 4.1) via the intrinsic_permeability route; viscosity 1e-9 MPa.s = 1e-3 Pa.s (Table 4.1). Pipeline computes mobility - never hand-converted.",
+        "_comment_storage": "PAPER_VALUE: porosity 0.15, K_liquid 2100 MPa (Table 4.1); grains incompressible, consistent with b=1. Gives Q=K_f/n=14 GPa, 1/Q=7.14e-11 1/Pa.",
+        "_comment_sanity": "c_v=(k/mu)/(1/Q+1/E)=5.09e-8 m2/s; fundamental time L^2/(pi^2 c_v)=6.3 a -> 30 a run reaches steady state, matching the report's profile schedule."
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "pore_pressure",
+      "value": 0.0,
+      "location": "column_domain",
+      "_comment": "EXCESS pore pressure: paper IC p0=0.1013 MPa absolute (Table 4.1) is the datum -> 0 Pa excess. Zero consistent state, satisfying the backend IC admissibility rule."
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "dirichlet",
+      "field": "pore_pressure",
+      "value": 898700.0,
+      "location": "face_left",
+      "_comment": "PAPER_VALUE: lhs pore pressure 1 MPa absolute (Table 4.1) -> 0.8987 MPa excess after datum shift. Drained, prescribed-pressure boundary."
+    },
+    {
+      "type": "dirichlet",
+      "field": "pore_pressure",
+      "value": 0.0,
+      "location": "face_right",
+      "_comment": "PAPER_VALUE: rhs pore pressure 0.1013 MPa absolute = datum -> 0 Pa excess."
+    },
+    {
+      "type": "neumann",
+      "field": "displacement",
+      "component": "ux",
+      "value": 898700.0,
+      "location": "face_left",
+      "_comment": "PAPER_VALUE: lhs total stress 1 MPa compressive (Table 4.1) -> increment 0.8987 MPa over the initial 0.1013 MPa equilibrium. Compression = +x traction on the left face (tension-positive FEM convention)."
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "face_right",
+      "_comment": "PAPER_VALUE: rhs clamped, u_rhs=0 (Table 4.1)."
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "edge_bottom",
+      "_comment": "PAPER_VALUE (implicit): lateral confinement of the 1D column, eps_yy=0. Together with the edge_top constraint this makes the 2D plane-strain mapping exact. NOT merely rigid-body suppression - see metadata.notes."
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "edge_top",
+      "_comment": "PAPER_VALUE (implicit): the reference is a 1D oedometric column, eps_yy=0. Under Biot coupling a traction-free top gives eps_yy = b*p/M even at nu=0, which drops the undrained jump from 5.7181e5 to 3.4949e5 Pa and stretches the fundamental time from 6.31 a to 10.32 a. Not optional."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "column_domain": {
+        "active_fields": [
+          "displacement",
+          "pore_pressure"
+        ],
+        "material": "porous_medium"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 946728000.0,
+    "analysis_type": "transient",
+    "_comment_t_end": "PAPER_VALUE: last profile time 30 a (Sec. 4.1.1) = 30*365.25*86400 s",
+    "dt_strategy": {
+      "type": "log",
+      "dt_min": 6000.0,
+      "dt_max": 20000000.0,
+      "n_steps": 465
+    },
+    "linear_solver": "skyline",
+    "_comment_linear_solver": "MUST stay skyline. linear_solver 'dss' maps hydro_mechanical (symmetric_tangent=True) onto SMT_DSS_sym_LDL, an UNPIVOTED LDL^T, but the u-p tangent is symmetric INDEFINITE (a saddle point). It breaks down on the LAST equation of the system - node 2835's P_f in the v5 mesh - and leaves that pressure DOF dead at p~0, i.e. a spurious point sink. Controlled test (2026-08-17, same mesh, same config, 3 steps): node 2834 p = -3.289e-07 under dss vs 657831 Pa under skyline, max|dp| over all 2835 nodes = 6.578e5 attained at exactly that node, displacements agreeing to 2.2e-6 m. In the v5 run that one node stole 15.6% of the inlet flux and scaled the whole steady profile to 0.844x. The v5 comment reasoned against the WRONG caveat: solver.py documents only DSS's accuracy floor on free/unloaded problems, which is a different failure mode. Skyline was 65 s/step at 8505 unknowns; the 0.05 m strip (v6) drops that to ~1200 unknowns, so cost is no longer a reason to reach for dss.",
+    "_comment_dt": "log grid sums to 30 a. dt_min raised 1e3 -> 6e3 s in v5 to clear the upquad11 (unstabilised equal-order u-p) monotonicity floor dt >= h^2/(6c) = 0.0415^2/(6*5.09e-8) = 5.6e3 s; at dt_min=1e3 the first step rang on both boundaries (p oscillating 898700/131927/392615/320900 near x=0, 29 nodes undershooting the interior plateau). Still ~16 steps before the report's first profile instant at 0.003 a = 9.47e4 s. If finer early resolution is ever needed, refine h near the boundaries instead - the floor scales as h^2."
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "f48_0.25m_analytical",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.25m_analytical.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "Analytical X=0.25m",
+        "_comment": "Digitised from Fig. 4.8 (log time axis); Fig. 4.7 is the SAME data on a linear axis, so one set serves both evolution plots. ABSOLUTE MPa vs years - the report's own units. Provenance and verification: reference/README.md."
+      },
+      {
+        "id": "f48_0.25m_BGR",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.25m_BGR.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "BGR"
+      },
+      {
+        "id": "f48_0.25m_ENSI-TF",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.25m_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f48_0.25m_ENSI-OGS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.25m_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f48_0.25m_ENSI-CM",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.25m_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f48_0.25m_GRS-BS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.25m_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f48_0.25m_GRS-K",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.25m_GRS-K.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f48_0.25m_LBNL",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.25m_LBNL.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "LBNL"
+      },
+      {
+        "id": "f48_0.25m_TUC",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.25m_TUC.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "TUC"
+      },
+      {
+        "id": "f48_0.75m_analytical",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.75m_analytical.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "Analytical X=0.75m"
+      },
+      {
+        "id": "f48_0.75m_BGR",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.75m_BGR.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "BGR"
+      },
+      {
+        "id": "f48_0.75m_ENSI-TF",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.75m_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f48_0.75m_ENSI-OGS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.75m_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f48_0.75m_ENSI-CM",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.75m_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f48_0.75m_GRS-BS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.75m_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f48_0.75m_GRS-K",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.75m_GRS-K.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f48_0.75m_LBNL",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.75m_LBNL.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "LBNL"
+      },
+      {
+        "id": "f48_0.75m_TUC",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X0.75m_TUC.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "TUC"
+      },
+      {
+        "id": "f48_1.25m_analytical",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X1.25m_analytical.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "Analytical X=1.25m"
+      },
+      {
+        "id": "f48_1.25m_BGR",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X1.25m_BGR.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "BGR"
+      },
+      {
+        "id": "f48_1.25m_ENSI-TF",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X1.25m_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f48_1.25m_ENSI-OGS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X1.25m_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f48_1.25m_ENSI-CM",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X1.25m_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f48_1.25m_GRS-BS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X1.25m_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f48_1.25m_GRS-K",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X1.25m_GRS-K.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f48_1.25m_LBNL",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X1.25m_LBNL.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "LBNL"
+      },
+      {
+        "id": "f48_1.25m_TUC",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X1.25m_TUC.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "TUC"
+      },
+      {
+        "id": "f48_5m_analytical",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X5m_analytical.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "Analytical X=5m"
+      },
+      {
+        "id": "f48_5m_BGR",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X5m_BGR.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "BGR"
+      },
+      {
+        "id": "f48_5m_ENSI-TF",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X5m_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f48_5m_ENSI-OGS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X5m_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f48_5m_ENSI-CM",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X5m_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f48_5m_GRS-BS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X5m_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f48_5m_GRS-K",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X5m_GRS-K.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f48_5m_LBNL",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X5m_LBNL.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "LBNL"
+      },
+      {
+        "id": "f48_5m_TUC",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X5m_TUC.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "TUC"
+      },
+      {
+        "id": "f48_9.75m_analytical",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X9.75m_analytical.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "Analytical X=9.75m"
+      },
+      {
+        "id": "f48_9.75m_BGR",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X9.75m_BGR.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "BGR"
+      },
+      {
+        "id": "f48_9.75m_ENSI-TF",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X9.75m_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f48_9.75m_ENSI-OGS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X9.75m_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f48_9.75m_ENSI-CM",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X9.75m_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f48_9.75m_GRS-BS",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X9.75m_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f48_9.75m_GRS-K",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X9.75m_GRS-K.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f48_9.75m_LBNL",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X9.75m_LBNL.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "LBNL"
+      },
+      {
+        "id": "f48_9.75m_TUC",
+        "file": "reference/fig4.8_pw_time_log/fig4_8_X9.75m_TUC.csv",
+        "has_header": true,
+        "x_col": "time_a",
+        "y_col": "pw_MPa",
+        "label": "TUC"
+      },
+      {
+        "id": "f410_0.003a_analytical",
+        "file": "reference/fig4.10_pw_profile/fig4_10_t0.003a_analytical.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "pw_MPa",
+        "label": "Analytical 0.003a"
+      },
+      {
+        "id": "f410_0.1a_analytical",
+        "file": "reference/fig4.10_pw_profile/fig4_10_t0.1a_analytical.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "pw_MPa",
+        "label": "Analytical 0.1a"
+      },
+      {
+        "id": "f410_0.3a_analytical",
+        "file": "reference/fig4.10_pw_profile/fig4_10_t0.3a_analytical.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "pw_MPa",
+        "label": "Analytical 0.3a"
+      },
+      {
+        "id": "f410_1a_analytical",
+        "file": "reference/fig4.10_pw_profile/fig4_10_t1a_analytical.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "pw_MPa",
+        "label": "Analytical 1a"
+      },
+      {
+        "id": "f410_3a_analytical",
+        "file": "reference/fig4.10_pw_profile/fig4_10_t3a_analytical.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "pw_MPa",
+        "label": "Analytical 3a"
+      },
+      {
+        "id": "f410_10a_analytical",
+        "file": "reference/fig4.10_pw_profile/fig4_10_t10a_analytical.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "pw_MPa",
+        "label": "Analytical 10a"
+      },
+      {
+        "id": "f410_30a_analytical",
+        "file": "reference/fig4.10_pw_profile/fig4_10_t30a_analytical.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "pw_MPa",
+        "label": "Analytical 30a"
+      },
+      {
+        "id": "f410_steady_analytical",
+        "file": "reference/fig4.10_pw_profile/fig4_10_tsteady_analytical.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "pw_MPa",
+        "label": "Analytical steady state"
+      },
+      {
+        "id": "f411_steady_analytical",
+        "file": "reference/fig4.11_u_profile/fig4_11_tsteady_analytical.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "Analytical steady state",
+        "_comment": "Fig. 4.11 draws ONE analytical curve (the steady state). The transient reference for u(x) is the 8-code band below."
+      },
+      {
+        "id": "f411_0.003a_BGR",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.003a_BGR.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "BGR"
+      },
+      {
+        "id": "f411_0.003a_ENSI-TF",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.003a_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f411_0.003a_ENSI-OGS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.003a_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f411_0.003a_ENSI-CM",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.003a_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f411_0.003a_GRS-BS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.003a_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f411_0.003a_GRS-K",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.003a_GRS-K.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f411_0.003a_LBNL",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.003a_LBNL.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "LBNL"
+      },
+      {
+        "id": "f411_0.003a_TUC",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.003a_TUC.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "TUC"
+      },
+      {
+        "id": "f411_0.1a_BGR",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.1a_BGR.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "BGR"
+      },
+      {
+        "id": "f411_0.1a_ENSI-TF",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.1a_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f411_0.1a_ENSI-OGS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.1a_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f411_0.1a_ENSI-CM",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.1a_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f411_0.1a_GRS-BS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.1a_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f411_0.1a_GRS-K",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.1a_GRS-K.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f411_0.1a_LBNL",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.1a_LBNL.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "LBNL"
+      },
+      {
+        "id": "f411_0.1a_TUC",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.1a_TUC.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "TUC"
+      },
+      {
+        "id": "f411_0.3a_BGR",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.3a_BGR.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "BGR"
+      },
+      {
+        "id": "f411_0.3a_ENSI-TF",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.3a_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f411_0.3a_ENSI-OGS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.3a_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f411_0.3a_ENSI-CM",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.3a_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f411_0.3a_GRS-BS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.3a_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f411_0.3a_GRS-K",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.3a_GRS-K.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f411_0.3a_LBNL",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.3a_LBNL.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "LBNL"
+      },
+      {
+        "id": "f411_0.3a_TUC",
+        "file": "reference/fig4.11_u_profile/fig4_11_t0.3a_TUC.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "TUC"
+      },
+      {
+        "id": "f411_1a_BGR",
+        "file": "reference/fig4.11_u_profile/fig4_11_t1a_BGR.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "BGR"
+      },
+      {
+        "id": "f411_1a_ENSI-TF",
+        "file": "reference/fig4.11_u_profile/fig4_11_t1a_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f411_1a_ENSI-OGS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t1a_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f411_1a_ENSI-CM",
+        "file": "reference/fig4.11_u_profile/fig4_11_t1a_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f411_1a_GRS-BS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t1a_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f411_1a_GRS-K",
+        "file": "reference/fig4.11_u_profile/fig4_11_t1a_GRS-K.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f411_1a_LBNL",
+        "file": "reference/fig4.11_u_profile/fig4_11_t1a_LBNL.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "LBNL"
+      },
+      {
+        "id": "f411_1a_TUC",
+        "file": "reference/fig4.11_u_profile/fig4_11_t1a_TUC.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "TUC"
+      },
+      {
+        "id": "f411_3a_BGR",
+        "file": "reference/fig4.11_u_profile/fig4_11_t3a_BGR.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "BGR"
+      },
+      {
+        "id": "f411_3a_ENSI-TF",
+        "file": "reference/fig4.11_u_profile/fig4_11_t3a_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f411_3a_ENSI-OGS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t3a_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f411_3a_ENSI-CM",
+        "file": "reference/fig4.11_u_profile/fig4_11_t3a_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f411_3a_GRS-BS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t3a_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f411_3a_GRS-K",
+        "file": "reference/fig4.11_u_profile/fig4_11_t3a_GRS-K.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f411_3a_LBNL",
+        "file": "reference/fig4.11_u_profile/fig4_11_t3a_LBNL.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "LBNL"
+      },
+      {
+        "id": "f411_3a_TUC",
+        "file": "reference/fig4.11_u_profile/fig4_11_t3a_TUC.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "TUC"
+      },
+      {
+        "id": "f411_10a_BGR",
+        "file": "reference/fig4.11_u_profile/fig4_11_t10a_BGR.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "BGR"
+      },
+      {
+        "id": "f411_10a_ENSI-TF",
+        "file": "reference/fig4.11_u_profile/fig4_11_t10a_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f411_10a_ENSI-OGS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t10a_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f411_10a_ENSI-CM",
+        "file": "reference/fig4.11_u_profile/fig4_11_t10a_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f411_10a_GRS-BS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t10a_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f411_10a_GRS-K",
+        "file": "reference/fig4.11_u_profile/fig4_11_t10a_GRS-K.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f411_10a_LBNL",
+        "file": "reference/fig4.11_u_profile/fig4_11_t10a_LBNL.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "LBNL"
+      },
+      {
+        "id": "f411_10a_TUC",
+        "file": "reference/fig4.11_u_profile/fig4_11_t10a_TUC.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "TUC"
+      },
+      {
+        "id": "f411_30a_BGR",
+        "file": "reference/fig4.11_u_profile/fig4_11_t30a_BGR.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "BGR"
+      },
+      {
+        "id": "f411_30a_ENSI-TF",
+        "file": "reference/fig4.11_u_profile/fig4_11_t30a_ENSI-TF.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-TF"
+      },
+      {
+        "id": "f411_30a_ENSI-OGS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t30a_ENSI-OGS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-OGS"
+      },
+      {
+        "id": "f411_30a_ENSI-CM",
+        "file": "reference/fig4.11_u_profile/fig4_11_t30a_ENSI-CM.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "ENSI-CM"
+      },
+      {
+        "id": "f411_30a_GRS-BS",
+        "file": "reference/fig4.11_u_profile/fig4_11_t30a_GRS-BS.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-BS"
+      },
+      {
+        "id": "f411_30a_GRS-K",
+        "file": "reference/fig4.11_u_profile/fig4_11_t30a_GRS-K.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "GRS-K"
+      },
+      {
+        "id": "f411_30a_LBNL",
+        "file": "reference/fig4.11_u_profile/fig4_11_t30a_LBNL.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "LBNL"
+      },
+      {
+        "id": "f411_30a_TUC",
+        "file": "reference/fig4.11_u_profile/fig4_11_t30a_TUC.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_m",
+        "label": "TUC"
+      },
+      {
+        "id": "an_steady_u",
+        "file": "reference/steady_state_profiles.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "u_mm",
+        "label": "Analytical steady state (repo)",
+        "y_scale": 0.001,
+        "_comment": "u_mm -> m via y_scale. Independently computed, agrees with the digitised Fig. 4.11 curve to 2.3e-4 mm."
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_years",
+        "type": "formula",
+        "formula": "t / 31557600.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [years]"
+      },
+      {
+        "id": "p_x025",
+        "type": "field",
+        "field": "pore_pressure",
+        "component": "p",
+        "at": "probe_x025",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "p' at X=0.25 m [Pa]"
+      },
+      {
+        "id": "p_x075",
+        "type": "field",
+        "field": "pore_pressure",
+        "component": "p",
+        "at": "probe_x075",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "p' at X=0.75 m [Pa]"
+      },
+      {
+        "id": "p_x125",
+        "type": "field",
+        "field": "pore_pressure",
+        "component": "p",
+        "at": "probe_x125",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "p' at X=1.25 m [Pa]"
+      },
+      {
+        "id": "p_x500",
+        "type": "field",
+        "field": "pore_pressure",
+        "component": "p",
+        "at": "probe_x500",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "p' at X=5 m [Pa]"
+      },
+      {
+        "id": "p_x975",
+        "type": "field",
+        "field": "pore_pressure",
+        "component": "p",
+        "at": "probe_x975",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "p' at X=9.75 m [Pa]"
+      },
+      {
+        "id": "p_profile",
+        "type": "line_profile",
+        "field": "pore_pressure",
+        "component": "p",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "label": "p'(x) profile",
+        "_comment": "No at_time, so the last step (30 a) is what source:'query' plots. The earlier instants are the p_prof_* snapshots below."
+      },
+      {
+        "id": "u_lhs_m",
+        "type": "field",
+        "field": "displacement",
+        "component": "ux",
+        "at": "probe_lhs",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "lhs displacement [m]",
+        "_comment": "Renamed from u_lhs_mm: the query returns METRES, the old id said mm. Expect +5.617e-4 m at steady state."
+      },
+      {
+        "id": "p_x025_MPa",
+        "type": "formula",
+        "formula": "p_x025 / 1e6 + 0.1013",
+        "depends_on": [
+          "p_x025"
+        ],
+        "label": "p at X=0.25m [MPa abs]",
+        "_comment": "excess Pa -> absolute MPa, the units the report's figures are plotted in."
+      },
+      {
+        "id": "p_x075_MPa",
+        "type": "formula",
+        "formula": "p_x075 / 1e6 + 0.1013",
+        "depends_on": [
+          "p_x075"
+        ],
+        "label": "p at X=0.75m [MPa abs]"
+      },
+      {
+        "id": "p_x125_MPa",
+        "type": "formula",
+        "formula": "p_x125 / 1e6 + 0.1013",
+        "depends_on": [
+          "p_x125"
+        ],
+        "label": "p at X=1.25m [MPa abs]"
+      },
+      {
+        "id": "p_x500_MPa",
+        "type": "formula",
+        "formula": "p_x500 / 1e6 + 0.1013",
+        "depends_on": [
+          "p_x500"
+        ],
+        "label": "p at X=5m [MPa abs]"
+      },
+      {
+        "id": "p_x975_MPa",
+        "type": "formula",
+        "formula": "p_x975 / 1e6 + 0.1013",
+        "depends_on": [
+          "p_x975"
+        ],
+        "label": "p at X=9.75m [MPa abs]"
+      },
+      {
+        "id": "u_profile",
+        "type": "line_profile",
+        "field": "displacement",
+        "component": "ux",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "label": "u(x) profile",
+        "_comment": "Was missing entirely - Fig. 4.11 had nothing to compare against. No at_time: last step = 30 a."
+      },
+      {
+        "id": "p_prof_0p003a",
+        "type": "line_profile",
+        "field": "pore_pressure",
+        "component": "p",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 94672.8,
+        "label": "p(x) at 0.003a",
+        "_comment": "The report's profile instants (Figs 4.10/4.11). at_time fires once, on the step crossing it. 30 a is deliberately NOT an at_time query: t_end is exactly 30 a, so no step would cross it - p_profile/u_profile cover it."
+      },
+      {
+        "id": "u_prof_0p003a",
+        "type": "line_profile",
+        "field": "displacement",
+        "component": "ux",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 94672.8,
+        "label": "u(x) at 0.003a"
+      },
+      {
+        "id": "p_prof_0p1a",
+        "type": "line_profile",
+        "field": "pore_pressure",
+        "component": "p",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 3155760.0,
+        "label": "p(x) at 0.1a"
+      },
+      {
+        "id": "u_prof_0p1a",
+        "type": "line_profile",
+        "field": "displacement",
+        "component": "ux",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 3155760.0,
+        "label": "u(x) at 0.1a"
+      },
+      {
+        "id": "p_prof_0p3a",
+        "type": "line_profile",
+        "field": "pore_pressure",
+        "component": "p",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 9467280.0,
+        "label": "p(x) at 0.3a"
+      },
+      {
+        "id": "u_prof_0p3a",
+        "type": "line_profile",
+        "field": "displacement",
+        "component": "ux",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 9467280.0,
+        "label": "u(x) at 0.3a"
+      },
+      {
+        "id": "p_prof_1a",
+        "type": "line_profile",
+        "field": "pore_pressure",
+        "component": "p",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 31557600.0,
+        "label": "p(x) at 1a"
+      },
+      {
+        "id": "u_prof_1a",
+        "type": "line_profile",
+        "field": "displacement",
+        "component": "ux",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 31557600.0,
+        "label": "u(x) at 1a"
+      },
+      {
+        "id": "p_prof_3a",
+        "type": "line_profile",
+        "field": "pore_pressure",
+        "component": "p",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 94672800.0,
+        "label": "p(x) at 3a"
+      },
+      {
+        "id": "u_prof_3a",
+        "type": "line_profile",
+        "field": "displacement",
+        "component": "ux",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 94672800.0,
+        "label": "u(x) at 3a"
+      },
+      {
+        "id": "p_prof_10a",
+        "type": "line_profile",
+        "field": "pore_pressure",
+        "component": "p",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 315576000.0,
+        "label": "p(x) at 10a"
+      },
+      {
+        "id": "u_prof_10a",
+        "type": "line_profile",
+        "field": "displacement",
+        "component": "ux",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.05
+        ],
+        "end": [
+          10.0,
+          0.05
+        ],
+        "n_samples": 201,
+        "at_time": 315576000.0,
+        "label": "u(x) at 10a"
+      }
+    ],
+    "plots": [
+      {
+        "name": "pw_evolution_log",
+        "title": "Pore-water pressure at the 5 probes (log time) - Fig. 4.8",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [a]"
+        },
+        "y_axis": {
+          "label": "Pore-water pressure [MPa]"
+        },
+        "ylim": [
+          0,
+          1
+        ],
+        "legend_location": "lower left",
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x025",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=0.25m",
+            "style": {
+              "color": "#d62728",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x075",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=0.75m",
+            "style": {
+              "color": "#bcbd22",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x125",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=1.25m",
+            "style": {
+              "color": "#2ca02c",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x500",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=5m",
+            "style": {
+              "color": "#17becf",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x975",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=9.75m",
+            "style": {
+              "color": "#1f77b4",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_BGR",
+            "label": "BenVaSim codes (8)",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_analytical",
+            "label": "Analytical X=0.25m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_analytical",
+            "label": "Analytical X=0.75m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_analytical",
+            "label": "Analytical X=1.25m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_analytical",
+            "label": "Analytical X=5m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_analytical",
+            "label": "Analytical X=9.75m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          }
+        ],
+        "xscale": "log",
+        "xlim": [
+          0.001,
+          30
+        ],
+        "_comment": "Mirrors Fig. 4.8. THE diagnostic plot: the reported early-time discrepancy (interior jump 3.50e5 instead of 5.72e5 Pa, diffusivity off by 1+Q/E=2.75) lives at t<0.1 a and is invisible on a linear axis. Digitised curves start at t=1e-3 a - the log axis' left edge."
+      },
+      {
+        "name": "pw_evolution_linear",
+        "title": "Pore-water pressure at the 5 probes (linear time) - Fig. 4.7",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [a]"
+        },
+        "y_axis": {
+          "label": "Pore-water pressure [MPa]"
+        },
+        "ylim": [
+          0,
+          1
+        ],
+        "legend_location": "center right",
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x025",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=0.25m",
+            "style": {
+              "color": "#d62728",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x075",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=0.75m",
+            "style": {
+              "color": "#bcbd22",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x125",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=1.25m",
+            "style": {
+              "color": "#2ca02c",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x500",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=5m",
+            "style": {
+              "color": "#17becf",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_years"
+            },
+            "y": {
+              "key": "p_x975",
+              "scale": 1e-06,
+              "offset": 0.1013
+            },
+            "label": "OOFEM X=9.75m",
+            "style": {
+              "color": "#1f77b4",
+              "linewidth": 1.8,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_BGR",
+            "label": "BenVaSim codes (8)",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.25m_analytical",
+            "label": "Analytical X=0.25m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_0.75m_analytical",
+            "label": "Analytical X=0.75m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_1.25m_analytical",
+            "label": "Analytical X=1.25m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_5m_analytical",
+            "label": "Analytical X=5m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f48_9.75m_analytical",
+            "label": "Analytical X=9.75m",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          }
+        ],
+        "xlim": [
+          0,
+          30
+        ],
+        "_comment": "Mirrors Fig. 4.7 (same data as 4.8, linear time axis)."
+      },
+      {
+        "name": "pw_profiles",
+        "title": "Pore-water pressure profiles - Fig. 4.10",
+        "grid": true,
+        "x_axis": {
+          "label": "X [m]"
+        },
+        "y_axis": {
+          "label": "Pore-water pressure [MPa]"
+        },
+        "xlim": [
+          0,
+          10
+        ],
+        "legend_location": "best",
+        "curves": [
+          {
+            "source": "query",
+            "query_key": "p_prof_0p003a",
+            "axis": 0,
+            "label": "OOFEM 0.003a",
+            "scale_y": 1e-06,
+            "offset_y": 0.1013
+          },
+          {
+            "source": "query",
+            "query_key": "p_prof_0p1a",
+            "axis": 0,
+            "label": "OOFEM 0.1a",
+            "scale_y": 1e-06,
+            "offset_y": 0.1013
+          },
+          {
+            "source": "query",
+            "query_key": "p_prof_0p3a",
+            "axis": 0,
+            "label": "OOFEM 0.3a",
+            "scale_y": 1e-06,
+            "offset_y": 0.1013
+          },
+          {
+            "source": "query",
+            "query_key": "p_prof_1a",
+            "axis": 0,
+            "label": "OOFEM 1a",
+            "scale_y": 1e-06,
+            "offset_y": 0.1013
+          },
+          {
+            "source": "query",
+            "query_key": "p_prof_3a",
+            "axis": 0,
+            "label": "OOFEM 3a",
+            "scale_y": 1e-06,
+            "offset_y": 0.1013
+          },
+          {
+            "source": "query",
+            "query_key": "p_prof_10a",
+            "axis": 0,
+            "label": "OOFEM 10a",
+            "scale_y": 1e-06,
+            "offset_y": 0.1013
+          },
+          {
+            "source": "query",
+            "query_key": "p_profile",
+            "axis": 0,
+            "label": "OOFEM 30a",
+            "scale_y": 1e-06,
+            "offset_y": 0.1013
+          },
+          {
+            "source": "reference",
+            "ref_id": "f410_0.003a_analytical",
+            "label": "Analytical 0.003a",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f410_0.1a_analytical",
+            "label": "Analytical 0.1a",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f410_0.3a_analytical",
+            "label": "Analytical 0.3a",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f410_1a_analytical",
+            "label": "Analytical 1a",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f410_3a_analytical",
+            "label": "Analytical 3a",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f410_10a_analytical",
+            "label": "Analytical 10a",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f410_30a_analytical",
+            "label": "Analytical 30a",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f410_steady_analytical",
+            "label": "Analytical steady-state limit",
+            "style": {
+              "color": "#b22222",
+              "linestyle": ":",
+              "linewidth": 1.6,
+              "zorder": 7
+            },
+            "_comment": "Exact t->inf limit. Its gap to the 30a curve shows how far 30 a still is from steady state."
+          }
+        ],
+        "ylim": [
+          0,
+          1
+        ],
+        "_comment": "Fig. 4.10 gives an analytical curve at every profile time, so the 8-code band is not wired here - those 56 CSVs are on disk if you want them."
+      },
+      {
+        "name": "u_profiles",
+        "title": "Displacement profiles - Fig. 4.11",
+        "grid": true,
+        "x_axis": {
+          "label": "X [m]"
+        },
+        "y_axis": {
+          "label": "Displacement [m]"
+        },
+        "xlim": [
+          0,
+          10
+        ],
+        "legend_location": "best",
+        "curves": [
+          {
+            "source": "query",
+            "query_key": "u_prof_0p003a",
+            "axis": 0,
+            "label": "OOFEM 0.003a"
+          },
+          {
+            "source": "query",
+            "query_key": "u_prof_0p1a",
+            "axis": 0,
+            "label": "OOFEM 0.1a"
+          },
+          {
+            "source": "query",
+            "query_key": "u_prof_0p3a",
+            "axis": 0,
+            "label": "OOFEM 0.3a"
+          },
+          {
+            "source": "query",
+            "query_key": "u_prof_1a",
+            "axis": 0,
+            "label": "OOFEM 1a"
+          },
+          {
+            "source": "query",
+            "query_key": "u_prof_3a",
+            "axis": 0,
+            "label": "OOFEM 3a"
+          },
+          {
+            "source": "query",
+            "query_key": "u_prof_10a",
+            "axis": 0,
+            "label": "OOFEM 10a"
+          },
+          {
+            "source": "query",
+            "query_key": "u_profile",
+            "axis": 0,
+            "label": "OOFEM 30a"
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.003a_BGR",
+            "label": "BenVaSim codes (8)",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.003a_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.003a_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.003a_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.003a_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.003a_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.003a_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.003a_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.1a_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.1a_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.1a_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.1a_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.1a_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.1a_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.1a_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.1a_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.3a_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.3a_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.3a_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.3a_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.3a_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.3a_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.3a_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_0.3a_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_1a_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_1a_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_1a_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_1a_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_1a_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_1a_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_1a_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_1a_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_3a_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_3a_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_3a_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_3a_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_3a_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_3a_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_3a_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_3a_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_10a_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_10a_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_10a_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_10a_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_10a_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_10a_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_10a_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_10a_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_30a_BGR",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_30a_ENSI-TF",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_30a_ENSI-OGS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_30a_ENSI-CM",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_30a_GRS-BS",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_30a_GRS-K",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_30a_LBNL",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_30a_TUC",
+            "label": "_nolegend_",
+            "style": {
+              "color": "0.62",
+              "linewidth": 0.7,
+              "alpha": 0.75,
+              "zorder": 2
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "f411_steady_analytical",
+            "label": "Analytical steady state",
+            "style": {
+              "color": "black",
+              "linestyle": "--",
+              "linewidth": 1.4,
+              "zorder": 6
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "an_steady_u",
+            "label": "Analytical steady state (repo, independent)",
+            "style": {
+              "color": "#b22222",
+              "linestyle": ":",
+              "linewidth": 1.6,
+              "zorder": 7
+            },
+            "_comment": "steady_state_profiles.csv, computed not digitised - an independent second opinion on the black digitised curve."
+          }
+        ],
+        "_comment": "Fig. 4.11 has only ONE analytical curve (steady state), so the 8-code band IS the transient reference for u(x) and is wired in full."
+      }
+    ],
+    "console": {
+      "summary_every_steps": 20,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_years",
+            "y": "p_x025_MPa",
+            "ref_id": "f48_0.25m_analytical"
+          },
+          {
+            "x": "t_years",
+            "y": "p_x075_MPa",
+            "ref_id": "f48_0.75m_analytical"
+          },
+          {
+            "x": "t_years",
+            "y": "p_x125_MPa",
+            "ref_id": "f48_1.25m_analytical"
+          },
+          {
+            "x": "t_years",
+            "y": "p_x500_MPa",
+            "ref_id": "f48_5m_analytical"
+          },
+          {
+            "x": "t_years",
+            "y": "p_x975_MPa",
+            "ref_id": "f48_9.75m_analytical"
+          }
+        ],
+        "_comment": "Pairs must already agree in units - the tracker applies no scale/offset. Hence the p_*_MPa formula queries against the absolute-MPa references."
+      }
+    },
+    "save_checkpoint": true,
+    "aux_fields": [
+      "*"
+    ],
+    "export_vtu": true,
+    "save_db": true
+  }
+}

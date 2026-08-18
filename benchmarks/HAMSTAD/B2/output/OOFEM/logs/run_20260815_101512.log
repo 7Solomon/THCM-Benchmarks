@@ -1,0 +1,301 @@
+10:15:12 INFO     tools.simulations: Log file: debug/HAMSTAD/B2/output/OOFEM/logs/run_20260815_101512.log
+10:15:12 INFO     tools.simulations: == STARTING BENCHMARK: B2 ==
+10:15:12 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HAMSTAD/B2
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+10:15:12 INFO     tools.simulations: Loading benchmark config: debug/HAMSTAD/B2/benchmark.json
+10:15:12 INFO     tools.simulations: Benchmark: HAMSTAD WP2 Benchmark 2: isothermal moisture redistribution in a homogeneous wall (analytical case) (hamstad-benchmark-2-analytical)
+10:15:12 INFO     tools.simulations: Configurations loaded.
+10:15:12 INFO     tools.simulations: Loading mesh...
+10:15:12 INFO     tools.simulations: Mesh loaded: 1345 nodes, 1232 elements (quad)
+10:15:12 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+10:15:12 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1345
+  Total DOFs: 1345
+  Fields: 1
+    - humidity: 1345 DOFs (['h'])
+10:15:12 INFO     tools.simulations: Building oofem problem...
+10:15:12 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 369 steps, dt=[300.0 -> 49997.3] s
+10:15:12 INFO     tools.simulations: oofem problem built: 1345 nodes, 1232 elements, 369 steps (t=[0 -> 3.6e+06])
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:15:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:13 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +8.477e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.477e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.477e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +8.333e-02
+────────────────────────────────────────────────────────────────────
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.46e+01,  max=+8.46e+01)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:15:45 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.08 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +8.464e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.477e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.477e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +1.908e+00
+────────────────────────────────────────────────────────────────────
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.31e+01,  max=+8.31e+01)
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:16:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:16:35 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.18 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +8.307e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.477e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.477e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +4.428e+00
+────────────────────────────────────────────────────────────────────
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+7.92e+01,  max=+7.92e+01)
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:17:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.32 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +7.918e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.477e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.477e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +7.755e+00
+────────────────────────────────────────────────────────────────────
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+7.39e+01,  max=+7.39e+01)
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:17:32 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:32 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.51 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +7.387e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.477e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.477e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +1.215e+01
+────────────────────────────────────────────────────────────────────
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+6.81e+01,  max=+6.81e+01)
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:17:42 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:42 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.75 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +6.814e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.477e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.477e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +1.795e+01
+────────────────────────────────────────────────────────────────────
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+6.26e+01,  max=+6.26e+01)
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:17:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:49 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.07 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +6.257e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.477e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.477e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +2.561e+01
+────────────────────────────────────────────────────────────────────
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+5.74e+01,  max=+5.74e+01)
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:17:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:17:57 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.49 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +5.741e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.476e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.476e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +3.573e+01
+────────────────────────────────────────────────────────────────────
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+5.27e+01,  max=+5.27e+01)
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.47e+01,  max=+8.47e+01)
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.47e+01,  max=+8.47e+01)
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:18:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:05 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.05 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +5.274e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.472e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.473e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +4.909e+01
+────────────────────────────────────────────────────────────────────
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.86e+01,  max=+4.86e+01)
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.45e+01,  max=+8.45e+01)
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.46e+01,  max=+8.46e+01)
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:18:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:13 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.78 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +4.858e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.454e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.458e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +6.674e+01
+────────────────────────────────────────────────────────────────────
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.49e+01,  max=+4.49e+01)
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.40e+01,  max=+8.40e+01)
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.41e+01,  max=+8.41e+01)
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:18:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:20 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.75 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +4.491e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.401e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.414e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +9.004e+01
+────────────────────────────────────────────────────────────────────
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.17e+01,  max=+4.17e+01)
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.29e+01,  max=+8.29e+01)
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.48e+01,  max=+8.48e+01)
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.32e+01,  max=+8.32e+01)
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:18:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:28 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.03 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +4.167e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.288e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.477e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.319e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +1.208e+02
+────────────────────────────────────────────────────────────────────
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.95e+01,  max=+1.95e+01)
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.88e+01,  max=+3.88e+01)
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.10e+01,  max=+8.10e+01)
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.47e+01,  max=+8.47e+01)
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+8.16e+01,  max=+8.16e+01)
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.05e+01,  max=+3.05e+01)
+10:18:35 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+10:18:35 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 6.73 d · 8 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.954e+01   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +3.883e+01   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +8.095e+01   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +8.475e+01   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +8.159e+01   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +3.051e+01   h @ probe_x200
+   Time [hours]            +1.614e+02
+────────────────────────────────────────────────────────────────────

@@ -1,0 +1,614 @@
+{
+    "metadata": {
+        "id": "bazant-najjar-1972-drying-cylinder",
+        "title": "Drying of concrete cylinder — Bažant-Najjar moisture transport validation",
+        "source": {
+            "authors": [
+                "Hanson, J.A."
+            ],
+            "year": 1968,
+            "journal": "Portland Cement Association Research Department Bulletin",
+            "doi": "N/A",
+            "cited_in": "Bažant & Najjar (1972), Mat. & Struct. 5:3–20; and Pesavento et al., Chapter 7, Sec. 7.3.4.1, Fig. 7.5, RILEM SOA 27, doi:10.1007/978-3-319-76617-1_7"
+        },
+        "dimension": 2,
+        "physics_class": "hygral",
+        "validation_method": "comparison with relative humidity profile across cylinder diameter at t=7 days after drying start",
+        "validation_target": "Radial RH profile h(r) at t=7 days, ambient RH=0.5 (Fig. 7.5)",
+        "notes": "Pure moisture transport — no temperature, no hydration, no mechanics. The best-fit parameters from Chapter 7 (C1, a0, hc, N) are explicitly stated and are PAPER_VALUE. Cylinder is mature at start of drying (7 days old) → self-desiccation source hs is neglected (hydration essentially complete). Cylinder length not stated → 2D axisymmetric approximation modelled as 2D rectangle (half cross-section, r=0 to r=R). The pipeline uses Cartesian geometry; a 2D rectangle of half-width R and unit length (or thin strip) exploits symmetry at x=0."
+    },
+    "geometry": {
+        "_comment": "STRATEGY: Model the half cross-section as a 2D rectangle [0, R] × [0, L_strip]. R = 0.0762 m (3 inches = half-diameter of 6-inch cylinder). L_strip = 0.01 m (thin nominal length — moisture transport is purely radial, L has no effect). The left face x=0 is the axis of symmetry (zero-flux Neumann, default). The right face x=R is the drying surface (Dirichlet or Robin).",
+        "entities": [
+            {
+                "id": "half_section",
+                "type": "rectangle",
+                "parameters": {
+                    "origin": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "size": [
+                        0.0762,
+                        0.01
+                    ]
+                },
+                "_comment": "PAPER_VALUE: diameter=6 inches=0.1524 m → radius R=0.0762 m. ASSUMED: strip length 0.01 m (arbitrary — 1D radial problem)."
+            }
+        ],
+        "physical_groups": [
+            {
+                "name": "concrete_domain",
+                "dimension": 2,
+                "entity_ids": [
+                    "half_section"
+                ]
+            },
+            {
+                "name": "axis_symmetry",
+                "dimension": 1,
+                "selection": {
+                    "box": [
+                        -1e-6,
+                        -1e-6,
+                        -1e-6,
+                        1e-6,
+                        0.011,
+                        1e-6
+                    ]
+                },
+                "_comment": "Left face = axis of symmetry. Default zero-flux Neumann — no BC needed explicitly."
+            },
+            {
+                "name": "drying_surface",
+                "dimension": 1,
+                "selection": {
+                    "box": [
+                        0.0761,
+                        -1e-6,
+                        -1e-6,
+                        0.0763,
+                        0.011,
+                        1e-6
+                    ]
+                },
+                "_comment": "PAPER_VALUE: outer surface of cylinder exposed to RH=0.5. Using Dirichlet h=0.5 (standard approach for mature concrete). Could use Robin moisture film if bp known."
+            },
+            {
+                "name": "top_bottom_sealed",
+                "dimension": 1,
+                "selection": {
+                    "boxes": [
+                        [
+                            -1e-6,
+                            -1e-6,
+                            -1e-6,
+                            0.0763,
+                            1e-6,
+                            1e-6
+                        ],
+                        [
+                            -1e-6,
+                            0.0099,
+                            -1e-6,
+                            0.0763,
+                            0.0101,
+                            1e-6
+                        ]
+                    ]
+                },
+                "_comment": "ASSUMED: top/bottom faces sealed (zero flux) — Hanson (1968) specimens sealed at ends during drying. Default Neumann, no explicit BC needed."
+            }
+        ],
+        "points": [
+            {
+                "name": "center",
+                "coordinates": [
+                    0.0,
+                    0.005
+                ],
+                "_comment": "PAPER_VALUE: axis of cylinder (r=0). Used for min-humidity query."
+            },
+            {
+                "name": "r_quarter",
+                "coordinates": [
+                    0.0191,
+                    0.005
+                ],
+                "_comment": "ASSUMED: r = R/4 = 0.0191 m for intermediate profile check."
+            },
+            {
+                "name": "r_half",
+                "coordinates": [
+                    0.0381,
+                    0.005
+                ],
+                "_comment": "ASSUMED: r = R/2 = 0.0381 m."
+            },
+            {
+                "name": "r_threequarter",
+                "coordinates": [
+                    0.0572,
+                    0.005
+                ],
+                "_comment": "ASSUMED: r = 3R/4 = 0.0572 m."
+            }
+        ],
+        "mesh": {
+            "element_size": 0.002,
+            "_comment": "ASSUMED: 0.002 m → ~38 elements across the 0.0762 m radius. Adequate for the steep near-surface gradient in Bažant-Najjar S-shape diffusivity. Refine to 0.001 m at surface if needed."
+        }
+    },
+    "physics": {
+        "humidity_transport": {
+            "type": "field",
+            "dependent_variable": {
+                "name": "humidity",
+                "symbol": "h",
+                "type": "scalar",
+                "components": [
+                    "h"
+                ]
+            }
+        }
+    },
+    "materials": {
+        "concrete": {
+            "humidity": {
+                "model": "bazant_najjar",
+                "capacity": 1.0,
+                "D0": 5.79e-10,
+                "hc": 0.85,
+                "n": 3.0,
+                "alpha": 0.002,
+                "_comment_D0": "PAPER_VALUE: C1 = 579×10⁻¹² m²/s = 5.79×10⁻¹⁰ m²/s — explicitly stated in Sec. 7.3.4.1 of Chapter 7 as best-fit for Hanson (1968) data.",
+                "_comment_hc": "PAPER_VALUE: hc = 0.85 — explicitly stated in Sec. 7.3.4.1.",
+                "_comment_n": "PAPER_VALUE: N = 3 (paper uses N; pipeline key is n) — explicitly stated in Sec. 7.3.4.1.",
+                "_comment_alpha": "PAPER_VALUE: a0 = 0.002 — explicitly stated in Sec. 7.3.4.1 as 'alpha' parameter (residual diffusivity ratio at h=0). Note: Chapter 7 calls it a0; pipeline key is 'alpha'. Maps directly.",
+                "_comment_capacity": "ASSUMED: moisture capacity Ch = 1.0 (dimensionless normalization used in bazant_najjar model; the actual Ch [kg/m³] is absorbed into the diffusivity D(h)). The model solves ∂h/∂t = ∇·(C(h)∇h) with C(h) = D0·[a0 + (1-a0)/(1+((1-h)/(1-hc))^N)]. Capacity=1.0 means no additional storage scaling beyond the S-shape.",
+                "_comment_sanity": "SANITY CHECK: At h=1 (saturated): C(1)=D0*(a0+1-a0)=D0=5.79e-10 m²/s. At h→0: C(0)=D0*a0=1.16e-12 m²/s. Ratio ≈500× decrease from saturated to dry — consistent with Fig. 7.4 in Chapter 7. Diffusion time scale: τ=R²/D0 = (0.0762)²/(5.79e-10) ≈ 10,030,000 s ≈ 116 days. At 7 days (604800 s) the front has penetrated ~√(D0*t) ≈ √(5.79e-10*604800) ≈ 0.019 m = 25% of radius. Non-linear S-shape will shift this — consistent with Fig. 7.5 showing partial drying at 7 days."
+            }
+        }
+    },
+    "initial_conditions": [
+        {
+            "field": "humidity",
+            "value": 0.99,
+            "location": "concrete_domain",
+            "_comment": "PAPER_VALUE: cylinder was 7 days old (mature, fully saturated) before drying started at t=0. h=1.0 throughout."
+        }
+    ],
+    "boundary_conditions": [
+        {
+            "type": "dirichlet",
+            "field": "humidity",
+            "value": 0.5,
+            "location": "drying_surface",
+            "time_function": "constant",
+            "_comment": "PAPER_VALUE: environmental humidity = 0.5 (Sec. 7.3.4.1: 'exposed at 7 days to environmental humidity with 0.5'). Instantaneous Dirichlet is correct here — the cylinder was exposed to a constant RH chamber, not a gradual drying front. No moisture-film Robin BC needed for this controlled lab test."
+        }
+    ],
+    "assignment": {
+        "domains": {
+            "concrete_domain": {
+                "active_fields": [
+                    "humidity"
+                ],
+                "material": "concrete",
+                "_comment": "No temperature or mechanics. Pure Bažant-Najjar moisture transport only."
+            }
+        }
+    },
+    "time_stepping": {
+        "t_start": 0.0,
+        "t_end": 94608000.0,
+        "_comment_t_end": "3 years = 3 × 365 × 86400 s — the LAST of Hanson's four profiles (Fig. 7.5 gives 3 d / 28 d / 180 d / 3 y). Was 604800 (7 d), which reached only the 3-day curve; the other three reference columns fell outside the simulated window entirely.",
+        "analysis_type": "transient",
+        "dt_strategy": {
+            "type": "piecewise",
+            "segments": [
+                {
+                    "t_end": 3600,
+                    "strategy": {
+                        "type": "log",
+                        "dt_min": 1,
+                        "dt_max": 60,
+                        "n_steps": 30
+                    },
+                    "_comment": "Very fine at start: steep surface gradient when Dirichlet jumps from 1.0 to 0.5."
+                },
+                {
+                    "t_end": 86400,
+                    "strategy": {
+                        "type": "log",
+                        "dt_min": 60,
+                        "dt_max": 1800,
+                        "n_steps": 60
+                    },
+                    "_comment": "First day — front propagation."
+                },
+                {
+                    "t_end": 259200,
+                    "strategy": {
+                        "type": "log",
+                        "dt_min": 1800,
+                        "dt_max": 21600,
+                        "n_steps": 20
+                    },
+                    "_comment": "-> 3 d."
+                },
+                {
+                    "t_end": 2419200,
+                    "strategy": {
+                        "type": "log",
+                        "dt_min": 21600,
+                        "dt_max": 86400,
+                        "n_steps": 40
+                    },
+                    "_comment": "-> 28 d."
+                },
+                {
+                    "t_end": 15552000,
+                    "strategy": {
+                        "type": "log",
+                        "dt_min": 86400,
+                        "dt_max": 864000,
+                        "n_steps": 50
+                    },
+                    "_comment": "-> 180 d."
+                },
+                {
+                    "t_end": 94608000,
+                    "strategy": {
+                        "type": "log",
+                        "dt_min": 864000,
+                        "dt_max": 5184000,
+                        "n_steps": 60
+                    },
+                    "_comment": "-> 3 y."
+                }
+            ],
+            "_comment": "The segment boundaries ARE the four reference times (3 d / 28 d / 180 d / 3 y). That is load-bearing, not cosmetic: a segment end is always an exact grid point, so each results.queries[].at_time lands on a step EXACTLY. With the boundaries elsewhere, at_time fires on the first step past it — the 180-day profile came out 7.5 days late on a plain log grid. 260 steps total."
+        }
+    },
+    "results": {
+        "reference_curves": [
+            {
+                "id": "hanson1968_profile_3d",
+                "file": "reference/hanson1968_rh_profiles.csv",
+                "has_header": true,
+                "x_col": "distance_from_surface_mm",
+                "y_col": "rh_t_3_days",
+                "label": "Hanson (1968), t=3 days (Fig. 7.5)"
+            },
+            {
+                "id": "hanson1968_profile_28d",
+                "file": "reference/hanson1968_rh_profiles.csv",
+                "has_header": true,
+                "x_col": "distance_from_surface_mm",
+                "y_col": "rh_t_28_days",
+                "label": "Hanson (1968), t=28 days (Fig. 7.5)"
+            },
+            {
+                "id": "hanson1968_profile_180d",
+                "file": "reference/hanson1968_rh_profiles.csv",
+                "has_header": true,
+                "x_col": "distance_from_surface_mm",
+                "y_col": "rh_t_180_days",
+                "label": "Hanson (1968), t=180 days (Fig. 7.5)"
+            },
+            {
+                "id": "hanson1968_profile_3y",
+                "file": "reference/hanson1968_rh_profiles.csv",
+                "has_header": true,
+                "x_col": "distance_from_surface_mm",
+                "y_col": "rh_t_3_years",
+                "label": "Hanson (1968), t=3 Jahre (Fig. 7.5)"
+            }
+        ],
+        "queries": [
+            {
+                "id": "t",
+                "type": "time",
+                "display": false
+            },
+            {
+                "id": "t_days",
+                "type": "formula",
+                "formula": "t * 1.157e-5",
+                "depends_on": [
+                    "t"
+                ],
+                "label": "Time [days]"
+            },
+            {
+                "id": "h_center",
+                "type": "field",
+                "field": "humidity",
+                "component": "h",
+                "at": "center",
+                "reduce": "avg",
+                "evaluate_in": "fem",
+                "label": "RH at center (r=0) [-]"
+            },
+            {
+                "id": "h_quarter",
+                "type": "field",
+                "field": "humidity",
+                "component": "h",
+                "at": "r_quarter",
+                "reduce": "avg",
+                "evaluate_in": "fem",
+                "label": "RH at r=R/4 [-]"
+            },
+            {
+                "id": "h_half",
+                "type": "field",
+                "field": "humidity",
+                "component": "h",
+                "at": "r_half",
+                "reduce": "avg",
+                "evaluate_in": "fem",
+                "label": "RH at r=R/2 [-]"
+            },
+            {
+                "id": "h_threequarter",
+                "type": "field",
+                "field": "humidity",
+                "component": "h",
+                "at": "r_threequarter",
+                "reduce": "avg",
+                "evaluate_in": "fem",
+                "label": "RH at r=3R/4 [-]"
+            },
+            {
+                "id": "h_surface",
+                "type": "field",
+                "field": "humidity",
+                "component": "h",
+                "at": "drying_surface",
+                "reduce": "avg",
+                "evaluate_in": "fem",
+                "label": "RH at drying surface [-]",
+                "_comment": "Sanity: must equal the Dirichlet value 0.5 at all times."
+            },
+            {
+                "id": "h_profile_3d",
+                "type": "line_profile",
+                "field": "humidity",
+                "component": "h",
+                "axis": 0,
+                "start": [0.0, 0.005],
+                "end": [0.0762, 0.005],
+                "n_samples": 60,
+                "at_time": 259200,
+                "evaluate_in": "fem",
+                "display": false,
+                "label": "RH radial profile at 3 d",
+                "_comment": "Radial line at mid-height of the strip: axis (r=0) -> drying surface (r=R). 60 samples = 1.3 mm, resolving the near-surface gradient the reference samples at 0/5/10 mm. at_time makes this a SINGLE snapshot (one entry, not a per-step series) — see the dt_strategy comment for why it lands exactly on 3 d."
+            },
+            {
+                "id": "h_profile_28d",
+                "type": "line_profile",
+                "field": "humidity",
+                "component": "h",
+                "axis": 0,
+                "start": [0.0, 0.005],
+                "end": [0.0762, 0.005],
+                "n_samples": 60,
+                "at_time": 2419200,
+                "evaluate_in": "fem",
+                "display": false,
+                "label": "RH radial profile at 28 d"
+            },
+            {
+                "id": "h_profile_180d",
+                "type": "line_profile",
+                "field": "humidity",
+                "component": "h",
+                "axis": 0,
+                "start": [0.0, 0.005],
+                "end": [0.0762, 0.005],
+                "n_samples": 60,
+                "at_time": 15552000,
+                "evaluate_in": "fem",
+                "display": false,
+                "label": "RH radial profile at 180 d"
+            },
+            {
+                "id": "h_profile_3y",
+                "type": "line_profile",
+                "field": "humidity",
+                "component": "h",
+                "axis": 0,
+                "start": [0.0, 0.005],
+                "end": [0.0762, 0.005],
+                "n_samples": 60,
+                "at_time": 94608000,
+                "evaluate_in": "fem",
+                "display": false,
+                "label": "RH radial profile at 3 y"
+            }
+        ],
+        "plots": [
+            {
+                "name": "rh_time_history",
+                "title": "Drying Cylinder — RH Evolution at Gage Points",
+                "grid": true,
+                "x_axis": {
+                    "label": "Time [days]"
+                },
+                "y_axis": {
+                    "label": "Relative Humidity h [-]"
+                },
+                "curves": [
+                    {
+                        "source": "simulation",
+                        "x": {
+                            "key": "t_days"
+                        },
+                        "y": {
+                            "key": "h_center"
+                        },
+                        "label": "FEM — center (r=0)"
+                    },
+                    {
+                        "source": "simulation",
+                        "x": {
+                            "key": "t_days"
+                        },
+                        "y": {
+                            "key": "h_quarter"
+                        },
+                        "label": "FEM — r=R/4"
+                    },
+                    {
+                        "source": "simulation",
+                        "x": {
+                            "key": "t_days"
+                        },
+                        "y": {
+                            "key": "h_half"
+                        },
+                        "label": "FEM — r=R/2"
+                    },
+                    {
+                        "source": "simulation",
+                        "x": {
+                            "key": "t_days"
+                        },
+                        "y": {
+                            "key": "h_threequarter"
+                        },
+                        "label": "FEM — r=3R/4"
+                    },
+                    {
+                        "source": "simulation",
+                        "x": {
+                            "key": "t_days"
+                        },
+                        "y": {
+                            "key": "h_surface"
+                        },
+                        "label": "FEM — surface (sanity: 0.5)"
+                    }
+                ],
+                "_comment": "Time histories only. The Hanson reference curves used to be drawn on this same axes, but they are RH vs distance-from-surface while these are RH vs time — the overlay compared millimetres against days. They now live in rh_radial_profiles."
+            },
+            {
+                "name": "rh_radial_profiles",
+                "title": "Drying Cylinder — Radial RH Profiles vs Hanson (1968)",
+                "grid": true,
+                "x_axis": {
+                    "label": "Distance from drying surface [mm]"
+                },
+                "y_axis": {
+                    "label": "Relative Humidity h [-]"
+                },
+                "curves": [
+                    {
+                        "source": "query",
+                        "query_key": "h_profile_3d",
+                        "axis": 0,
+                        "scale_x": -1000,
+                        "offset_x": 76.2,
+                        "label": "FEM — 3 d",
+                        "style": {
+                            "color": "C0"
+                        },
+                        "_comment": "The query's x column is r [m]; the reference's is (R - r) [mm]. scale_x/offset_x IS that conversion: 76.2 - 1000*r."
+                    },
+                    {
+                        "source": "query",
+                        "query_key": "h_profile_28d",
+                        "axis": 0,
+                        "scale_x": -1000,
+                        "offset_x": 76.2,
+                        "label": "FEM — 28 d",
+                        "style": {
+                            "color": "C1"
+                        }
+                    },
+                    {
+                        "source": "query",
+                        "query_key": "h_profile_180d",
+                        "axis": 0,
+                        "scale_x": -1000,
+                        "offset_x": 76.2,
+                        "label": "FEM — 180 d",
+                        "style": {
+                            "color": "C2"
+                        }
+                    },
+                    {
+                        "source": "query",
+                        "query_key": "h_profile_3y",
+                        "axis": 0,
+                        "scale_x": -1000,
+                        "offset_x": 76.2,
+                        "label": "FEM — 3 y",
+                        "style": {
+                            "color": "C3"
+                        }
+                    },
+                    {
+                        "source": "reference",
+                        "ref_id": "hanson1968_profile_3d",
+                        "label": "Hanson — 3 d",
+                        "style": {
+                            "color": "C0",
+                            "linestyle": "--",
+                            "marker": "o"
+                        }
+                    },
+                    {
+                        "source": "reference",
+                        "ref_id": "hanson1968_profile_28d",
+                        "label": "Hanson — 28 d",
+                        "style": {
+                            "color": "C1",
+                            "linestyle": "--",
+                            "marker": "o"
+                        }
+                    },
+                    {
+                        "source": "reference",
+                        "ref_id": "hanson1968_profile_180d",
+                        "label": "Hanson — 180 d",
+                        "style": {
+                            "color": "C2",
+                            "linestyle": "--",
+                            "marker": "o"
+                        },
+                        "_comment": "ref_id was 'hanson1968_profile_180' (no trailing d) and matched no declared reference_curve, so this curve silently never rendered."
+                    },
+                    {
+                        "source": "reference",
+                        "ref_id": "hanson1968_profile_3y",
+                        "label": "Hanson — 3 y",
+                        "style": {
+                            "color": "C3",
+                            "linestyle": "--",
+                            "marker": "o"
+                        }
+                    }
+                ],
+                "_comment": "Matching colours pair each FEM profile with its experiment; solid = simulation, dashed+markers = Hanson."
+            }
+        ],
+        "console": {
+            "summary_every_steps": 10,
+            "reference_deviation": {
+                "enabled": false,
+                "_comment": "The references are SPATIAL profiles at four fixed times, not a time series at a point, so the per-step deviation tracker has nothing to track against. Compare visually in rh_radial_profiles (or via VTU/ParaView)."
+            }
+        },
+        "save_checkpoint": true,
+        "aux_fields": [
+            "*"
+        ],
+        "export_vtu": true,
+        "save_db": true
+    }
+}

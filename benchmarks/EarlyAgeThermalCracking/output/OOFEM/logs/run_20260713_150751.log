@@ -1,0 +1,166 @@
+15:07:51 INFO     tools.simulations: Log file: debug/EarlyAgeThermalCracking/OOFEM/output/OOFEM/logs/run_20260713_150751.log
+15:07:51 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+15:07:51 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/EarlyAgeThermalCracking/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+15:07:51 INFO     tools.simulations: Loading benchmark config: debug/EarlyAgeThermalCracking/OOFEM/benchmark.json
+15:07:51 INFO     tools.simulations: Benchmark: Thermo-mechanical simulations of early-age concrete cracking — Oslo restrained wall (havlasek-2017-oslo-wall)
+15:07:51 INFO     tools.simulations: Configurations loaded.
+15:07:51 INFO     tools.simulations: Loading mesh...
+15:07:51 INFO     tools.simulations: Mesh loaded: 204 nodes, 509 elements (tetra)
+15:07:51 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+15:07:51 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 204
+  Total DOFs: 816
+  Fields: 2
+    - temperature: 204 DOFs (['T'])
+    - displacement: 612 DOFs (['ux', 'uy', 'uz'])
+15:07:51 INFO     tools.simulations: Building COUPLED oofem problem (lockstep)...
+15:07:51 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[117.9 -> 1473.5] s
+15:07:51 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[1632.0 -> 20791.4] s
+15:07:51 INFO     tools.simulations.oofem.problem_builder: 'temperature' sub-problem: skipping BC entries of other fields: displacement x5
+15:07:51 WARNING  tools.simulations.oofem.problem_builder: thermal_strain keys ['alpha_inf', 'autogenous_shrinkage_max'] (domain 'concrete_domain') have NO oofem mapping and are IGNORED (D9 amendment)
+15:07:51 INFO     tools.simulations.oofem.problem_builder: 'displacement' sub-problem: skipping BC entries of other fields: temperature x3
+15:07:51 INFO     tools.simulations: oofem problem built: 204 nodes, 509 elements, 344 steps (t=[0 -> 1.08e+06])
+15:07:51 INFO     tools.simulations.oofem.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+15:07:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.50e+01,  max=+1.50e+01)
+15:07:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:07:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:07:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:07:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.90e-08,  max=+1.90e-08)
+15:07:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:07:51 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +1.501e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +1.904e-08   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:07:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.53e+01,  max=+1.53e+01)
+15:07:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:07:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:07:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:07:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.09e-06,  max=+1.09e-06)
+15:07:54 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:07:54 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.05 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +1.527e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +1.086e-06   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:07:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.69e+01,  max=+1.69e+01)
+15:07:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:07:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:07:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:07:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+8.16e-06,  max=+8.16e-06)
+15:07:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:07:57 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.17 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +1.694e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +8.162e-06   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:08:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+3.41e+01,  max=+3.41e+01)
+15:08:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:08:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+7.79e-05,  max=+7.79e-05)
+15:08:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:01 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.42 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +3.410e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +7.791e-05   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:08:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+5.42e+01,  max=+5.42e+01)
+15:08:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:08:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.44e-04,  max=+1.44e-04)
+15:08:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:05 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.71 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +5.416e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +1.441e-04   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+6.16e+01,  max=+6.16e+01)
+15:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.58e-04,  max=+1.58e-04)
+15:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.97 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +6.158e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +1.580e-04   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:08:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+6.36e+01,  max=+6.36e+01)
+15:08:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:08:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.54e-04,  max=+1.54e-04)
+15:08:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:11 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.23 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +6.362e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +1.545e-04   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:08:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+6.29e+01,  max=+6.29e+01)
+15:08:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:08:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.44e-04,  max=+1.44e-04)
+15:08:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:13 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.49 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +6.286e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +1.439e-04   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:08:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+6.06e+01,  max=+6.06e+01)
+15:08:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:08:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.31e-04,  max=+1.31e-04)
+15:08:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:16 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.75 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +6.061e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +1.306e-04   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:08:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+5.75e+01,  max=+5.75e+01)
+15:08:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:08:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.16e-04,  max=+1.16e-04)
+15:08:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:19 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.02 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +5.754e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +1.161e-04   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:08:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+4.96e+01,  max=+4.96e+01)
+15:08:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:08:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+8.33e-05,  max=+8.33e-05)
+15:08:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:22 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.65 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +4.957e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +8.334e-05   ezz @ gage_15
+────────────────────────────────────────────────────────────────────
+15:08:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+3.78e+01,  max=+3.78e+01)
+15:08:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+15:08:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+3.79e-05,  max=+3.79e-05)
+15:08:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+15:08:25 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.73 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +3.782e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +3.790e-05   ezz @ gage_15
+────────────────────────────────────────────────────────────────────

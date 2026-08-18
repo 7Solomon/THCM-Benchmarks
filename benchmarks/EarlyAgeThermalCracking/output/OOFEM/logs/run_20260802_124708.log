@@ -1,0 +1,504 @@
+12:47:08 INFO     tools.simulations: Log file: debug/EarlyAgeThermalCracking/OOFEM/output/OOFEM/logs/run_20260802_124708.log
+12:47:08 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+12:47:08 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/EarlyAgeThermalCracking/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+12:47:08 INFO     tools.simulations: Loading benchmark config: debug/EarlyAgeThermalCracking/OOFEM/benchmark.json
+12:47:08 INFO     tools.simulations: Benchmark: Thermo-mechanical simulations of early-age concrete cracking — Oslo restrained wall (havlasek-2017-oslo-wall)
+12:47:08 INFO     tools.simulations: Configurations loaded.
+12:47:08 INFO     tools.simulations: Loading mesh...
+12:47:08 INFO     tools.simulations: Mesh loaded: 1192 nodes, 4378 elements (tetra)
+12:47:08 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:47:08 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1192
+  Total DOFs: 4768
+  Fields: 2
+    - temperature: 1192 DOFs (['T'])
+    - displacement: 3576 DOFs (['ux', 'uy', 'uz'])
+12:47:08 INFO     tools.simulations: Building oofem problem...
+12:47:08 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[117.9 -> 1473.5] s
+12:47:08 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[1993.5 -> 3987.1] s
+12:47:08 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[2666.5 -> 16985.3] s
+12:47:08 INFO     tools.simulations.oofem.src.builder.problem: 'temperature' sub-problem: skipping BC entries of other fields: displacement x5
+12:47:08 WARNING  tools.simulations.oofem.src.builder.problem: thermal_strain keys ['alpha_inf'] (domain 'concrete_domain') have NO oofem mapping and are IGNORED (D9 amendment)
+12:47:08 INFO     tools.simulations.oofem.src.builder.problem: 'displacement' sub-problem: skipping BC entries of other fields: temperature x3
+12:47:08 INFO     tools.simulations: Solution plan: STAGGERED lockstep (1 sources)
+12:47:08 INFO     tools.simulations: oofem problem built: 1192 nodes, 4378 elements, 736 steps (t=[0 -> 1.08e+06])
+12:47:08 INFO     tools.simulations.oofem.src.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.50e+01,  max=+1.50e+01)
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.04e-08,  max=+1.04e-08)
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+2.37e-08,  max=+2.37e-08)
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:47:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:47:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +1.500e+01   T @ gage_15
+   displacement_ux_gage15              +1.040e-08   ux @ gage_15
+   total_strain_gage15_ezz             +2.374e-08   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.53e+01,  max=+1.53e+01)
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.84e-07,  max=+5.84e-07)
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.30e-06,  max=+1.30e-06)
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:48:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:48:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.05 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +1.526e+01   T @ gage_15
+   displacement_ux_gage15              +5.838e-07   ux @ gage_15
+   total_strain_gage15_ezz             +1.299e-06   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.68e+01,  max=+1.68e+01)
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+4.58e-06,  max=+4.58e-06)
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+9.86e-06,  max=+9.86e-06)
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:49:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:49:06 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.17 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +1.681e+01   T @ gage_15
+   displacement_ux_gage15              +4.577e-06   ux @ gage_15
+   total_strain_gage15_ezz             +9.861e-06   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.20e+01,  max=+3.20e+01)
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+4.69e-05,  max=+4.69e-05)
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+9.40e-05,  max=+9.40e-05)
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:50:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:50:09 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.42 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +3.202e+01   T @ gage_15
+   displacement_ux_gage15              +4.687e-05   ux @ gage_15
+   total_strain_gage15_ezz             +9.403e-05   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+4.85e+01,  max=+4.85e+01)
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+9.49e-05,  max=+9.49e-05)
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.75e-04,  max=+1.75e-04)
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:51:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:51:11 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.71 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +4.853e+01   T @ gage_15
+   displacement_ux_gage15              +9.492e-05   ux @ gage_15
+   total_strain_gage15_ezz             +1.748e-04   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.42e+01,  max=+5.42e+01)
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.12e-04,  max=+1.12e-04)
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.94e-04,  max=+1.94e-04)
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:52:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:52:07 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.97 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +5.417e+01   T @ gage_15
+   displacement_ux_gage15              +1.117e-04   ux @ gage_15
+   total_strain_gage15_ezz             +1.943e-04   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.57e+01,  max=+5.57e+01)
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.16e-04,  max=+1.16e-04)
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.93e-04,  max=+1.93e-04)
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:53:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:53:05 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.23 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +5.569e+01   T @ gage_15
+   displacement_ux_gage15              +1.156e-04   ux @ gage_15
+   total_strain_gage15_ezz             +1.929e-04   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.52e+01,  max=+5.52e+01)
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.13e-04,  max=+1.13e-04)
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.83e-04,  max=+1.83e-04)
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:54:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:54:01 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.49 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +5.516e+01   T @ gage_15
+   displacement_ux_gage15              +1.128e-04   ux @ gage_15
+   total_strain_gage15_ezz             +1.826e-04   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.36e+01,  max=+5.36e+01)
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.07e-04,  max=+1.07e-04)
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.68e-04,  max=+1.68e-04)
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:55:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:55:07 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.75 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +5.356e+01   T @ gage_15
+   displacement_ux_gage15              +1.066e-04   ux @ gage_15
+   total_strain_gage15_ezz             +1.683e-04   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.13e+01,  max=+5.13e+01)
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+9.82e-05,  max=+9.82e-05)
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.52e-04,  max=+1.52e-04)
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:56:11 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:56:11 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.02 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +5.128e+01   T @ gage_15
+   displacement_ux_gage15              +9.819e-05   ux @ gage_15
+   total_strain_gage15_ezz             +1.517e-04   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+4.37e+01,  max=+4.37e+01)
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+7.11e-05,  max=+7.11e-05)
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.03e-04,  max=+1.03e-04)
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:57:17 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:57:17 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.82 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +4.367e+01   T @ gage_15
+   displacement_ux_gage15              +7.114e-05   ux @ gage_15
+   total_strain_gage15_ezz             +1.031e-04   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+4.07e+01,  max=+4.07e+01)
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+6.07e-05,  max=+6.07e-05)
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+8.51e-05,  max=+8.51e-05)
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:58:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:58:24 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.15 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +4.068e+01   T @ gage_15
+   displacement_ux_gage15              +6.070e-05   ux @ gage_15
+   total_strain_gage15_ezz             +8.514e-05   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.92e+01,  max=+3.92e+01)
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.54e-05,  max=+5.54e-05)
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+7.60e-05,  max=+7.60e-05)
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+12:59:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+12:59:27 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.32 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +3.916e+01   T @ gage_15
+   displacement_ux_gage15              +5.539e-05   ux @ gage_15
+   total_strain_gage15_ezz             +7.605e-05   ezz @ gage_15
+   max damage in wall [-]              +0.000e+00   @ concrete_domain
+   max damage at restrained base [-]   +0.000e+00   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.77e+01,  max=+3.77e+01)
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.03e-05,  max=+5.03e-05)
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+6.74e-05,  max=+6.74e-05)
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+1.21e-01)
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+1.21e-01)
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:00:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:00:29 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.49 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +3.770e+01   T @ gage_15
+   displacement_ux_gage15              +5.030e-05   ux @ gage_15
+   total_strain_gage15_ezz             +6.736e-05   ezz @ gage_15
+   max damage in wall [-]              +1.212e-01   @ concrete_domain
+   max damage at restrained base [-]   +1.212e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.63e+01,  max=+3.63e+01)
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+4.54e-05,  max=+4.54e-05)
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.90e-05,  max=+5.90e-05)
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+3.94e-01)
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+3.94e-01)
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:01:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:01:24 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.67 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +3.631e+01   T @ gage_15
+   displacement_ux_gage15              +4.545e-05   ux @ gage_15
+   total_strain_gage15_ezz             +5.897e-05   ezz @ gage_15
+   max damage in wall [-]              +3.936e-01   @ concrete_domain
+   max damage at restrained base [-]   +3.936e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.50e+01,  max=+3.50e+01)
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+4.08e-05,  max=+4.08e-05)
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+5.09e-05,  max=+5.09e-05)
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+5.76e-01)
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+5.76e-01)
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:02:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:02:23 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.84 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +3.500e+01   T @ gage_15
+   displacement_ux_gage15              +4.084e-05   ux @ gage_15
+   total_strain_gage15_ezz             +5.094e-05   ezz @ gage_15
+   max damage in wall [-]              +5.759e-01   @ concrete_domain
+   max damage at restrained base [-]   +5.759e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.37e+01,  max=+3.37e+01)
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.65e-05,  max=+3.65e-05)
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+4.32e-05,  max=+4.32e-05)
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+6.98e-01)
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+6.98e-01)
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:03:19 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:03:19 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.01 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +3.375e+01   T @ gage_15
+   displacement_ux_gage15              +3.647e-05   ux @ gage_15
+   total_strain_gage15_ezz             +4.323e-05   ezz @ gage_15
+   max damage in wall [-]              +6.980e-01   @ concrete_domain
+   max damage at restrained base [-]   +6.980e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.26e+01,  max=+3.26e+01)
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.23e-05,  max=+3.23e-05)
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.58e-05,  max=+3.58e-05)
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+7.86e-01)
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+7.86e-01)
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:04:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:04:14 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.19 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +3.257e+01   T @ gage_15
+   displacement_ux_gage15              +3.234e-05   ux @ gage_15
+   total_strain_gage15_ezz             +3.577e-05   ezz @ gage_15
+   max damage in wall [-]              +7.861e-01   @ concrete_domain
+   max damage at restrained base [-]   +7.861e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.15e+01,  max=+3.15e+01)
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+2.84e-05,  max=+2.84e-05)
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+2.86e-05,  max=+2.86e-05)
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+8.48e-01)
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+8.48e-01)
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:05:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:05:13 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.36 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +3.146e+01   T @ gage_15
+   displacement_ux_gage15              +2.845e-05   ux @ gage_15
+   total_strain_gage15_ezz             +2.858e-05   ezz @ gage_15
+   max damage in wall [-]              +8.485e-01   @ concrete_domain
+   max damage at restrained base [-]   +8.485e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+3.04e+01,  max=+3.04e+01)
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+2.48e-05,  max=+2.48e-05)
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+2.15e-05,  max=+2.15e-05)
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+8.98e-01)
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+8.98e-01)
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:06:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:06:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.53 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +3.042e+01   T @ gage_15
+   displacement_ux_gage15              +2.478e-05   ux @ gage_15
+   total_strain_gage15_ezz             +2.149e-05   ezz @ gage_15
+   max damage in wall [-]              +8.977e-01   @ concrete_domain
+   max damage at restrained base [-]   +8.977e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+2.94e+01,  max=+2.94e+01)
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+2.13e-05,  max=+2.13e-05)
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.45e-05,  max=+1.45e-05)
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+9.32e-01)
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+9.32e-01)
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:07:07 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:07:07 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.71 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +2.943e+01   T @ gage_15
+   displacement_ux_gage15              +2.134e-05   ux @ gage_15
+   total_strain_gage15_ezz             +1.446e-05   ezz @ gage_15
+   max damage in wall [-]              +9.318e-01   @ concrete_domain
+   max damage at restrained base [-]   +9.318e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+2.85e+01,  max=+2.85e+01)
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.81e-05,  max=+1.81e-05)
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+7.30e-06,  max=+7.30e-06)
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+9.55e-01)
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+9.55e-01)
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:08:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:08:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.88 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +2.851e+01   T @ gage_15
+   displacement_ux_gage15              +1.811e-05   ux @ gage_15
+   total_strain_gage15_ezz             +7.305e-06   ezz @ gage_15
+   max damage in wall [-]              +9.551e-01   @ concrete_domain
+   max damage at restrained base [-]   +9.551e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+2.71e+01,  max=+2.71e+01)
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+1.33e-05,  max=+1.33e-05)
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=-5.66e-06,  max=-5.66e-06)
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+9.80e-01)
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1192 nodes
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+9.80e-01)
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             111 nodes
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             (min=+0.00e+00,  max=+0.00e+00)
+13:09:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                             1 nodes
+13:09:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.17 d · 6 queries ok ────────────────────────────────────────
+   temperature_gage15                  +2.713e+01   T @ gage_15
+   displacement_ux_gage15              +1.330e-05   ux @ gage_15
+   total_strain_gage15_ezz             -5.660e-06   ezz @ gage_15
+   max damage in wall [-]              +9.804e-01   @ concrete_domain
+   max damage at restrained base [-]   +9.804e-01   @ bottom_surface
+   damage at gage 15 [-]               +0.000e+00   @ gage_15
+────────────────────────────────────────────────────────────────────
+13:10:06 WARNING  tools.simulations.oofem.src.step_loop: coupled step 570 (t=482400) failed in oofem: Convergence Exception Reason: Maximum number of iterations reached without convergence -- TRUNCATING the run here
+13:10:07 INFO     tools.simulations: VTU export: 1139 file(s) -> debug/EarlyAgeThermalCracking/OOFEM/output/OOFEM/vtu
+13:10:07 INFO     tools.simulations: Checkpoint saved -> debug/EarlyAgeThermalCracking/OOFEM/output/OOFEM/checkpoint.h5  (17.1 MB)
+13:10:07 WARNING  tools.simulations: ========================================================================
+13:10:07 WARNING  tools.simulations: RUN TRUNCATED — step 570 of 736 FAILED TO CONVERGE (t=482400)
+13:10:07 WARNING  tools.simulations:   reason: Convergence Exception Reason: Maximum number of iterations reached without convergence
+13:10:07 WARNING  tools.simulations:   results are VALID ONLY UP TO t=480600 (569 of 736 steps); checkpoint/plots cover that range only — this is NOT a complete validation run.
+13:10:07 WARNING  tools.simulations: ========================================================================

@@ -1,0 +1,107 @@
+{
+  "panel": 0,
+  "title": "Model 1.1 scenario (a): FIRST (pre-refinement) results, log time axis (Fig. 4.9)",
+  "n_series": 45,
+  "px_in_x": 0.010804845876512415,
+  "px_in_y": 0.0005528050219903013,
+  "threshold_a_px": 3.0,
+  "threshold_b_px": 19.802424,
+  "masks": [
+    [
+      0.37008691892032936,
+      0.875433102452008,
+      0.4423588642339397,
+      0.9337105430609761
+    ],
+    [
+      0.47347054975638675,
+      0.7841703254719908,
+      0.5443930594664937,
+      0.8500162870671406
+    ],
+    [
+      0.592198415403816,
+      0.7200057707043317,
+      0.6628379565526844,
+      0.7862910453614574
+    ],
+    [
+      0.6876813072391095,
+      0.6122878778900389,
+      0.7272840897482589,
+      0.6511705626094647
+    ],
+    [
+      0.8137222880265331,
+      0.07409348581958848,
+      0.8859506863696525,
+      0.11242548043772066
+    ]
+  ],
+  "masked_original_px": 19760,
+  "original_to_extracted": {
+    "mean_px": 0.002,
+    "p99_px": 0.0,
+    "max_px": 1.0,
+    "frac_over_threshold": 0.0,
+    "pixels_total": 366223
+  },
+  "extracted_to_original": {
+    "mean_px": 2.718,
+    "p99_px": 18.6,
+    "frac_over_threshold": 0.00804
+  },
+  "path_fidelity": {
+    "worst_offset_pt": 0.0002,
+    "threshold_pt": 0.05,
+    "series_failing": [],
+    "per_series": {
+      "fig4_9_X0.25m_analytical": 0.0001,
+      "fig4_9_X0.75m_analytical": 0.0001,
+      "fig4_9_X1.25m_analytical": 0.0001,
+      "fig4_9_X5m_analytical": 0.0001,
+      "fig4_9_X9.75m_analytical": 0.0001,
+      "fig4_9_X0.25m_BGR": 0.0001,
+      "fig4_9_X0.25m_ENSI-TF": 0.0001,
+      "fig4_9_X0.25m_ENSI-OGS": 0.0001,
+      "fig4_9_X0.25m_ENSI-CM": 0.0001,
+      "fig4_9_X0.25m_GRS-BS": 0.0001,
+      "fig4_9_X0.25m_GRS-K": 0.0001,
+      "fig4_9_X0.25m_LBNL": 0.0001,
+      "fig4_9_X0.25m_TUC": 0.0001,
+      "fig4_9_X0.75m_BGR": 0.0001,
+      "fig4_9_X0.75m_ENSI-TF": 0.0001,
+      "fig4_9_X0.75m_ENSI-OGS": 0.0001,
+      "fig4_9_X0.75m_ENSI-CM": 0.0001,
+      "fig4_9_X0.75m_GRS-BS": 0.0001,
+      "fig4_9_X0.75m_GRS-K": 0.0001,
+      "fig4_9_X0.75m_LBNL": 0.0001,
+      "fig4_9_X0.75m_TUC": 0.0001,
+      "fig4_9_X1.25m_BGR": 0.0001,
+      "fig4_9_X1.25m_ENSI-TF": 0.0001,
+      "fig4_9_X1.25m_ENSI-OGS": 0.0001,
+      "fig4_9_X1.25m_ENSI-CM": 0.0001,
+      "fig4_9_X1.25m_GRS-BS": 0.0001,
+      "fig4_9_X1.25m_GRS-K": 0.0001,
+      "fig4_9_X1.25m_LBNL": 0.0001,
+      "fig4_9_X1.25m_TUC": 0.0001,
+      "fig4_9_X5m_BGR": 0.0001,
+      "fig4_9_X5m_ENSI-TF": 0.0002,
+      "fig4_9_X5m_ENSI-OGS": 0.0001,
+      "fig4_9_X5m_ENSI-CM": 0.0001,
+      "fig4_9_X5m_GRS-BS": 0.0001,
+      "fig4_9_X5m_GRS-K": 0.0001,
+      "fig4_9_X5m_LBNL": 0.0001,
+      "fig4_9_X5m_TUC": 0.0001,
+      "fig4_9_X9.75m_BGR": 0.0001,
+      "fig4_9_X9.75m_ENSI-TF": 0.0001,
+      "fig4_9_X9.75m_ENSI-OGS": 0.0001,
+      "fig4_9_X9.75m_ENSI-CM": 0.0001,
+      "fig4_9_X9.75m_GRS-BS": 0.0001,
+      "fig4_9_X9.75m_GRS-K": 0.0001,
+      "fig4_9_X9.75m_LBNL": 0.0001,
+      "fig4_9_X9.75m_TUC": 0.0001
+    }
+  },
+  "verdict": "PASS"
+}

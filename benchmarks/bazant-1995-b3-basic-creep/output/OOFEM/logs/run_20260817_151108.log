@@ -1,0 +1,28 @@
+15:11:08 INFO     tools.simulations: Log file: benchmarks/bazant-1995-b3-basic-creep/output/OOFEM/logs/run_20260817_151108.log
+15:11:08 INFO     tools.simulations: == STARTING BENCHMARK: bazant-1995-b3-basic-creep ==
+15:11:08 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/bazant-1995-b3-basic-creep
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+15:11:08 INFO     tools.simulations: Loading benchmark config: benchmarks/bazant-1995-b3-basic-creep/benchmark.json
+15:11:08 INFO     tools.simulations: Benchmark: Model B3 basic creep - worked example Sec. 1.4.5 (sealed cylinder, t'=28 d, sigma=0.4*fc) (bazant-1995-b3-basic-creep)
+15:11:08 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[195.2 -> 975758.9] s
+15:11:08 INFO     tools.simulations: Configurations loaded.
+15:11:08 INFO     tools.simulations: Loading mesh...
+15:11:08 INFO     tools.simulations: Mesh loaded: 527 nodes, 476 elements (quad)
+15:11:08 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+15:11:08 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 527
+  Total DOFs: 1054
+  Fields: 1
+    - displacement: 1054 DOFs (['ux', 'uy'])
+15:11:08 INFO     tools.simulations: Building oofem problem...
+15:11:08 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[195.2 -> 975758.9] s

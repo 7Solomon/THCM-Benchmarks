@@ -1,0 +1,74 @@
+19:10:22 INFO     tools.simulations: Log file: debug/HAMSTAD/B2/output/OOFEM/logs/run_20260814_191022.log
+19:10:22 INFO     tools.simulations: == STARTING BENCHMARK: B2 ==
+19:10:22 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HAMSTAD/B2
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+19:10:22 INFO     tools.simulations: Loading benchmark config: debug/HAMSTAD/B2/benchmark.json
+19:10:22 INFO     tools.simulations: Benchmark: HAMSTAD WP2 Benchmark 2: isothermal moisture redistribution in a homogeneous wall (analytical case) (hamstad-benchmark-2-analytical)
+19:10:22 INFO     tools.simulations: Configurations loaded.
+19:10:22 INFO     tools.simulations: Loading mesh...
+19:10:22 INFO     tools.simulations: Mesh loaded: 1318 nodes, 1205 elements (quad)
+19:10:22 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+19:10:22 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1318
+  Total DOFs: 1318
+  Fields: 1
+    - humidity: 1318 DOFs (['h'])
+19:10:22 INFO     tools.simulations: Building oofem problem...
+19:10:22 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 369 steps, dt=[300.0 -> 49997.3] s
+19:10:22 INFO     tools.simulations: oofem problem built: 1318 nodes, 1205 elements, 369 steps (t=[0 -> 3.6e+06])
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:10:43 DEBUG    tools.simulations.post.evaluate.queries.display:                                 201 sample pts,  t=300 s
+19:10:43 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 9 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.000e+00   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +1.000e+00   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +1.000e+00   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +1.000e+00   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +1.000e+00   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +1.000e+00   h @ probe_x200
+   w(x) profile [kg/m3]    +1.000e+00 → +1.000e+00   humidity
+   Time [hours]            +8.333e-02
+────────────────────────────────────────────────────────────────────
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.00e+00,  max=+1.00e+00)
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+19:16:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                 201 sample pts,  t=6869 s
+19:16:53 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.08 d · 9 queries ok ────────────────────────────────────────
+   w at x=0.00 m [kg/m3]   +1.000e+00   h @ probe_x000
+   w at x=0.01 m [kg/m3]   +1.000e+00   h @ probe_x010
+   w at x=0.05 m [kg/m3]   +1.000e+00   h @ probe_x050
+   w at x=0.10 m [kg/m3]   +1.000e+00   h @ probe_x100
+   w at x=0.15 m [kg/m3]   +1.000e+00   h @ probe_x150
+   w at x=0.20 m [kg/m3]   +1.000e+00   h @ probe_x200
+   w(x) profile [kg/m3]    +1.000e+00 → +1.000e+00   humidity
+   Time [hours]            +1.908e+00
+────────────────────────────────────────────────────────────────────

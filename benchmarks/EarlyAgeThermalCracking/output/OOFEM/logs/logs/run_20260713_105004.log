@@ -1,0 +1,51 @@
+10:50:04 INFO     tools.simulations: Log file: debug/EarlyAgeThermalCracking/OOFEM/output/OOFEM/logs/logs/run_20260713_105004.log
+10:50:04 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+10:50:04 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/EarlyAgeThermalCracking/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+10:50:04 INFO     tools.simulations: Loading benchmark config: debug/EarlyAgeThermalCracking/OOFEM/benchmark.json
+10:50:04 INFO     tools.simulations: Benchmark: Thermo-mechanical simulations of early-age concrete cracking — Oslo restrained wall (havlasek-2017-oslo-wall)
+10:50:04 INFO     tools.simulations: Configurations loaded.
+10:50:04 INFO     tools.simulations: Loading mesh...
+10:50:04 INFO     tools.simulations: Mesh loaded: 204 nodes, 509 elements (tetra)
+10:50:04 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+10:50:04 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 204
+  Total DOFs: 816
+  Fields: 2
+    - temperature: 204 DOFs (['T'])
+    - displacement: 612 DOFs (['ux', 'uy', 'uz'])
+10:50:04 INFO     tools.simulations: Building COUPLED oofem problem (lockstep)...
+10:50:04 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[117.9 -> 1473.5] s
+10:50:04 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[1632.0 -> 20791.4] s
+10:50:04 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+10:50:04 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+10:50:04 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+10:50:04 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+10:50:04 INFO     tools.simulations.oofem.problem_builder: BC for field 'displacement' skipped by the 'temperature' sub-problem
+10:50:04 WARNING  tools.simulations.oofem.problem_builder: thermal_strain keys ['alpha_inf', 'autogenous_shrinkage_max'] (domain 'concrete_domain') have NO oofem mapping and are IGNORED (D9 amendment)
+10:50:04 INFO     tools.simulations.oofem.problem_builder: BC for field 'temperature' skipped by the 'displacement' sub-problem
+10:50:04 INFO     tools.simulations.oofem.problem_builder: BC for field 'temperature' skipped by the 'displacement' sub-problem
+10:50:04 INFO     tools.simulations.oofem.problem_builder: BC for field 'temperature' skipped by the 'displacement' sub-problem
+10:50:04 INFO     tools.simulations: oofem problem built: 204 nodes, 509 elements, 344 steps (t=[0 -> 1.08e+06])
+10:50:04 INFO     tools.simulations.oofem.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+10:50:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.50e+01,  max=+1.50e+01)
+10:50:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+10:50:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+0.00e+00,  max=+0.00e+00)
+10:50:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+10:50:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+2.44e-08,  max=+2.44e-08)
+10:50:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+10:50:04 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +1.501e+01   T @ gage_15
+   displacement_ux_gage15    +0.000e+00   ux @ gage_15
+   total_strain_gage15_ezz   +2.437e-08   ezz @ gage_15
+────────────────────────────────────────────────────────────────────

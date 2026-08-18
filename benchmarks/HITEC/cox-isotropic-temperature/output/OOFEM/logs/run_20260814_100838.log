@@ -1,0 +1,604 @@
+10:08:38 INFO     tools.simulations: Log file: debug/HITEC/cox-isotropic-temperature/oofem/output/OOFEM/logs/run_20260814_100838.log
+10:08:38 INFO     tools.simulations: == STARTING BENCHMARK: oofem ==
+10:08:38 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HITEC/cox-isotropic-temperature/oofem
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+10:08:38 INFO     tools.simulations: Loading benchmark config: debug/HITEC/cox-isotropic-temperature/oofem/benchmark.json
+10:08:38 INFO     tools.simulations: Benchmark: HITEC near-field benchmark - COx claystone, isotropic, heat conduction from gallery (10 y) (hitec-cox-isotropic-temperature)
+10:08:38 INFO     tools.simulations: Configurations loaded.
+10:08:38 INFO     tools.simulations: Loading mesh...
+10:08:39 INFO     tools.simulations: Mesh loaded: 11857 nodes, 23312 elements (triangle)
+10:08:39 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+10:08:39 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 11857
+  Total DOFs: 11857
+  Fields: 1
+    - temperature: 11857 DOFs (['T'])
+10:08:39 INFO     tools.simulations: Building oofem problem...
+10:08:39 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[20152.4 -> 2418289.9] s
+10:08:39 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[3375.0 -> 40499.8] s
+10:08:39 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[103604.3 -> 518021.3] s
+10:08:39 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 160 steps, dt=[399821.1 -> 4797853.2] s
+10:08:39 INFO     tools.simulations: oofem problem built: 11857 nodes, 23312 elements, 362 steps (t=[0 -> 3.31e+08])
+10:08:40 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:40 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:40 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:40 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:40 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:40 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:40 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:40 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:40 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.08 d · 6 queries ok ────────────────────────────────────────
+   T at P1 [degC]   +2.200e+01   T @ P1
+   T at P2 [degC]   +2.200e+01   T @ P2
+   T at P3 [degC]   +2.200e+01   T @ P3
+   T at P4 [degC]   +2.200e+01   T @ P4
+   Time [days]      +8.333e-02
+────────────────────────────────────────────────────────────────────
+10:08:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:45 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.83 d · 6 queries ok ────────────────────────────────────────
+   T at P1 [degC]   +2.200e+01   T @ P1
+   T at P2 [degC]   +2.200e+01   T @ P2
+   T at P3 [degC]   +2.200e+01   T @ P3
+   T at P4 [degC]   +2.200e+01   T @ P4
+   Time [days]      +8.333e-01
+────────────────────────────────────────────────────────────────────
+10:08:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:51 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 4.57 d · 6 queries ok ────────────────────────────────────────
+   T at P1 [degC]   +2.200e+01   T @ P1
+   T at P2 [degC]   +2.200e+01   T @ P2
+   T at P3 [degC]   +2.200e+01   T @ P3
+   T at P4 [degC]   +2.200e+01   T @ P4
+   Time [days]      +4.568e+00
+────────────────────────────────────────────────────────────────────
+10:08:56 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:56 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:56 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:56 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:56 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:56 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:56 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:08:56 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:08:56 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 25.07 d · 6 queries ok ───────────────────────────────────────
+   T at P1 [degC]   +2.200e+01   T @ P1
+   T at P2 [degC]   +2.200e+01   T @ P2
+   T at P3 [degC]   +2.200e+01   T @ P3
+   T at P4 [degC]   +2.200e+01   T @ P4
+   Time [days]      +2.507e+01
+────────────────────────────────────────────────────────────────────
+10:09:03 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:09:03 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:03 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:09:03 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:03 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:09:03 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:03 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.20e+01,  max=+2.20e+01)
+10:09:03 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:03 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 131.91 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +2.200e+01   T @ P1
+   T at P2 [degC]   +2.200e+01   T @ P2
+   T at P3 [degC]   +2.200e+01   T @ P3
+   T at P4 [degC]   +2.200e+01   T @ P4
+   Time [days]      +1.319e+02
+────────────────────────────────────────────────────────────────────
+10:09:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+7.06e+01,  max=+7.06e+01)
+10:09:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+3.94e+01,  max=+3.94e+01)
+10:09:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+3.94e+01,  max=+3.94e+01)
+10:09:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.25e+01,  max=+2.25e+01)
+10:09:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 184.02 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +7.059e+01   T @ P1
+   T at P2 [degC]   +3.943e+01   T @ P2
+   T at P3 [degC]   +3.943e+01   T @ P3
+   T at P4 [degC]   +2.250e+01   T @ P4
+   Time [days]      +1.840e+02
+────────────────────────────────────────────────────────────────────
+10:09:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+7.20e+01,  max=+7.20e+01)
+10:09:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.00e+01,  max=+4.00e+01)
+10:09:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.00e+01,  max=+4.00e+01)
+10:09:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.25e+01,  max=+2.25e+01)
+10:09:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:16 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 184.90 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +7.198e+01   T @ P1
+   T at P2 [degC]   +3.998e+01   T @ P2
+   T at P3 [degC]   +3.998e+01   T @ P3
+   T at P4 [degC]   +2.251e+01   T @ P4
+   Time [days]      +1.849e+02
+────────────────────────────────────────────────────────────────────
+10:09:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+7.43e+01,  max=+7.43e+01)
+10:09:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.11e+01,  max=+4.11e+01)
+10:09:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.11e+01,  max=+4.11e+01)
+10:09:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.25e+01,  max=+2.25e+01)
+10:09:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:22 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 186.57 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +7.435e+01   T @ P1
+   T at P2 [degC]   +4.106e+01   T @ P2
+   T at P3 [degC]   +4.106e+01   T @ P3
+   T at P4 [degC]   +2.254e+01   T @ P4
+   Time [days]      +1.866e+02
+────────────────────────────────────────────────────────────────────
+10:09:30 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+7.81e+01,  max=+7.81e+01)
+10:09:30 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:30 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.31e+01,  max=+4.31e+01)
+10:09:30 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:30 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.31e+01,  max=+4.31e+01)
+10:09:30 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:30 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.26e+01,  max=+2.26e+01)
+10:09:30 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:30 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 189.72 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +7.812e+01   T @ P1
+   T at P2 [degC]   +4.311e+01   T @ P2
+   T at P3 [degC]   +4.311e+01   T @ P3
+   T at P4 [degC]   +2.261e+01   T @ P4
+   Time [days]      +1.897e+02
+────────────────────────────────────────────────────────────────────
+10:09:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+8.76e+01,  max=+8.76e+01)
+10:09:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.97e+01,  max=+4.97e+01)
+10:09:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.97e+01,  max=+4.97e+01)
+10:09:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.29e+01,  max=+2.29e+01)
+10:09:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:35 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 200.69 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +8.755e+01   T @ P1
+   T at P2 [degC]   +4.969e+01   T @ P2
+   T at P3 [degC]   +4.969e+01   T @ P3
+   T at P4 [degC]   +2.290e+01   T @ P4
+   Time [days]      +2.007e+02
+────────────────────────────────────────────────────────────────────
+10:09:43 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+9.61e+01,  max=+9.61e+01)
+10:09:43 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:43 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+5.67e+01,  max=+5.67e+01)
+10:09:43 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:43 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+5.67e+01,  max=+5.67e+01)
+10:09:43 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:43 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.35e+01,  max=+2.35e+01)
+10:09:43 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:43 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 214.90 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +9.609e+01   T @ P1
+   T at P2 [degC]   +5.669e+01   T @ P2
+   T at P3 [degC]   +5.669e+01   T @ P3
+   T at P4 [degC]   +2.348e+01   T @ P4
+   Time [days]      +2.149e+02
+────────────────────────────────────────────────────────────────────
+10:09:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.03e+02,  max=+1.03e+02)
+10:09:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+6.32e+01,  max=+6.32e+01)
+10:09:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+6.32e+01,  max=+6.32e+01)
+10:09:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.44e+01,  max=+2.44e+01)
+10:09:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:09:55 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 231.17 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.035e+02   T @ P1
+   T at P2 [degC]   +6.316e+01   T @ P2
+   T at P3 [degC]   +6.316e+01   T @ P3
+   T at P4 [degC]   +2.438e+01   T @ P4
+   Time [days]      +2.312e+02
+────────────────────────────────────────────────────────────────────
+10:10:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.10e+02,  max=+1.10e+02)
+10:10:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+6.93e+01,  max=+6.93e+01)
+10:10:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+6.93e+01,  max=+6.93e+01)
+10:10:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.57e+01,  max=+2.57e+01)
+10:10:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 249.79 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.102e+02   T @ P1
+   T at P2 [degC]   +6.926e+01   T @ P2
+   T at P3 [degC]   +6.926e+01   T @ P3
+   T at P4 [degC]   +2.567e+01   T @ P4
+   Time [days]      +2.498e+02
+────────────────────────────────────────────────────────────────────
+10:10:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.17e+02,  max=+1.17e+02)
+10:10:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+7.51e+01,  max=+7.51e+01)
+10:10:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+7.51e+01,  max=+7.51e+01)
+10:10:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.73e+01,  max=+2.73e+01)
+10:10:22 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:22 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 271.11 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.165e+02   T @ P1
+   T at P2 [degC]   +7.509e+01   T @ P2
+   T at P3 [degC]   +7.509e+01   T @ P3
+   T at P4 [degC]   +2.734e+01   T @ P4
+   Time [days]      +2.711e+02
+────────────────────────────────────────────────────────────────────
+10:10:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.22e+02,  max=+1.22e+02)
+10:10:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+8.07e+01,  max=+8.07e+01)
+10:10:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+8.07e+01,  max=+8.07e+01)
+10:10:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.94e+01,  max=+2.94e+01)
+10:10:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:38 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 295.52 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.225e+02   T @ P1
+   T at P2 [degC]   +8.071e+01   T @ P2
+   T at P3 [degC]   +8.071e+01   T @ P3
+   T at P4 [degC]   +2.937e+01   T @ P4
+   Time [days]      +2.955e+02
+────────────────────────────────────────────────────────────────────
+10:10:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.28e+02,  max=+1.28e+02)
+10:10:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+8.62e+01,  max=+8.62e+01)
+10:10:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+8.62e+01,  max=+8.62e+01)
+10:10:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+3.17e+01,  max=+3.17e+01)
+10:10:55 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:10:55 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 323.47 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.282e+02   T @ P1
+   T at P2 [degC]   +8.618e+01   T @ P2
+   T at P3 [degC]   +8.618e+01   T @ P3
+   T at P4 [degC]   +3.173e+01   T @ P4
+   Time [days]      +3.235e+02
+────────────────────────────────────────────────────────────────────
+10:11:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.34e+02,  max=+1.34e+02)
+10:11:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+9.15e+01,  max=+9.15e+01)
+10:11:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+9.15e+01,  max=+9.15e+01)
+10:11:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+3.44e+01,  max=+3.44e+01)
+10:11:10 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 355.46 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.338e+02   T @ P1
+   T at P2 [degC]   +9.154e+01   T @ P2
+   T at P3 [degC]   +9.154e+01   T @ P3
+   T at P4 [degC]   +3.438e+01   T @ P4
+   Time [days]      +3.555e+02
+────────────────────────────────────────────────────────────────────
+10:11:23 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.39e+02,  max=+1.39e+02)
+10:11:23 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:23 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+9.68e+01,  max=+9.68e+01)
+10:11:23 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:23 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+9.68e+01,  max=+9.68e+01)
+10:11:23 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:23 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+3.73e+01,  max=+3.73e+01)
+10:11:23 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:23 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 392.08 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.393e+02   T @ P1
+   T at P2 [degC]   +9.681e+01   T @ P2
+   T at P3 [degC]   +9.681e+01   T @ P3
+   T at P4 [degC]   +3.730e+01   T @ P4
+   Time [days]      +3.921e+02
+────────────────────────────────────────────────────────────────────
+10:11:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.45e+02,  max=+1.45e+02)
+10:11:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.02e+02,  max=+1.02e+02)
+10:11:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.02e+02,  max=+1.02e+02)
+10:11:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.04e+01,  max=+4.04e+01)
+10:11:38 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:38 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 434.01 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.446e+02   T @ P1
+   T at P2 [degC]   +1.020e+02   T @ P2
+   T at P3 [degC]   +1.020e+02   T @ P3
+   T at P4 [degC]   +4.045e+01   T @ P4
+   Time [days]      +4.340e+02
+────────────────────────────────────────────────────────────────────
+10:11:52 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.50e+02,  max=+1.50e+02)
+10:11:52 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:52 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.07e+02,  max=+1.07e+02)
+10:11:52 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:52 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.07e+02,  max=+1.07e+02)
+10:11:52 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:52 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.38e+01,  max=+4.38e+01)
+10:11:52 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:11:52 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 482.01 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.499e+02   T @ P1
+   T at P2 [degC]   +1.072e+02   T @ P2
+   T at P3 [degC]   +1.072e+02   T @ P3
+   T at P4 [degC]   +4.381e+01   T @ P4
+   Time [days]      +4.820e+02
+────────────────────────────────────────────────────────────────────
+10:12:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.55e+02,  max=+1.55e+02)
+10:12:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.12e+02,  max=+1.12e+02)
+10:12:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.12e+02,  max=+1.12e+02)
+10:12:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+4.74e+01,  max=+4.74e+01)
+10:12:07 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:07 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 536.96 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.551e+02   T @ P1
+   T at P2 [degC]   +1.123e+02   T @ P2
+   T at P3 [degC]   +1.123e+02   T @ P3
+   T at P4 [degC]   +4.735e+01   T @ P4
+   Time [days]      +5.370e+02
+────────────────────────────────────────────────────────────────────
+10:12:21 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.59e+02,  max=+1.59e+02)
+10:12:21 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:21 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.16e+02,  max=+1.16e+02)
+10:12:21 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:21 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.16e+02,  max=+1.16e+02)
+10:12:21 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:21 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+5.04e+01,  max=+5.04e+01)
+10:12:21 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:21 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 588.00 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.594e+02   T @ P1
+   T at P2 [degC]   +1.164e+02   T @ P2
+   T at P3 [degC]   +1.164e+02   T @ P3
+   T at P4 [degC]   +5.039e+01   T @ P4
+   Time [days]      +5.880e+02
+────────────────────────────────────────────────────────────────────
+10:12:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.64e+02,  max=+1.64e+02)
+10:12:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.21e+02,  max=+1.21e+02)
+10:12:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.21e+02,  max=+1.21e+02)
+10:12:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+5.35e+01,  max=+5.35e+01)
+10:12:35 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:35 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 644.32 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.636e+02   T @ P1
+   T at P2 [degC]   +1.205e+02   T @ P2
+   T at P3 [degC]   +1.205e+02   T @ P3
+   T at P4 [degC]   +5.348e+01   T @ P4
+   Time [days]      +6.443e+02
+────────────────────────────────────────────────────────────────────
+10:12:53 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.68e+02,  max=+1.68e+02)
+10:12:53 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:53 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.25e+02,  max=+1.25e+02)
+10:12:53 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:53 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.25e+02,  max=+1.25e+02)
+10:12:53 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:53 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+5.68e+01,  max=+5.68e+01)
+10:12:53 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:12:53 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 710.16 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.679e+02   T @ P1
+   T at P2 [degC]   +1.248e+02   T @ P2
+   T at P3 [degC]   +1.248e+02   T @ P3
+   T at P4 [degC]   +5.682e+01   T @ P4
+   Time [days]      +7.102e+02
+────────────────────────────────────────────────────────────────────
+10:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.72e+02,  max=+1.72e+02)
+10:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.29e+02,  max=+1.29e+02)
+10:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.29e+02,  max=+1.29e+02)
+10:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+6.04e+01,  max=+6.04e+01)
+10:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 787.14 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.724e+02   T @ P1
+   T at P2 [degC]   +1.292e+02   T @ P2
+   T at P3 [degC]   +1.292e+02   T @ P3
+   T at P4 [degC]   +6.038e+01   T @ P4
+   Time [days]      +7.871e+02
+────────────────────────────────────────────────────────────────────
+10:13:24 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.77e+02,  max=+1.77e+02)
+10:13:24 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:24 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.34e+02,  max=+1.34e+02)
+10:13:24 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:24 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.34e+02,  max=+1.34e+02)
+10:13:24 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:24 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+6.41e+01,  max=+6.41e+01)
+10:13:24 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:24 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 877.14 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.770e+02   T @ P1
+   T at P2 [degC]   +1.338e+02   T @ P2
+   T at P3 [degC]   +1.338e+02   T @ P3
+   T at P4 [degC]   +6.415e+01   T @ P4
+   Time [days]      +8.771e+02
+────────────────────────────────────────────────────────────────────
+10:13:37 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.82e+02,  max=+1.82e+02)
+10:13:37 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:37 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.39e+02,  max=+1.39e+02)
+10:13:37 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:37 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.39e+02,  max=+1.39e+02)
+10:13:37 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:37 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+6.81e+01,  max=+6.81e+01)
+10:13:37 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:37 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 982.37 d · 6 queries ok ──────────────────────────────────────
+   T at P1 [degC]   +1.818e+02   T @ P1
+   T at P2 [degC]   +1.385e+02   T @ P2
+   T at P3 [degC]   +1.385e+02   T @ P3
+   T at P4 [degC]   +6.813e+01   T @ P4
+   Time [days]      +9.824e+02
+────────────────────────────────────────────────────────────────────
+10:13:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.87e+02,  max=+1.87e+02)
+10:13:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.43e+02,  max=+1.43e+02)
+10:13:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.43e+02,  max=+1.43e+02)
+10:13:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+7.23e+01,  max=+7.23e+01)
+10:13:51 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:13:51 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1105.39 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +1.867e+02   T @ P1
+   T at P2 [degC]   +1.434e+02   T @ P2
+   T at P3 [degC]   +1.434e+02   T @ P3
+   T at P4 [degC]   +7.230e+01   T @ P4
+   Time [days]      +1.105e+03
+────────────────────────────────────────────────────────────────────
+10:14:05 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.92e+02,  max=+1.92e+02)
+10:14:05 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:05 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.48e+02,  max=+1.48e+02)
+10:14:05 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:05 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.48e+02,  max=+1.48e+02)
+10:14:05 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:05 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+7.66e+01,  max=+7.66e+01)
+10:14:05 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:05 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1249.23 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +1.916e+02   T @ P1
+   T at P2 [degC]   +1.483e+02   T @ P2
+   T at P3 [degC]   +1.483e+02   T @ P3
+   T at P4 [degC]   +7.665e+01   T @ P4
+   Time [days]      +1.249e+03
+────────────────────────────────────────────────────────────────────
+10:14:20 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.97e+02,  max=+1.97e+02)
+10:14:20 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:20 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.53e+02,  max=+1.53e+02)
+10:14:20 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:20 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.53e+02,  max=+1.53e+02)
+10:14:20 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:20 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+8.12e+01,  max=+8.12e+01)
+10:14:20 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:20 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1417.40 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +1.967e+02   T @ P1
+   T at P2 [degC]   +1.534e+02   T @ P2
+   T at P3 [degC]   +1.534e+02   T @ P3
+   T at P4 [degC]   +8.116e+01   T @ P4
+   Time [days]      +1.417e+03
+────────────────────────────────────────────────────────────────────
+10:14:34 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.02e+02,  max=+2.02e+02)
+10:14:34 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:34 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.58e+02,  max=+1.58e+02)
+10:14:34 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:34 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.58e+02,  max=+1.58e+02)
+10:14:34 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:34 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+8.58e+01,  max=+8.58e+01)
+10:14:34 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:34 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1614.01 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +2.019e+02   T @ P1
+   T at P2 [degC]   +1.585e+02   T @ P2
+   T at P3 [degC]   +1.585e+02   T @ P3
+   T at P4 [degC]   +8.582e+01   T @ P4
+   Time [days]      +1.614e+03
+────────────────────────────────────────────────────────────────────
+10:14:50 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.07e+02,  max=+2.07e+02)
+10:14:50 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:50 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.64e+02,  max=+1.64e+02)
+10:14:50 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:50 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.64e+02,  max=+1.64e+02)
+10:14:50 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:50 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+9.06e+01,  max=+9.06e+01)
+10:14:50 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:14:50 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1843.88 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +2.071e+02   T @ P1
+   T at P2 [degC]   +1.637e+02   T @ P2
+   T at P3 [degC]   +1.637e+02   T @ P3
+   T at P4 [degC]   +9.062e+01   T @ P4
+   Time [days]      +1.844e+03
+────────────────────────────────────────────────────────────────────
+10:15:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.12e+02,  max=+2.12e+02)
+10:15:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.69e+02,  max=+1.69e+02)
+10:15:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.69e+02,  max=+1.69e+02)
+10:15:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+9.55e+01,  max=+9.55e+01)
+10:15:08 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2112.64 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +2.124e+02   T @ P1
+   T at P2 [degC]   +1.690e+02   T @ P2
+   T at P3 [degC]   +1.690e+02   T @ P3
+   T at P4 [degC]   +9.553e+01   T @ P4
+   Time [days]      +2.113e+03
+────────────────────────────────────────────────────────────────────
+10:15:27 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.18e+02,  max=+2.18e+02)
+10:15:27 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:27 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.74e+02,  max=+1.74e+02)
+10:15:27 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:27 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.74e+02,  max=+1.74e+02)
+10:15:27 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:27 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.01e+02,  max=+1.01e+02)
+10:15:27 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:27 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2426.86 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +2.178e+02   T @ P1
+   T at P2 [degC]   +1.743e+02   T @ P2
+   T at P3 [degC]   +1.743e+02   T @ P3
+   T at P4 [degC]   +1.006e+02   T @ P4
+   Time [days]      +2.427e+03
+────────────────────────────────────────────────────────────────────
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.23e+02,  max=+2.23e+02)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.80e+02,  max=+1.80e+02)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.80e+02,  max=+1.80e+02)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.06e+02,  max=+1.06e+02)
+10:15:45 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:15:45 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2794.24 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +2.232e+02   T @ P1
+   T at P2 [degC]   +1.798e+02   T @ P2
+   T at P3 [degC]   +1.798e+02   T @ P3
+   T at P4 [degC]   +1.057e+02   T @ P4
+   Time [days]      +2.794e+03
+────────────────────────────────────────────────────────────────────
+10:16:01 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.29e+02,  max=+2.29e+02)
+10:16:01 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:01 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.85e+02,  max=+1.85e+02)
+10:16:01 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:01 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.85e+02,  max=+1.85e+02)
+10:16:01 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:01 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.11e+02,  max=+1.11e+02)
+10:16:01 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:01 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3223.75 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +2.287e+02   T @ P1
+   T at P2 [degC]   +1.852e+02   T @ P2
+   T at P3 [degC]   +1.852e+02   T @ P3
+   T at P4 [degC]   +1.109e+02   T @ P4
+   Time [days]      +3.224e+03
+────────────────────────────────────────────────────────────────────
+10:16:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.34e+02,  max=+2.34e+02)
+10:16:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.91e+02,  max=+1.91e+02)
+10:16:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.91e+02,  max=+1.91e+02)
+10:16:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.16e+02,  max=+1.16e+02)
+10:16:16 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:16 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3725.92 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +2.342e+02   T @ P1
+   T at P2 [degC]   +1.907e+02   T @ P2
+   T at P3 [degC]   +1.907e+02   T @ P3
+   T at P4 [degC]   +1.162e+02   T @ P4
+   Time [days]      +3.726e+03
+────────────────────────────────────────────────────────────────────
+10:16:19 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+2.35e+02,  max=+2.35e+02)
+10:16:19 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:19 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.92e+02,  max=+1.92e+02)
+10:16:19 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:19 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.92e+02,  max=+1.92e+02)
+10:16:19 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:19 DEBUG    tools.simulations.post.evaluate.queries.display:                          (min=+1.17e+02,  max=+1.17e+02)
+10:16:19 DEBUG    tools.simulations.post.evaluate.queries.display:                          1 nodes
+10:16:19 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3836.12 d · 6 queries ok ─────────────────────────────────────
+   T at P1 [degC]   +2.353e+02   T @ P1
+   T at P2 [degC]   +1.918e+02   T @ P2
+   T at P3 [degC]   +1.918e+02   T @ P3
+   T at P4 [degC]   +1.173e+02   T @ P4
+   Time [days]      +3.836e+03
+────────────────────────────────────────────────────────────────────
+10:16:19 INFO     tools.simulations: VTU export: 362 file(s) -> debug/HITEC/cox-isotropic-temperature/oofem/output/OOFEM/vtu
+10:16:20 INFO     tools.simulations: Checkpoint saved -> debug/HITEC/cox-isotropic-temperature/oofem/output/OOFEM/checkpoint.h5  (10.0 MB)
+10:16:20 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 362/362 steps ok) ==

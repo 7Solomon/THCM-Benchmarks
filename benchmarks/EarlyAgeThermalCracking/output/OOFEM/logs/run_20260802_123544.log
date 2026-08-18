@@ -1,0 +1,47 @@
+12:35:44 INFO     tools.simulations: Log file: debug/EarlyAgeThermalCracking/OOFEM/output/OOFEM/logs/run_20260802_123544.log
+12:35:44 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+12:35:44 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/EarlyAgeThermalCracking/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+12:35:44 INFO     tools.simulations: Loading benchmark config: debug/EarlyAgeThermalCracking/OOFEM/benchmark.json
+12:35:44 INFO     tools.simulations: Benchmark: Thermo-mechanical simulations of early-age concrete cracking — Oslo restrained wall (havlasek-2017-oslo-wall)
+12:35:44 INFO     tools.simulations: Configurations loaded.
+12:35:44 INFO     tools.simulations: Loading mesh...
+12:35:44 INFO     tools.simulations: Mesh loaded: 1192 nodes, 4378 elements (tetra)
+12:35:44 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:35:44 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1192
+  Total DOFs: 4768
+  Fields: 2
+    - temperature: 1192 DOFs (['T'])
+    - displacement: 3576 DOFs (['ux', 'uy', 'uz'])
+12:35:44 INFO     tools.simulations: Building oofem problem...
+12:35:44 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[117.9 -> 1473.5] s
+12:35:44 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[1993.5 -> 3987.1] s
+12:35:44 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[2666.5 -> 16985.3] s
+12:35:44 INFO     tools.simulations.oofem.src.builder.problem: 'temperature' sub-problem: skipping BC entries of other fields: displacement x5
+12:35:45 WARNING  tools.simulations.oofem.src.builder.problem: thermal_strain keys ['alpha_inf'] (domain 'concrete_domain') have NO oofem mapping and are IGNORED (D9 amendment)
+12:35:45 INFO     tools.simulations.oofem.src.builder.problem: 'displacement' sub-problem: skipping BC entries of other fields: temperature x3
+12:35:45 INFO     tools.simulations: Solution plan: STAGGERED lockstep (1 sources)
+12:35:45 INFO     tools.simulations: oofem problem built: 1192 nodes, 4378 elements, 736 steps (t=[0 -> 1.08e+06])
+12:35:45 INFO     tools.simulations.oofem.src.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+12:35:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.50e+01,  max=+1.50e+01)
+12:35:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+12:35:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+1.04e-08,  max=+1.04e-08)
+12:35:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+12:35:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                   (min=+2.37e-08,  max=+2.37e-08)
+12:35:47 DEBUG    tools.simulations.post.evaluate.queries.display:                                   1 nodes
+12:35:47 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 3 queries ok ────────────────────────────────────────
+   temperature_gage15        +1.500e+01   T @ gage_15
+   displacement_ux_gage15    +1.040e-08   ux @ gage_15
+   total_strain_gage15_ezz   +2.374e-08   ezz @ gage_15
+────────────────────────────────────────────────────────────────────

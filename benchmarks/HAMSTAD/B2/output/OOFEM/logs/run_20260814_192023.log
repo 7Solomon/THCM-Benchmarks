@@ -1,0 +1,27 @@
+19:20:23 INFO     tools.simulations: Log file: debug/HAMSTAD/B2/output/OOFEM/logs/run_20260814_192023.log
+19:20:23 INFO     tools.simulations: == STARTING BENCHMARK: B2 ==
+19:20:23 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/HAMSTAD/B2
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+19:20:23 INFO     tools.simulations: Loading benchmark config: debug/HAMSTAD/B2/benchmark.json
+19:20:23 INFO     tools.simulations: Benchmark: HAMSTAD WP2 Benchmark 2: isothermal moisture redistribution in a homogeneous wall (analytical case) (hamstad-benchmark-2-analytical)
+19:20:23 INFO     tools.simulations: Configurations loaded.
+19:20:23 INFO     tools.simulations: Loading mesh...
+19:20:23 INFO     tools.simulations: Mesh loaded: 1345 nodes, 1232 elements (quad)
+19:20:23 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+19:20:23 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 1345
+  Total DOFs: 1345
+  Fields: 1
+    - humidity: 1345 DOFs (['h'])
+19:20:23 INFO     tools.simulations: Building oofem problem...
+19:20:23 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 369 steps, dt=[300.0 -> 49997.3] s

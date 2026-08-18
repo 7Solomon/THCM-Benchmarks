@@ -1,0 +1,400 @@
+{
+    "metadata": {
+        "id": "uac-van-mier-uniaxial-compression",
+        "title": "Uniaxial Compression Test — Size Effect (Van Mier)",
+        "source": {
+            "authors": [
+                "Van Mier, J.G.M."
+            ],
+            "year": 1984,
+            "journal": "PhD Dissertation, TU Eindhoven"
+        },
+        "dimension": 2,
+        "physics_class": "mechanical",
+        "validation_method": "experimental_comparison",
+        "validation_target": "Stress-strain curves for h=50, 100, 200mm specimens — size-independent post-peak",
+        "notes": "Three specimens with 100x100mm cross-section and heights 50, 100, 200mm. This JSON covers the 200mm specimen (reference). Clone and adjust geometry/mesh for 50mm and 100mm variants. Plane stress assumed. Localization band = 1 element row with slightly reduced wd."
+    },
+    "geometry": {
+        "entities": [
+            {
+                "id": "specimen_lower",
+                "type": "rectangle",
+                "parameters": {
+                    "origin": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "size": [
+                        0.1,
+                        0.0875
+                    ],
+                    "_comment": "100mm wide x 200mm tall specimen, split into lower / localization band / upper so the band can carry its own material. For h=100mm use lower+upper 0.0375 each; for h=50mm 0.0125 each (band stays one element row)."
+                }
+            },
+            {
+                "id": "localization_band",
+                "type": "rectangle",
+                "parameters": {
+                    "origin": [
+                        0.0,
+                        0.0875,
+                        0.0
+                    ],
+                    "size": [
+                        0.1,
+                        0.025
+                    ],
+                    "_comment": "ONE element row (= mesh.element_size) centred on mid-height y=0.1. Carries the reduced wd that triggers localization."
+                }
+            },
+            {
+                "id": "specimen_upper",
+                "type": "rectangle",
+                "parameters": {
+                    "origin": [
+                        0.0,
+                        0.1125,
+                        0.0
+                    ],
+                    "size": [
+                        0.1,
+                        0.0875
+                    ]
+                }
+            }
+        ],
+        "operations": [
+            {
+                "type": "fragment",
+                "targets": [
+                    "specimen_lower"
+                ],
+                "tools": [
+                    "localization_band",
+                    "specimen_upper"
+                ],
+                "result_ids": [
+                    "specimen_lower",
+                    "localization_band",
+                    "specimen_upper"
+                ],
+                "_comment": "Glues the three stacked rectangles into ONE conformal mesh — without it the touching surfaces mesh independently and the interfaces get duplicated nodes (specimen splits in two)."
+            }
+        ],
+        "physical_groups": [
+            {
+                "name": "concrete_domain",
+                "dimension": 2,
+                "entity_ids": [
+                    "specimen_lower",
+                    "specimen_upper"
+                ]
+            },
+            {
+                "name": "localization_band",
+                "dimension": 2,
+                "entity_ids": [
+                    "localization_band"
+                ]
+            },
+            {
+                "name": "bottom_face",
+                "dimension": 1,
+                "selection": {
+                    "box": [
+                        -1e-6,
+                        -1e-6,
+                        -1e-6,
+                        0.101,
+                        1e-6,
+                        1e-6
+                    ]
+                },
+                "_comment": "Fixed in vertical direction; bottom-left corner also fixed horizontally"
+            },
+            {
+                "name": "bottom_left_corner",
+                "dimension": 0,
+                "selection": {
+                    "box": [
+                        -1e-6,
+                        -1e-6,
+                        -1e-6,
+                        1e-6,
+                        1e-6,
+                        1e-6
+                    ]
+                },
+                "_comment": "Additional horizontal fixity to prevent rigid body translation"
+            },
+            {
+                "name": "top_face",
+                "dimension": 1,
+                "selection": {
+                    "box": [
+                        -1e-6,
+                        0.199,
+                        -1e-6,
+                        0.101,
+                        0.201,
+                        1e-6
+                    ]
+                },
+                "_comment": "Prescribed vertical displacement (compressive loading)"
+            }
+        ],
+        "points": [
+            {
+                "name": "mid_specimen",
+                "coordinates": [
+                    0.05,
+                    0.1,
+                    0.0
+                ],
+                "_comment": "Centre of specimen for strain monitoring"
+            }
+        ],
+        "mesh": {
+            "element_size": 0.025,
+            "_comment": "25mm uniform mesh as per paper. For h=50mm: 2 elements; h=100mm: 4; h=200mm: 8 in y."
+        }
+    },
+    "physics": {
+        "solid_mechanics": {
+            "type": "field",
+            "dependent_variable": {
+                "name": "displacement",
+                "symbol": "u",
+                "type": "vector",
+                "components": [
+                    "ux",
+                    "uy"
+                ]
+            }
+        }
+    },
+    "materials": {
+        "concrete_bulk": {
+            "displacement": {
+                "model": "compression_softening",
+                "E": 38.0e9,
+                "_E_comment": "PAPER_VALUE: Table 1.3-1 [Pa]",
+                "nu": 0.2,
+                "_nu_comment": "PAPER_VALUE: Table 1.3-1",
+                "ft": 2.987e6,
+                "_ft_comment": "PAPER_VALUE: Table 1.3-1 [Pa]",
+                "Gf": 74.67,
+                "_Gf_comment": "PAPER_VALUE: Table 1.3-1 [J/m2]",
+                "fc": 43.9e6,
+                "_fc_comment": "PAPER_VALUE: Table 1.3-1 [Pa]",
+                "wd": 6e-4,
+                "_wd_comment": "PAPER_VALUE: Critical compressive displacement for bulk material [m]. Table 1.3-1.",
+                "rho": 2400,
+                "_rho_comment": "Inert here (staticStructural assembles no mass matrix) but the oofem backend refuses to guess a density.",
+                "plane_stress": true,
+                "_plane_stress_comment": "PAPER_VALUE: plane stress explicitly stated",
+                "thickness": 0.1,
+                "_thickness_comment": "PAPER_VALUE: 100x100mm cross-section -> 0.1 m out of plane. SCALES the reported reactions; the queries' A = 0.1*0.1 assumes it."
+            }
+        },
+        "concrete_localization_band": {
+            "displacement": {
+                "model": "compression_softening",
+                "E": 38.0e9,
+                "nu": 0.2,
+                "ft": 2.987e6,
+                "Gf": 74.67,
+                "fc": 43.9e6,
+                "wd": 5e-4,
+                "_wd_comment": "PAPER_VALUE: Slightly reduced wd=5e-4m for localization band vs 6e-4m for bulk. Table 1.3-1.",
+                "rho": 2400,
+                "plane_stress": true,
+                "thickness": 0.1
+            }
+        }
+    },
+    "initial_conditions": [
+        {
+            "field": "displacement",
+            "component": "ux",
+            "value": 0.0,
+            "location": "concrete_domain"
+        },
+        {
+            "field": "displacement",
+            "component": "uy",
+            "value": 0.0,
+            "location": "concrete_domain"
+        }
+    ],
+    "boundary_conditions": [
+        {
+            "type": "dirichlet",
+            "field": "displacement",
+            "component": "uy",
+            "value": 0.0,
+            "location": "bottom_face",
+            "time_function": "constant",
+            "_comment": "Frictionless: only vertical fixity at bottom"
+        },
+        {
+            "type": "dirichlet",
+            "field": "displacement",
+            "component": "ux",
+            "value": 0.0,
+            "location": "bottom_left_corner",
+            "time_function": "constant",
+            "_comment": "Horizontal fixity at bottom-left corner only — prevents rigid body translation"
+        },
+        {
+            "type": "dirichlet",
+            "field": "displacement",
+            "component": "uy",
+            "value": -1.4e-3,
+            "_value_comment": "Total prescribed compressive displacement [m]. For 200mm specimen: ~7x peak strain (~0.9e-3) x 0.2m ≈ 1.4mm to capture full softening tail.",
+            "location": "top_face",
+            "time_function": "linear"
+        }
+    ],
+    "assignment": {
+        "domains": {
+            "concrete_domain": {
+                "active_fields": [
+                    "displacement"
+                ],
+                "material": "concrete_bulk"
+            },
+            "localization_band": {
+                "active_fields": [
+                    "displacement"
+                ],
+                "material": "concrete_localization_band",
+                "_comment": "One element row at mid-height (geometry entity 'localization_band'). Elements are assigned by node-majority vote, so the band's own nodes outvote concrete_domain on every band element."
+            }
+        }
+    },
+    "time_stepping": {
+        "t_start": 0.0,
+        "t_end": 1.0,
+        "analysis_type": "transient",
+        "dt": 0.005,
+        "_dt_comment": "200 steps = 7μm per step for 200mm specimen. Adequate for softening resolution."
+    },
+    "results": {
+        "reference_curves": [
+            {
+                "id": "uac200_exp",
+                "file": "reference/uac_stress_strain.csv",
+                "has_header": true,
+                "x_col": "strain_1e-3_200mm",
+                "y_col": "stress_exp_200mm",
+                "label": "Experiment h=200mm (Van Mier 1984)"
+            },
+            {
+                "id": "uac200_sim",
+                "file": "reference/uac_stress_strain.csv",
+                "has_header": true,
+                "x_col": "strain_1e-3_200mm",
+                "y_col": "stress_sim_200mm",
+                "label": "ATENA h=200mm (Fig 1-8)"
+            }
+        ],
+        "queries": [
+            {
+                "id": "t",
+                "type": "time"
+            },
+            {
+                "id": "uy_top",
+                "type": "field",
+                "field": "displacement",
+                "component": "uy",
+                "at": "mid_specimen",
+                "reduce": "avg",
+                "evaluate_in": "fem"
+            },
+            {
+                "id": "reaction_top",
+                "type": "reaction",
+                "component": "uy",
+                "at": "top_face",
+                "reduce": "sum",
+                "evaluate_in": "fem"
+            },
+            {
+                "id": "stress_MPa",
+                "type": "formula",
+                "formula": "reaction_top / (0.1 * 0.1) * -1e-6",
+                "depends_on": [
+                    "reaction_top"
+                ],
+                "_comment": "Average compressive stress [MPa] = F / A. A=0.01m2. Flip sign for compression positive."
+            },
+            {
+                "id": "stress_normalised",
+                "type": "formula",
+                "formula": "stress_MPa / 43.9",
+                "depends_on": [
+                    "stress_MPa"
+                ]
+            },
+            {
+                "id": "strain_total_1e3",
+                "type": "field",
+                "field": "displacement",
+                "component": "uy",
+                "at": "mid_specimen",
+                "reduce": "avg",
+                "evaluate_in": "fem",
+                "_comment": "Raw vertical displacement [m] — divide by specimen height to get strain, then scale by 1e3 via plot x.scale"
+            }
+        ],
+        "plots": [
+            {
+                "name": "uac_stress_strain_200",
+                "title": "UAC: Normalised Stress-Strain (h=200mm)",
+                "x_axis": {
+                    "label": "Strain ×10⁻³"
+                },
+                "y_axis": {
+                    "label": "σ / σ_peak [–]"
+                },
+                "grid": true,
+                "curves": [
+                    {
+                        "source": "simulation",
+                        "x": {
+                            "key": "strain_total_1e3",
+                            "scale": 1e3
+                        },
+                        "y": {
+                            "key": "stress_normalised"
+                        },
+                        "label": "FEM h=200mm"
+                    },
+                    {
+                        "source": "reference",
+                        "ref_id": "uac200_exp",
+                        "label": "Experiment h=200mm (Van Mier)"
+                    },
+                    {
+                        "source": "reference",
+                        "ref_id": "uac200_sim",
+                        "label": "ATENA h=200mm (Fig 1-8)"
+                    }
+                ]
+            }
+        ],
+        "exports": {
+            "save_checkpoint": true,
+            "aux_fields": [
+                "damage",
+                "total_strain"
+            ],
+            "export_vtu": true,
+            "save_db": true
+        }
+    }
+}

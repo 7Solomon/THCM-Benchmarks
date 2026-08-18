@@ -1,0 +1,113 @@
+13:01:49 INFO     tools.simulations: Log file: debug/BenVaSim/1.1/output/OOFEM/logs/run_20260814_130149.log
+13:01:49 INFO     tools.simulations: == STARTING BENCHMARK: 1.1 ==
+13:01:49 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/BenVaSim/1.1
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+13:01:49 INFO     tools.simulations: Loading benchmark config: debug/BenVaSim/1.1/benchmark.json
+13:01:49 INFO     tools.simulations: Benchmark: BenVaSim Stage 1 / Model 1.1(a): 1D HM-coupled saturated column (Biot consolidation benchmark) (benvasim-model-1-1a)
+13:01:49 INFO     tools.simulations: Configurations loaded.
+13:01:49 INFO     tools.simulations: Loading mesh...
+13:01:49 INFO     tools.simulations: Mesh loaded: 2617 nodes, 2405 elements (quad)
+13:01:49 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+13:01:49 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 2617
+  Total DOFs: 7851
+  Fields: 2
+    - displacement: 5234 DOFs (['ux', 'uy'])
+    - pore_pressure: 2617 DOFs (['p'])
+13:01:49 INFO     tools.simulations: Building oofem problem...
+13:01:49 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 465 steps, dt=[999.7 -> 19993561.9] s
+13:01:49 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: mobility = intrinsic_permeability/fluid_viscosity = 1e-20 / 0.001 = 1e-17 m2/(Pa.s)
+13:01:49 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: storage 1/Q = 7.14286e-11 1/Pa (from porosity)
+13:01:50 INFO     tools.simulations: oofem problem built: 2617 nodes, 2405 elements, 465 steps (t=[0 -> 9.47e+08])
+13:02:25 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'p_profile' failed: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 191, in q_line_profile
+    coords, values = ctx.line_field(
+                     ^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 156, in line_field
+    start = self._as_point(start, axis, nodes, "start")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 263, in _as_point
+    raise ValueError(
+ValueError: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+3.46e+05,  max=+3.46e+05)
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+3.50e+05,  max=+3.50e+05)
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+3.50e+05,  max=+3.50e+05)
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+3.49e+05,  max=+3.49e+05)
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+3.55e+05,  max=+3.55e+05)
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                (min=+6.86e-04,  max=+6.86e-04)
+13:02:25 DEBUG    tools.simulations.post.evaluate.queries.display:                                1 nodes
+13:02:25 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.01 d · 9 queries 1 FAILED ──────────────────────────────────
+   p' at X=0.25 m [Pa]    +3.461e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]    +3.500e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]    +3.496e+05   p @ probe_x125
+   p' at X=5 m [Pa]       +3.495e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]    +3.550e+05   p @ probe_x975
+   lhs displacement [m]   +6.863e-04   ux @ probe_lhs
+ ✗ p'(x) profile          +0.000e+00
+   Time [years]           +3.168e-05
+────────────────────────────────────────────────────────────────────
+13:02:25 WARNING  tools.simulations.post.evaluate.queries.display: Query 'p_profile': ValueError: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+13:03:14 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'p_profile' failed: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 191, in q_line_profile
+    coords, values = ctx.line_field(
+                     ^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 156, in line_field
+    start = self._as_point(start, axis, nodes, "start")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 263, in _as_point
+    raise ValueError(
+ValueError: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+13:03:14 WARNING  tools.simulations.post.evaluate.queries.display: Query 'p_profile': ValueError: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+13:03:59 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'p_profile' failed: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 191, in q_line_profile
+    coords, values = ctx.line_field(
+                     ^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 156, in line_field
+    start = self._as_point(start, axis, nodes, "start")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 263, in _as_point
+    raise ValueError(
+ValueError: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+13:03:59 WARNING  tools.simulations.post.evaluate.queries.display: Query 'p_profile': ValueError: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+13:04:45 ERROR    tools.simulations.post.evaluate.queries.engine: Query 'p_profile' failed: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+Traceback (most recent call last):
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/engine.py", line 145, in _run_single
+    out[name] = fn(q, ctx)
+                ^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/queries.py", line 191, in q_line_profile
+    coords, values = ctx.line_field(
+                     ^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 156, in line_field
+    start = self._as_point(start, axis, nodes, "start")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/johannes/programme/THCM-Fem/tools/simulations/post/evaluate/queries/adapters.py", line 263, in _as_point
+    raise ValueError(
+ValueError: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional
+13:04:45 WARNING  tools.simulations.post.evaluate.queries.display: Query 'p_profile': ValueError: line_profile 'start' has 3 coordinates but the mesh is 2-dimensional

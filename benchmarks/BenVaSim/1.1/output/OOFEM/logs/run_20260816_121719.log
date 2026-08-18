@@ -1,0 +1,62 @@
+12:17:19 INFO     tools.simulations: Log file: debug/BenVaSim/1.1/output/OOFEM/logs/run_20260816_121719.log
+12:17:19 INFO     tools.simulations: == STARTING BENCHMARK: 1.1 ==
+12:17:19 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/BenVaSim/1.1
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+12:17:19 INFO     tools.simulations: Loading benchmark config: debug/BenVaSim/1.1/benchmark.json
+12:17:19 INFO     tools.simulations: Benchmark: BenVaSim Stage 1 / Model 1.1(a): 1D HM-coupled saturated column (Biot consolidation benchmark) (benvasim-model-1-1a)
+12:17:19 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 465 steps, dt=[999.7 -> 19993561.9] s
+12:17:19 INFO     tools.simulations: Configurations loaded.
+12:17:19 INFO     tools.simulations: Loading mesh...
+12:17:19 INFO     tools.simulations: Mesh loaded: 2835 nodes, 2623 elements (quad)
+12:17:19 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:17:19 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 2835
+  Total DOFs: 8505
+  Fields: 2
+    - displacement: 5670 DOFs (['ux', 'uy'])
+    - pore_pressure: 2835 DOFs (['p'])
+12:17:19 INFO     tools.simulations: Building oofem problem...
+12:17:19 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 465 steps, dt=[999.7 -> 19993561.9] s
+12:17:19 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: mobility = intrinsic_permeability/fluid_viscosity = 1e-20 / 0.001 = 1e-17 m2/(Pa.s)
+12:17:19 INFO     tools.simulations.oofem.src.builder.materials.hydro_mechanical: pore_pressure: storage 1/Q = 7.14286e-11 1/Pa (from porosity)
+12:17:19 INFO     tools.simulations: oofem problem built: 2835 nodes, 2623 elements, 465 steps (t=[0 -> 9.47e+08])
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.45e+05,  max=+3.45e+05)
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.50e+05,  max=+3.50e+05)
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.50e+05,  max=+3.50e+05)
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.49e+05,  max=+3.49e+05)
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+3.51e+05,  max=+3.51e+05)
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=999.7 s
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  (min=+6.86e-04,  max=+6.86e-04)
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  1 nodes
+12:18:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                  201 sample pts,  t=999.7 s
+12:18:49 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.01 d · 15 queries ok ───────────────────────────────────────
+   p' at X=0.25 m [Pa]      +3.453e+05   p @ probe_x025
+   p' at X=0.75 m [Pa]      +3.499e+05   p @ probe_x075
+   p' at X=1.25 m [Pa]      +3.496e+05   p @ probe_x125
+   p' at X=5 m [Pa]         +3.495e+05   p @ probe_x500
+   p' at X=9.75 m [Pa]      +3.513e+05   p @ probe_x975
+   p'(x) profile            +0.000e+00 → +8.987e+05   pore_pressure
+   lhs displacement [m]     +6.863e-04   ux @ probe_lhs
+   u(x) profile             +0.000e+00 → +6.863e-04   displacement
+   Time [years]             +3.168e-05
+   p at X=0.25m [MPa abs]   +4.466e-01
+   p at X=0.75m [MPa abs]   +4.512e-01
+   p at X=1.25m [MPa abs]   +4.509e-01
+   p at X=5m [MPa abs]      +4.508e-01
+   p at X=9.75m [MPa abs]   +4.526e-01
+────────────────────────────────────────────────────────────────────

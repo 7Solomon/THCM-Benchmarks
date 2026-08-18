@@ -1,0 +1,26 @@
+09:38:54 INFO     tools.simulations: Log file: debug/ATENA/TPBB/OOFEM/output/OOFEM/logs/logs/run_20260712_093854.log
+09:38:54 INFO     tools.simulations: == STARTING BENCHMARK: OOFEM ==
+09:38:54 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ debug/ATENA/TPBB/OOFEM
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+09:38:54 INFO     tools.simulations: Loading benchmark config: debug/ATENA/TPBB/OOFEM/benchmark.json
+09:38:54 INFO     tools.simulations: Benchmark: Three-Point Bending Beam — Tensile Strength Determination (tpbb-atena-three-point-bending)
+09:38:54 INFO     tools.simulations: Configurations loaded.
+09:38:54 INFO     tools.simulations: Loading mesh...
+09:38:54 INFO     tools.simulations: Mesh loaded: 220 nodes, 368 elements (triangle)
+09:38:54 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+09:38:54 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 220
+  Total DOFs: 440
+  Fields: 1
+    - displacement: 440 DOFs (['ux', 'uy'])
+09:38:54 INFO     tools.simulations: Building oofem problem...

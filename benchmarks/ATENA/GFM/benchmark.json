@@ -1,0 +1,313 @@
+{
+    "metadata": {
+        "id": "gfm-fracture-energy-dcb",
+        "title": "Fracture Energy Measurement via Double Cantilever Beam",
+        "source": {
+            "authors": [
+                "Okada, T.",
+                "Horii, H.",
+                "Červenka, V."
+            ],
+            "year": 1998,
+            "journal": "FRAMCOS-3 Proceedings"
+        },
+        "dimension": 2,
+        "physics_class": "mechanical",
+        "validation_method": "analytical_comparison",
+        "validation_target": "Computed Gf = 124.591 N/m vs input Gf = 122 N/m (<2% error)",
+        "notes": "Two DCB specimens run separately: shorter notch a1=100mm, longer notch a2=105mm. Gf computed from area between two load-displacement curves divided by (delta_a * b). Thickness b=100mm (grooved), b0=120mm (outer). Specimen: 200x200mm with 100 or 105mm notch."
+    },
+    "geometry": {
+        "entities": [
+            {
+                "id": "dcb_beam",
+                "type": "rectangle",
+                "parameters": {
+                    "origin": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "size": [
+                        0.4,
+                        0.2
+                    ],
+                    "_comment": "400mm wide x 200mm deep. Notch modelled as initial crack from left at y=0.1m (mid-height). Use a1=0.1m for specimen 1, a2=0.105m for specimen 2."
+                }
+            }
+        ],
+        "physical_groups": [
+            {
+                "name": "concrete_domain",
+                "dimension": 2,
+                "entity_ids": [
+                    "dcb_beam"
+                ]
+            },
+            {
+                "name": "load_point_top",
+                "dimension": 0,
+                "selection": {
+                    "box": [
+                        -1e-6,
+                        0.199,
+                        -1e-6,
+                        1e-6,
+                        0.201,
+                        1e-6
+                    ]
+                },
+                "_comment": "Top arm loading point at x=0, y=0.2m"
+            },
+            {
+                "name": "load_point_bot",
+                "dimension": 0,
+                "selection": {
+                    "box": [
+                        -1e-6,
+                        -1e-6,
+                        -1e-6,
+                        1e-6,
+                        1e-6,
+                        1e-6
+                    ]
+                },
+                "_comment": "Bottom arm loading point at x=0, y=0"
+            },
+            {
+                "name": "right_support",
+                "dimension": 1,
+                "selection": {
+                    "box": [
+                        0.399,
+                        -1e-6,
+                        -1e-6,
+                        0.401,
+                        0.201,
+                        1e-6
+                    ]
+                },
+                "_comment": "Right edge fixed to prevent rigid body motion"
+            }
+        ],
+        "points": [
+            {
+                "name": "load_top",
+                "coordinates": [
+                    0.0,
+                    0.2,
+                    0.0
+                ],
+                "_comment": "Top loading point — monitors vertical displacement"
+            },
+            {
+                "name": "load_bot",
+                "coordinates": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "_comment": "Bottom loading point — monitors vertical displacement"
+            }
+        ],
+        "mesh": {
+            "element_size": 0.005,
+            "_comment": "5mm mesh; paper requires at least 20 elements along ligament (100mm/20=5mm)"
+        }
+    },
+    "physics": {
+        "solid_mechanics": {
+            "type": "field",
+            "dependent_variable": {
+                "name": "displacement",
+                "symbol": "u",
+                "type": "vector",
+                "components": [
+                    "ux",
+                    "uy"
+                ]
+            }
+        }
+    },
+    "materials": {
+        "concrete": {
+            "displacement": {
+                "model": "rotating_crack",
+                "_model_comment": "PAPER_VALUE: Table 1.2-1 — rotating crack model",
+                "E": 27.6e9,
+                "_E_comment": "PAPER_VALUE: Table 1.2-1 [Pa]",
+                "nu": 0.21,
+                "_nu_comment": "PAPER_VALUE: Table 1.2-1",
+                "ft": 2.06e6,
+                "_ft_comment": "PAPER_VALUE: Table 1.2-1 [Pa]",
+                "Gf": 122.0,
+                "_Gf_comment": "PAPER_VALUE: Table 1.2-1 [J/m2] — input value; computed result is 124.591 N/m",
+                "plane_stress": false
+            }
+        }
+    },
+    "initial_conditions": [
+        {
+            "field": "displacement",
+            "component": "ux",
+            "value": 0.0,
+            "location": "concrete_domain"
+        },
+        {
+            "field": "displacement",
+            "component": "uy",
+            "value": 0.0,
+            "location": "concrete_domain"
+        }
+    ],
+    "boundary_conditions": [
+        {
+            "type": "dirichlet",
+            "field": "displacement",
+            "component": "ux",
+            "value": 0.0,
+            "location": "right_support",
+            "time_function": "constant"
+        },
+        {
+            "type": "dirichlet",
+            "field": "displacement",
+            "component": "uy",
+            "value": 0.0,
+            "location": "right_support",
+            "time_function": "constant"
+        },
+        {
+            "type": "dirichlet",
+            "field": "displacement",
+            "component": "uy",
+            "value": 3e-4,
+            "_value_comment": "Top arm pulled up +0.3mm total (opening). Paper uses 0.003mm per step, constant increments.",
+            "location": "load_point_top",
+            "time_function": "linear"
+        },
+        {
+            "type": "dirichlet",
+            "field": "displacement",
+            "component": "uy",
+            "value": -3e-4,
+            "_value_comment": "Bottom arm pulled down -0.3mm (symmetric opening).",
+            "location": "load_point_bot",
+            "time_function": "linear"
+        }
+    ],
+    "assignment": {
+        "domains": {
+            "concrete_domain": {
+                "active_fields": [
+                    "displacement"
+                ],
+                "material": "concrete"
+            }
+        }
+    },
+    "time_stepping": {
+        "t_start": 0.0,
+        "t_end": 1.0,
+        "_t_end_comment": "Pseudo-time; linear time_function maps 0→1 to 0→±0.3mm at load points",
+        "analysis_type": "transient",
+        "dt": 0.01,
+        "_dt_comment": "100 steps = 0.003mm per step, matching paper step size"
+    },
+    "results": {
+        "reference_curves": [
+            {
+                "id": "gfm_short",
+                "file": "reference/gfm_load_displacement.csv",
+                "has_header": true,
+                "x_col": "opening_mm",
+                "y_col": "load_short_MN",
+                "label": "Short notch a1=100mm (Fig 1-4)"
+            },
+            {
+                "id": "gfm_long",
+                "file": "reference/gfm_load_displacement.csv",
+                "has_header": true,
+                "x_col": "opening_mm",
+                "y_col": "load_long_MN",
+                "label": "Long notch a2=105mm (Fig 1-4)"
+            }
+        ],
+        "queries": [
+            {
+                "id": "t",
+                "type": "time"
+            },
+            {
+                "id": "uy_top",
+                "type": "field",
+                "field": "displacement",
+                "component": "uy",
+                "at": "load_top",
+                "reduce": "value",
+                "evaluate_in": "fem"
+            },
+            {
+                "id": "reaction_top",
+                "type": "reaction",
+                "component": "uy",
+                "at": "load_point_top",
+                "reduce": "sum",
+                "evaluate_in": "fem"
+            },
+            {
+                "id": "relative_opening_mm",
+                "type": "formula",
+                "formula": "uy_top * 2000.0",
+                "depends_on": [
+                    "uy_top"
+                ],
+                "_comment": "Symmetric opening: total = 2 * top displacement [mm]"
+            }
+        ],
+        "plots": [
+            {
+                "name": "gfm_load_displacement_short",
+                "title": "GFM: DCB Load-Displacement (Short Notch)",
+                "x_axis": {
+                    "label": "Load-pt opening [mm]"
+                },
+                "y_axis": {
+                    "label": "Load [MN]"
+                },
+                "grid": true,
+                "curves": [
+                    {
+                        "source": "simulation",
+                        "x": {
+                            "key": "relative_opening_mm"
+                        },
+                        "y": {
+                            "key": "reaction_top"
+                        },
+                        "label": "FEM (short notch a1=100mm)"
+                    },
+                    {
+                        "source": "reference",
+                        "ref_id": "gfm_short",
+                        "label": "ATENA short notch (Fig 1-4)"
+                    },
+                    {
+                        "source": "reference",
+                        "ref_id": "gfm_long",
+                        "label": "ATENA long notch (Fig 1-4)"
+                    }
+                ]
+            }
+        ],
+        "exports": {
+            "save_checkpoint": true,
+            "aux_fields": [
+                "damage",
+                "total_strain"
+            ],
+            "export_vtu": true,
+            "save_db": true
+        }
+    }
+}

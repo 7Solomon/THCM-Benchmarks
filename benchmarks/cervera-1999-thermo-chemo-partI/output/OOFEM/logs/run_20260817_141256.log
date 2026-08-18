@@ -1,0 +1,108 @@
+14:12:56 INFO     tools.simulations: Log file: benchmarks/cervera-1999-thermo-chemo-partI/output/OOFEM/logs/run_20260817_141256.log
+14:12:56 INFO     tools.simulations: == STARTING BENCHMARK: cervera-1999-thermo-chemo-partI ==
+14:12:56 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/cervera-1999-thermo-chemo-partI
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+14:12:56 INFO     tools.simulations: Loading benchmark config: benchmarks/cervera-1999-thermo-chemo-partI/benchmark.json
+14:12:56 INFO     tools.simulations: Benchmark: Adiabatic calorimetric test, conventional concrete (Bentz I column) - Cervera, Oliver & Prato (1999), Fig. 1(a) (cervera-1999-adiabatic-bentz-i)
+14:12:56 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[136.7 -> 2050.2] s
+14:12:56 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[283.5 -> 3402.2] s
+14:12:56 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[2569.1 -> 15414.3] s
+14:12:56 INFO     tools.simulations: Configurations loaded.
+14:12:56 INFO     tools.simulations: Loading mesh...
+14:12:56 INFO     tools.simulations: Mesh loaded: 12 nodes, 14 elements (triangle)
+14:12:56 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+14:12:56 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 12
+  Total DOFs: 12
+  Fields: 1
+    - temperature: 12 DOFs (['T'])
+14:12:56 INFO     tools.simulations: Building oofem problem...
+14:12:56 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[136.7 -> 2050.2] s
+14:12:56 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[283.5 -> 3402.2] s
+14:12:56 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[2569.1 -> 15414.3] s
+14:12:56 INFO     tools.simulations: oofem problem built: 12 nodes, 14 elements, 210 steps (t=[0 -> 6.05e+05])
+14:12:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+2.10e+01,  max=+2.10e+01)
+14:12:57 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:12:57 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +2.100e+01   T @ probe_center
+   Time [hours]                +3.797e-02
+────────────────────────────────────────────────────────────────────
+14:12:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+2.10e+01,  max=+2.10e+01)
+14:12:59 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:12:59 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.09 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +2.100e+01   T @ probe_center
+   Time [hours]                +2.123e+00
+────────────────────────────────────────────────────────────────────
+14:13:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+2.11e+01,  max=+2.11e+01)
+14:13:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:01 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.29 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +2.115e+01   T @ probe_center
+   Time [hours]                +6.867e+00
+────────────────────────────────────────────────────────────────────
+14:13:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+2.21e+01,  max=+2.21e+01)
+14:13:03 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:03 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.39 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +2.208e+01   T @ probe_center
+   Time [hours]                +9.251e+00
+────────────────────────────────────────────────────────────────────
+14:13:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+3.39e+01,  max=+3.39e+01)
+14:13:06 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:06 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.54 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +3.390e+01   T @ probe_center
+   Time [hours]                +1.287e+01
+────────────────────────────────────────────────────────────────────
+14:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+6.18e+01,  max=+6.18e+01)
+14:13:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.77 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +6.180e+01   T @ probe_center
+   Time [hours]                +1.837e+01
+────────────────────────────────────────────────────────────────────
+14:13:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+7.54e+01,  max=+7.54e+01)
+14:13:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.11 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +7.540e+01   T @ probe_center
+   Time [hours]                +2.671e+01
+────────────────────────────────────────────────────────────────────
+14:13:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+8.10e+01,  max=+8.10e+01)
+14:13:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.64 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +8.101e+01   T @ probe_center
+   Time [hours]                +3.938e+01
+────────────────────────────────────────────────────────────────────
+14:13:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+8.28e+01,  max=+8.28e+01)
+14:13:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:13 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.34 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +8.285e+01   T @ probe_center
+   Time [hours]                +5.621e+01
+────────────────────────────────────────────────────────────────────
+14:13:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+8.33e+01,  max=+8.33e+01)
+14:13:15 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:15 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 3.43 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +8.335e+01   T @ probe_center
+   Time [hours]                +8.241e+01
+────────────────────────────────────────────────────────────────────
+14:13:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+8.34e+01,  max=+8.34e+01)
+14:13:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:16 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.44 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +8.341e+01   T @ probe_center
+   Time [hours]                +1.305e+02
+────────────────────────────────────────────────────────────────────
+14:13:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                     (min=+8.34e+01,  max=+8.34e+01)
+14:13:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                     1 nodes
+14:13:16 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 7.00 d · 3 queries ok ────────────────────────────────────────
+   Sample temperature [degC]   +8.341e+01   T @ probe_center
+   Time [hours]                +1.680e+02
+────────────────────────────────────────────────────────────────────
+14:13:16 INFO     tools.simulations: VTU export: 210 file(s) -> benchmarks/cervera-1999-thermo-chemo-partI/output/OOFEM/vtu
+14:13:16 INFO     tools.simulations: Checkpoint saved -> benchmarks/cervera-1999-thermo-chemo-partI/output/OOFEM/checkpoint.h5  (0.0 MB)
+14:13:16 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 210/210 steps ok) ==
