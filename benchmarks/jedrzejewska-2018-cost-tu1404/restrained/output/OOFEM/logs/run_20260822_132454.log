@@ -1,0 +1,204 @@
+13:24:54 INFO     tools.simulations: Log file: benchmarks/jedrzejewska-2018-cost-tu1404/restrained/output/OOFEM/logs/run_20260822_132454.log
+13:24:54 INFO     tools.simulations: == STARTING BENCHMARK: restrained ==
+13:24:54 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/jedrzejewska-2018-cost-tu1404/restrained
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+13:24:54 INFO     tools.simulations: Loading benchmark config: benchmarks/jedrzejewska-2018-cost-tu1404/restrained/benchmark.json
+13:24:54 INFO     tools.simulations: Benchmark: Thermo-mechanical restraining frame experiment (COST TU1404 Task 3 - Turner et al.) (jedrzejewska-2018-cost-tu1404-task3-frame)
+13:24:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[320.4 -> 1922.6] s
+13:24:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[1326.6 -> 5306.5] s
+13:24:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[5945.4 -> 23781.7] s
+13:24:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[7446.1 -> 29784.3] s
+13:24:54 INFO     tools.simulations: Configurations loaded.
+13:24:54 INFO     tools.simulations: Loading mesh...
+13:24:54 INFO     tools.simulations: Mesh loaded: 529 nodes, 898 elements (triangle)
+13:24:54 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+13:24:54 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 529
+  Total DOFs: 1587
+  Fields: 2
+    - temperature: 529 DOFs (['T'])
+    - displacement: 1058 DOFs (['ux', 'uy'])
+13:24:54 INFO     tools.simulations: Building oofem problem...
+13:24:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[320.4 -> 1922.6] s
+13:24:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[1326.6 -> 5306.5] s
+13:24:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[5945.4 -> 23781.7] s
+13:24:54 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[7446.1 -> 29784.3] s
+13:24:54 INFO     tools.simulations.oofem.src.builder.problem.single: 'temperature' sub-problem: skipping BC entries of other fields: displacement x3
+13:24:54 INFO     tools.simulations.oofem.src.builder.problem.single: 'displacement' sub-problem: skipping BC entries of other fields: temperature x3
+13:24:54 INFO     tools.simulations.oofem.src.builder.BCs.robin.springs: mechanical robin: 6 nodalspring element(s) attached
+13:24:54 INFO     tools.simulations: Solution plan: STAGGERED lockstep (1 sources)
+13:24:54 INFO     tools.simulations: oofem problem built: 529 nodes, 898 elements, 180 steps (t=[0 -> 1.44e+06])
+13:24:54 INFO     tools.simulations.oofem.src.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+13:24:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.20e+01,  max=+2.20e+01)
+13:24:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:24:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.20e+01,  max=+2.20e+01)
+13:24:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:24:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+5.36e-05,  max=+5.36e-05)
+13:24:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:24:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-2.53e+02,  max=-2.53e+02)
+13:24:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:24:55 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 7 queries ok ────────────────────────────────────────
+   Core T [C]              +2.200e+01   T @ core_center
+   Corner T [C]            +2.200e+01   T @ corner_probe
+   Hydration core          +5.363e-05   @ core_center
+   Axial stress sxx [Pa]   -2.534e+02   sxx @ core_center
+   Time [h]                +8.901e-02
+   Stress [MPa]            -2.534e-04
+────────────────────────────────────────────────────────────────────
+13:25:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.23e+01,  max=+2.23e+01)
+13:25:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:25:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.22e+01,  max=+2.22e+01)
+13:25:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:25:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+5.00e-03,  max=+5.00e-03)
+13:25:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:25:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-2.40e+04,  max=-2.40e+04)
+13:25:28 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:25:28 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.12 d · 7 queries ok ────────────────────────────────────────
+   Core T [C]              +2.225e+01   T @ core_center
+   Corner T [C]            +2.225e+01   T @ corner_probe
+   Hydration core          +5.001e-03   @ core_center
+   Axial stress sxx [Pa]   -2.396e+04   sxx @ core_center
+   Time [h]                +2.852e+00
+   Stress [MPa]            -2.396e-02
+────────────────────────────────────────────────────────────────────
+13:26:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.13e+01,  max=+3.13e+01)
+13:26:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:26:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.10e+01,  max=+3.10e+01)
+13:26:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:26:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.90e-01,  max=+1.90e-01)
+13:26:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:26:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-9.91e+05,  max=-9.91e+05)
+13:26:22 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:26:22 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.42 d · 7 queries ok ────────────────────────────────────────
+   Core T [C]              +3.135e+01   T @ core_center
+   Corner T [C]            +3.102e+01   T @ corner_probe
+   Hydration core          +1.900e-01   @ core_center
+   Axial stress sxx [Pa]   -9.907e+05   sxx @ core_center
+   Time [h]                +1.000e+01
+   Stress [MPa]            -9.907e-01
+────────────────────────────────────────────────────────────────────
+13:27:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.27e+01,  max=+4.27e+01)
+13:27:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:27:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.13e+01,  max=+4.13e+01)
+13:27:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:27:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.47e-01,  max=+4.47e-01)
+13:27:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:27:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-2.05e+06,  max=-2.05e+06)
+13:27:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:27:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.82 d · 7 queries ok ────────────────────────────────────────
+   Core T [C]              +4.266e+01   T @ core_center
+   Corner T [C]            +4.127e+01   T @ corner_probe
+   Hydration core          +4.470e-01   @ core_center
+   Axial stress sxx [Pa]   -2.049e+06   sxx @ core_center
+   Time [h]                +1.977e+01
+   Stress [MPa]            -2.049e+00
+────────────────────────────────────────────────────────────────────
+13:27:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.58e+01,  max=+4.58e+01)
+13:27:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:27:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.33e+01,  max=+4.33e+01)
+13:27:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:27:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+5.92e-01,  max=+5.92e-01)
+13:27:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:27:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-2.00e+06,  max=-2.00e+06)
+13:27:51 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:27:51 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.54 d · 7 queries ok ────────────────────────────────────────
+   Core T [C]              +4.579e+01   T @ core_center
+   Corner T [C]            +4.329e+01   T @ corner_probe
+   Hydration core          +5.919e-01   @ core_center
+   Axial stress sxx [Pa]   -2.001e+06   sxx @ core_center
+   Time [h]                +3.698e+01
+   Stress [MPa]            -2.001e+00
+────────────────────────────────────────────────────────────────────
+13:28:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.26e+01,  max=+4.26e+01)
+13:28:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.95e+01,  max=+3.95e+01)
+13:28:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+6.77e-01,  max=+6.77e-01)
+13:28:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=-1.03e+06,  max=-1.03e+06)
+13:28:04 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:04 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.85 d · 7 queries ok ────────────────────────────────────────
+   Core T [C]              +4.260e+01   T @ core_center
+   Corner T [C]            +3.952e+01   T @ corner_probe
+   Hydration core          +6.770e-01   @ core_center
+   Axial stress sxx [Pa]   -1.026e+06   sxx @ core_center
+   Time [h]                +6.840e+01
+   Stress [MPa]            -1.026e+00
+────────────────────────────────────────────────────────────────────
+13:28:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.55e+01,  max=+3.55e+01)
+13:28:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+3.30e+01,  max=+3.30e+01)
+13:28:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+7.25e-01,  max=+7.25e-01)
+13:28:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+4.41e+05,  max=+4.41e+05)
+13:28:18 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:18 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 5.05 d · 7 queries ok ────────────────────────────────────────
+   Core T [C]              +3.554e+01   T @ core_center
+   Corner T [C]            +3.296e+01   T @ corner_probe
+   Hydration core          +7.254e-01   @ core_center
+   Axial stress sxx [Pa]   +4.407e+05   sxx @ core_center
+   Time [h]                +1.211e+02
+   Stress [MPa]            +4.407e-01
+────────────────────────────────────────────────────────────────────
+13:28:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.84e+01,  max=+2.84e+01)
+13:28:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.70e+01,  max=+2.70e+01)
+13:28:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+7.55e-01,  max=+7.55e-01)
+13:28:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+1.78e+06,  max=+1.78e+06)
+13:28:30 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:30 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 8.56 d · 7 queries ok ────────────────────────────────────────
+   Core T [C]              +2.840e+01   T @ core_center
+   Corner T [C]            +2.700e+01   T @ corner_probe
+   Hydration core          +7.546e-01   @ core_center
+   Axial stress sxx [Pa]   +1.777e+06   sxx @ core_center
+   Time [h]                +2.054e+02
+   Stress [MPa]            +1.777e+00
+────────────────────────────────────────────────────────────────────
+13:28:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.20e+01,  max=+2.20e+01)
+13:28:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.20e+01,  max=+2.20e+01)
+13:28:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+7.69e-01,  max=+7.69e-01)
+13:28:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.95e+06,  max=+2.95e+06)
+13:28:44 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:44 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 12.12 d · 7 queries ok ───────────────────────────────────────
+   Core T [C]              +2.204e+01   T @ core_center
+   Corner T [C]            +2.202e+01   T @ corner_probe
+   Hydration core          +7.690e-01   @ core_center
+   Axial stress sxx [Pa]   +2.948e+06   sxx @ core_center
+   Time [h]                +2.909e+02
+   Stress [MPa]            +2.948e+00
+────────────────────────────────────────────────────────────────────
+13:28:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.20e+01,  max=+2.20e+01)
+13:28:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.20e+01,  max=+2.20e+01)
+13:28:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+7.81e-01,  max=+7.81e-01)
+13:28:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 (min=+2.85e+06,  max=+2.85e+06)
+13:28:55 DEBUG    tools.simulations.post.evaluate.queries.display:                                 1 nodes
+13:28:55 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 16.67 d · 7 queries ok ───────────────────────────────────────
+   Core T [C]              +2.202e+01   T @ core_center
+   Corner T [C]            +2.201e+01   T @ corner_probe
+   Hydration core          +7.806e-01   @ core_center
+   Axial stress sxx [Pa]   +2.852e+06   sxx @ core_center
+   Time [h]                +4.000e+02
+   Stress [MPa]            +2.852e+00
+────────────────────────────────────────────────────────────────────
+13:28:55 INFO     tools.simulations: VTU export: 360 file(s) -> benchmarks/jedrzejewska-2018-cost-tu1404/restrained/output/OOFEM/vtu
+13:28:55 INFO     tools.simulations: Checkpoint saved -> benchmarks/jedrzejewska-2018-cost-tu1404/restrained/output/OOFEM/checkpoint.h5  (2.1 MB)
+13:28:55 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 180/180 steps ok) ==

@@ -1,0 +1,276 @@
+12:18:44 INFO     tools.simulations: Log file: benchmarks/jedrzejewska-2018-cost-tu1404/cube/output/OOFEM/logs/run_20260822_121844.log
+12:18:44 INFO     tools.simulations: == STARTING BENCHMARK: cube ==
+12:18:44 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/jedrzejewska-2018-cost-tu1404/cube
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+12:18:44 INFO     tools.simulations: Loading benchmark config: benchmarks/jedrzejewska-2018-cost-tu1404/cube/benchmark.json
+12:18:44 INFO     tools.simulations: Benchmark: Temperature development in a massive concrete cube (COST TU1404 Task 2 - Azenha et al.) (jedrzejewska-2018-cost-tu1404-task2-cube)
+12:18:44 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[115.4 -> 577.0] s
+12:18:44 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[165.7 -> 828.5] s
+12:18:44 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[329.7 -> 1978.2] s
+12:18:44 INFO     tools.simulations: Configurations loaded.
+12:18:44 INFO     tools.simulations: Loading mesh...
+12:18:44 INFO     tools.simulations: Mesh loaded: 511 nodes, 940 elements (triangle)
+12:18:44 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:18:44 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 511
+  Total DOFs: 511
+  Fields: 1
+    - temperature: 511 DOFs (['T'])
+12:18:45 INFO     tools.simulations: Building oofem problem...
+12:18:45 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[115.4 -> 577.0] s
+12:18:45 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[165.7 -> 828.5] s
+12:18:45 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[329.7 -> 1978.2] s
+12:18:45 INFO     tools.simulations: oofem problem built: 511 nodes, 940 elements, 150 steps (t=[0 -> 8.64e+04])
+12:18:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.60e+01,  max=+2.60e+01)
+12:18:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.60e+01,  max=+2.60e+01)
+12:18:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.60e+01,  max=+2.60e+01)
+12:18:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+8.83e-05,  max=+8.83e-05)
+12:18:45 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:45 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.00 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +2.601e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +2.601e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +2.600e+01   T @ TP3_bottom
+   Hydration degree core                        +8.825e-05   @ TP18_core
+   Time [hours]                                 +3.205e-02
+────────────────────────────────────────────────────────────────────
+12:18:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.61e+01,  max=+2.61e+01)
+12:18:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.60e+01,  max=+2.60e+01)
+12:18:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.59e+01,  max=+2.59e+01)
+12:18:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+1.23e-03,  max=+1.23e-03)
+12:18:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:48 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.02 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +2.611e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +2.600e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +2.589e+01   T @ TP3_bottom
+   Hydration degree core                        +1.234e-03   @ TP18_core
+   Time [hours]                                 +3.732e-01
+────────────────────────────────────────────────────────────────────
+12:18:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.63e+01,  max=+2.63e+01)
+12:18:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.60e+01,  max=+2.60e+01)
+12:18:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.57e+01,  max=+2.57e+01)
+12:18:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.91e-03,  max=+3.91e-03)
+12:18:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:52 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.04 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +2.632e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +2.603e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +2.574e+01   T @ TP3_bottom
+   Hydration degree core                        +3.911e-03   @ TP18_core
+   Time [hours]                                 +8.916e-01
+────────────────────────────────────────────────────────────────────
+12:18:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.68e+01,  max=+2.68e+01)
+12:18:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.63e+01,  max=+2.63e+01)
+12:18:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.59e+01,  max=+2.59e+01)
+12:18:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+1.07e-02,  max=+1.07e-02)
+12:18:53 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:53 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.07 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +2.676e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +2.630e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +2.588e+01   T @ TP3_bottom
+   Hydration degree core                        +1.070e-02   @ TP18_core
+   Time [hours]                                 +1.612e+00
+────────────────────────────────────────────────────────────────────
+12:18:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.82e+01,  max=+2.82e+01)
+12:18:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.75e+01,  max=+2.75e+01)
+12:18:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.70e+01,  max=+2.70e+01)
+12:18:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.16e-02,  max=+3.16e-02)
+12:18:56 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:56 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.11 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +2.820e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +2.753e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +2.696e+01   T @ TP3_bottom
+   Hydration degree core                        +3.160e-02   @ TP18_core
+   Time [hours]                                 +2.611e+00
+────────────────────────────────────────────────────────────────────
+12:18:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.38e+01,  max=+3.38e+01)
+12:18:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.26e+01,  max=+3.26e+01)
+12:18:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.16e+01,  max=+3.16e+01)
+12:18:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+1.07e-01,  max=+1.07e-01)
+12:18:58 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:18:58 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.17 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +3.380e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +3.257e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +3.162e+01   T @ TP3_bottom
+   Hydration degree core                        +1.065e-01   @ TP18_core
+   Time [hours]                                 +4.000e+00
+────────────────────────────────────────────────────────────────────
+12:19:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.75e+01,  max=+3.75e+01)
+12:19:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.60e+01,  max=+3.60e+01)
+12:19:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.48e+01,  max=+3.48e+01)
+12:19:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+1.56e-01,  max=+1.56e-01)
+12:19:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:00 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.19 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +3.755e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +3.600e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +3.484e+01   T @ TP3_bottom
+   Hydration degree core                        +1.560e-01   @ TP18_core
+   Time [hours]                                 +4.558e+00
+────────────────────────────────────────────────────────────────────
+12:19:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+4.45e+01,  max=+4.45e+01)
+12:19:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+4.25e+01,  max=+4.25e+01)
+12:19:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+4.10e+01,  max=+4.10e+01)
+12:19:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+2.48e-01,  max=+2.48e-01)
+12:19:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:02 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.23 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +4.447e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +4.246e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +4.099e+01   T @ TP3_bottom
+   Hydration degree core                        +2.481e-01   @ TP18_core
+   Time [hours]                                 +5.401e+00
+────────────────────────────────────────────────────────────────────
+12:19:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.43e+01,  max=+5.43e+01)
+12:19:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.17e+01,  max=+5.17e+01)
+12:19:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+4.99e+01,  max=+4.99e+01)
+12:19:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.86e-01,  max=+3.86e-01)
+12:19:05 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:05 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.28 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +5.429e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +5.170e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +4.987e+01   T @ TP3_bottom
+   Hydration degree core                        +3.858e-01   @ TP18_core
+   Time [hours]                                 +6.675e+00
+────────────────────────────────────────────────────────────────────
+12:19:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+6.28e+01,  max=+6.28e+01)
+12:19:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.91e+01,  max=+5.91e+01)
+12:19:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.68e+01,  max=+5.68e+01)
+12:19:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.34e-01,  max=+5.34e-01)
+12:19:08 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:08 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.36 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +6.279e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +5.913e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +5.679e+01   T @ TP3_bottom
+   Hydration degree core                        +5.337e-01   @ TP18_core
+   Time [hours]                                 +8.600e+00
+────────────────────────────────────────────────────────────────────
+12:19:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+6.40e+01,  max=+6.40e+01)
+12:19:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.84e+01,  max=+5.84e+01)
+12:19:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.61e+01,  max=+5.61e+01)
+12:19:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.84e-01,  max=+5.84e-01)
+12:19:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.40 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +6.402e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +5.844e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +5.606e+01   T @ TP3_bottom
+   Hydration degree core                        +5.841e-01   @ TP18_core
+   Time [hours]                                 +9.654e+00
+────────────────────────────────────────────────────────────────────
+12:19:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+6.27e+01,  max=+6.27e+01)
+12:19:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.65e+01,  max=+5.65e+01)
+12:19:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.42e+01,  max=+5.42e+01)
+12:19:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+6.30e-01,  max=+6.30e-01)
+12:19:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:14 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.46 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +6.270e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +5.645e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +5.415e+01   T @ TP3_bottom
+   Hydration degree core                        +6.300e-01   @ TP18_core
+   Time [hours]                                 +1.108e+01
+────────────────────────────────────────────────────────────────────
+12:19:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.86e+01,  max=+5.86e+01)
+12:19:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.27e+01,  max=+5.27e+01)
+12:19:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.07e+01,  max=+5.07e+01)
+12:19:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+6.68e-01,  max=+6.68e-01)
+12:19:16 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:16 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.54 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +5.857e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +5.272e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +5.067e+01   T @ TP3_bottom
+   Hydration degree core                        +6.675e-01   @ TP18_core
+   Time [hours]                                 +1.302e+01
+────────────────────────────────────────────────────────────────────
+12:19:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+5.20e+01,  max=+5.20e+01)
+12:19:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+4.72e+01,  max=+4.72e+01)
+12:19:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+4.55e+01,  max=+4.55e+01)
+12:19:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+6.95e-01,  max=+6.95e-01)
+12:19:20 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:20 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.65 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +5.204e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +4.715e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +4.549e+01   T @ TP3_bottom
+   Hydration degree core                        +6.952e-01   @ TP18_core
+   Time [hours]                                 +1.564e+01
+────────────────────────────────────────────────────────────────────
+12:19:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+4.41e+01,  max=+4.41e+01)
+12:19:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+4.04e+01,  max=+4.04e+01)
+12:19:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.92e+01,  max=+3.92e+01)
+12:19:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+7.15e-01,  max=+7.15e-01)
+12:19:23 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:23 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.80 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +4.409e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +4.041e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +3.919e+01   T @ TP3_bottom
+   Hydration degree core                        +7.151e-01   @ TP18_core
+   Time [hours]                                 +1.919e+01
+────────────────────────────────────────────────────────────────────
+12:19:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.60e+01,  max=+3.60e+01)
+12:19:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.36e+01,  max=+3.36e+01)
+12:19:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+3.28e+01,  max=+3.28e+01)
+12:19:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      (min=+7.29e-01,  max=+7.29e-01)
+12:19:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                      1 nodes
+12:19:24 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.00 d · 6 queries ok ────────────────────────────────────────
+   Core T [C] TP18                              +3.601e+01   T @ TP18_core
+   Surface T [C] TP9 mid-height 5cm from side   +3.356e+01   T @ TP9_mid
+   Surface T [C] TP3 5cm from side 5cm bottom   +3.277e+01   T @ TP3_bottom
+   Hydration degree core                        +7.290e-01   @ TP18_core
+   Time [hours]                                 +2.400e+01
+────────────────────────────────────────────────────────────────────
+12:19:24 INFO     tools.simulations: VTU export: 150 file(s) -> benchmarks/jedrzejewska-2018-cost-tu1404/cube/output/OOFEM/vtu
+12:19:24 INFO     tools.simulations: Checkpoint saved -> benchmarks/jedrzejewska-2018-cost-tu1404/cube/output/OOFEM/checkpoint.h5  (0.6 MB)
+12:19:24 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 150/150 steps ok) ==

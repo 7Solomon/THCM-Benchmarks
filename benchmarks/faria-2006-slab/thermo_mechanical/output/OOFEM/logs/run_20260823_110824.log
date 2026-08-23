@@ -1,0 +1,30 @@
+11:08:24 INFO     tools.simulations: Log file: benchmarks/faria-2006-slab/thermo_mechanical/output/OOFEM/logs/run_20260823_110824.log
+11:08:24 INFO     tools.simulations: == STARTING BENCHMARK: thermo_mechanical ==
+11:08:24 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/faria-2006-slab/thermo_mechanical
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+11:08:24 INFO     tools.simulations: Loading benchmark config: benchmarks/faria-2006-slab/thermo_mechanical/benchmark.json
+11:08:24 INFO     tools.simulations: Benchmark: Faria et al. (2006) — fully restrained through-thickness strip (Fig. 9; bound for Figs. 17–18) (faria-2006-slab-thermomech-1d)
+11:08:24 INFO     tools.simulations.fem.solver.utils: dt from config: 3.60e+03
+11:08:24 INFO     tools.simulations: Configurations loaded.
+11:08:24 INFO     tools.simulations: Loading mesh...
+11:08:24 INFO     tools.simulations: Mesh loaded: 26 nodes, 33 elements (triangle)
+11:08:24 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:08:24 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 26
+  Total DOFs: 78
+  Fields: 2
+    - temperature: 26 DOFs (['T'])
+    - displacement: 52 DOFs (['ux', 'uy'])
+11:08:24 INFO     tools.simulations: Building oofem problem...
+11:08:24 INFO     tools.simulations.fem.solver.utils: dt from config: 3.60e+03
+11:08:24 INFO     tools.simulations.oofem.src.builder.problem.single: 'temperature' sub-problem: skipping BC entries of other fields: displacement x3

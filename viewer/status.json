@@ -10,11 +10,14 @@
   "HITEC/hm-excavation": true,
   "OpenGeoSys/consolidation-with-staggered-scheme": true,
   "bazant-1995-b3-basic-creep": true,
+  "bazant-2004-fahmi-transitional-thermal-creep": null,
   "bazant-najjar-1972-drying-cylinder": true,
   "briffaut-2010-civaux-wall": null,
   "cervera-1999-thermo-chemo-partI": true,
   "faria-2006-slab/thermal": true,
   "faria-2006-slab/thermo_mechanical": true,
+  "jedrzejewska-2018-cost-tu1404/cube": true,
+  "jedrzejewska-2018-cost-tu1404/restrained": true,
   "klemczak-knoppik-wrobel-early-age-cracks": null,
   "xi-bazant-jennings-1994-moisture-diffusion": null
 }

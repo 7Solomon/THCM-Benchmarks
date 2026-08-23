@@ -1,0 +1,377 @@
+11:42:24 INFO     tools.simulations: Log file: benchmarks/bazant-2004-fahmi-transitional-thermal-creep/output/OOFEM/logs/run_20260822_114224.log
+11:42:24 INFO     tools.simulations: == STARTING BENCHMARK: bazant-2004-fahmi-transitional-thermal-creep ==
+11:42:24 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/bazant-2004-fahmi-transitional-thermal-creep
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+11:42:24 INFO     tools.simulations: Loading benchmark config: benchmarks/bazant-2004-fahmi-transitional-thermal-creep/benchmark.json
+11:42:24 INFO     tools.simulations: Benchmark: Transitional thermal creep of sealed concrete (Fahmi et al. 1972) as fitted by the microprestress-solidification theory (bazant-2004-fahmi-transitional-thermal-creep)
+11:42:24 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[914.1 -> 131635.7] s
+11:42:24 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 150 steps, dt=[4044.1 -> 291175.0] s
+11:42:24 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[1040.1 -> 124814.8] s
+11:42:24 INFO     tools.simulations: Configurations loaded.
+11:42:24 INFO     tools.simulations: Loading mesh...
+11:42:24 INFO     tools.simulations: Mesh loaded: 177 nodes, 140 elements (quad)
+11:42:24 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:42:24 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 177
+  Total DOFs: 531
+  Fields: 2
+    - temperature: 177 DOFs (['T'])
+    - displacement: 354 DOFs (['ux', 'uy'])
+11:42:24 INFO     tools.simulations: Building oofem problem...
+11:42:24 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 120 steps, dt=[914.1 -> 131635.7] s
+11:42:24 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 150 steps, dt=[4044.1 -> 291175.0] s
+11:42:24 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 80 steps, dt=[1040.1 -> 124814.8] s
+11:42:24 INFO     tools.simulations.oofem.src.builder.problem.single: 'temperature' sub-problem: skipping BC entries of other fields: displacement x3
+11:42:24 INFO     tools.simulations.oofem.src.builder.problem.single: 'displacement' sub-problem: skipping BC entries of other fields: temperature x1
+11:42:24 INFO     tools.simulations: Solution plan: STAGGERED lockstep (1 sources)
+11:42:24 INFO     tools.simulations: oofem problem built: 177 nodes, 140 elements, 458 steps (t=[0 -> 1.56e+07])
+11:42:24 INFO     tools.simulations.oofem.src.step_loop: lockstep: FT_Temperature field registered in displacement FieldManager
+11:42:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:42:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:42:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-2.24e-04,  max=-2.24e-04)
+11:42:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:42:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+1.81e+06,  max=+1.81e+06)
+11:42:24 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:42:24 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.01 d · 7 queries ok ────────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -2.238e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +1.814e+06   @ probe_mid
+   Time after loading [days]                        +1.058e-02
+   Strain difference [1e-3, compression negative]   -2.238e-01
+   Compliance J [1/Pa]                              +3.553e-11
+────────────────────────────────────────────────────────────────────
+11:42:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:42:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:42:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-2.51e-04,  max=-2.51e-04)
+11:42:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:42:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+1.84e+06,  max=+1.84e+06)
+11:42:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:42:33 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 0.32 d · 7 queries ok ────────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -2.506e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +1.840e+06   @ probe_mid
+   Time after loading [days]                        +3.239e-01
+   Strain difference [1e-3, compression negative]   -2.506e-01
+   Compliance J [1/Pa]                              +3.978e-11
+────────────────────────────────────────────────────────────────────
+11:42:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:42:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:42:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-2.61e-04,  max=-2.61e-04)
+11:42:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:42:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+1.90e+06,  max=+1.90e+06)
+11:42:49 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:42:49 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 1.07 d · 7 queries ok ────────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -2.608e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +1.900e+06   @ probe_mid
+   Time after loading [days]                        +1.070e+00
+   Strain difference [1e-3, compression negative]   -2.608e-01
+   Compliance J [1/Pa]                              +4.139e-11
+────────────────────────────────────────────────────────────────────
+11:43:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:43:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-2.70e-04,  max=-2.70e-04)
+11:43:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.04e+06,  max=+2.04e+06)
+11:43:02 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:02 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 2.79 d · 7 queries ok ────────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -2.697e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +2.040e+06   @ probe_mid
+   Time after loading [days]                        +2.792e+00
+   Strain difference [1e-3, compression negative]   -2.697e-01
+   Compliance J [1/Pa]                              +4.281e-11
+────────────────────────────────────────────────────────────────────
+11:43:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:43:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-2.82e-04,  max=-2.82e-04)
+11:43:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.36e+06,  max=+2.36e+06)
+11:43:12 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:12 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 6.76 d · 7 queries ok ────────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -2.817e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +2.363e+06   @ probe_mid
+   Time after loading [days]                        +6.760e+00
+   Strain difference [1e-3, compression negative]   -2.817e-01
+   Compliance J [1/Pa]                              +4.472e-11
+────────────────────────────────────────────────────────────────────
+11:43:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:43:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-2.97e-04,  max=-2.97e-04)
+11:43:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+3.11e+06,  max=+3.11e+06)
+11:43:29 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:29 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 15.91 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -2.975e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +3.106e+06   @ probe_mid
+   Time after loading [days]                        +1.591e+01
+   Strain difference [1e-3, compression negative]   -2.975e-01
+   Compliance J [1/Pa]                              +4.721e-11
+────────────────────────────────────────────────────────────────────
+11:43:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:43:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-3.18e-04,  max=-3.18e-04)
+11:43:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+4.82e+06,  max=+4.82e+06)
+11:43:36 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:36 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 37.00 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -3.181e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +4.821e+06   @ probe_mid
+   Time after loading [days]                        +3.700e+01
+   Strain difference [1e-3, compression negative]   -3.181e-01
+   Compliance J [1/Pa]                              +5.049e-11
+────────────────────────────────────────────────────────────────────
+11:43:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.00e+01,  max=+6.00e+01)
+11:43:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-3.86e-04,  max=-3.86e-04)
+11:43:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+4.86e+06,  max=+4.86e+06)
+11:43:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:41 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 37.21 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +6.000e+01   T @ probe_mid
+   Axial total strain [-]                           -3.856e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +4.856e+06   @ probe_mid
+   Time after loading [days]                        +3.721e+01
+   Strain difference [1e-3, compression negative]   -3.856e-01
+   Compliance J [1/Pa]                              +6.121e-11
+────────────────────────────────────────────────────────────────────
+11:43:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.00e+01,  max=+6.00e+01)
+11:43:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-4.43e-04,  max=-4.43e-04)
+11:43:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+4.90e+06,  max=+4.90e+06)
+11:43:52 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:43:52 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 37.42 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +6.000e+01   T @ probe_mid
+   Axial total strain [-]                           -4.431e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +4.903e+06   @ probe_mid
+   Time after loading [days]                        +3.742e+01
+   Strain difference [1e-3, compression negative]   -4.431e-01
+   Compliance J [1/Pa]                              +7.033e-11
+────────────────────────────────────────────────────────────────────
+11:44:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.00e+01,  max=+6.00e+01)
+11:44:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-5.25e-04,  max=-5.25e-04)
+11:44:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+5.07e+06,  max=+5.07e+06)
+11:44:01 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:01 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 38.16 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +6.000e+01   T @ probe_mid
+   Axial total strain [-]                           -5.247e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +5.069e+06   @ probe_mid
+   Time after loading [days]                        +3.816e+01
+   Strain difference [1e-3, compression negative]   -5.247e-01
+   Compliance J [1/Pa]                              +8.328e-11
+────────────────────────────────────────────────────────────────────
+11:44:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.00e+01,  max=+6.00e+01)
+11:44:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-5.97e-04,  max=-5.97e-04)
+11:44:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+5.46e+06,  max=+5.46e+06)
+11:44:09 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:09 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 39.92 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +6.000e+01   T @ probe_mid
+   Axial total strain [-]                           -5.974e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +5.463e+06   @ probe_mid
+   Time after loading [days]                        +3.992e+01
+   Strain difference [1e-3, compression negative]   -5.974e-01
+   Compliance J [1/Pa]                              +9.483e-11
+────────────────────────────────────────────────────────────────────
+11:44:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.00e+01,  max=+6.00e+01)
+11:44:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-6.55e-04,  max=-6.55e-04)
+11:44:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.16e+06,  max=+6.16e+06)
+11:44:13 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:13 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 43.04 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +6.000e+01   T @ probe_mid
+   Axial total strain [-]                           -6.552e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +6.161e+06   @ probe_mid
+   Time after loading [days]                        +4.304e+01
+   Strain difference [1e-3, compression negative]   -6.552e-01
+   Compliance J [1/Pa]                              +1.040e-10
+────────────────────────────────────────────────────────────────────
+11:44:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.00e+01,  max=+6.00e+01)
+11:44:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-7.07e-04,  max=-7.07e-04)
+11:44:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+7.40e+06,  max=+7.40e+06)
+11:44:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:21 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 48.59 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +6.000e+01   T @ probe_mid
+   Axial total strain [-]                           -7.071e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +7.402e+06   @ probe_mid
+   Time after loading [days]                        +4.859e+01
+   Strain difference [1e-3, compression negative]   -7.071e-01
+   Compliance J [1/Pa]                              +1.122e-10
+────────────────────────────────────────────────────────────────────
+11:44:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.00e+01,  max=+6.00e+01)
+11:44:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-7.56e-04,  max=-7.56e-04)
+11:44:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+9.60e+06,  max=+9.60e+06)
+11:44:27 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:27 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 58.43 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +6.000e+01   T @ probe_mid
+   Axial total strain [-]                           -7.562e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +9.604e+06   @ probe_mid
+   Time after loading [days]                        +5.843e+01
+   Strain difference [1e-3, compression negative]   -7.562e-01
+   Compliance J [1/Pa]                              +1.200e-10
+────────────────────────────────────────────────────────────────────
+11:44:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.00e+01,  max=+6.00e+01)
+11:44:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-8.04e-04,  max=-8.04e-04)
+11:44:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+1.35e+07,  max=+1.35e+07)
+11:44:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:33 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 75.91 d · 7 queries ok ───────────────────────────────────────
+   Temperature [degC]                               +6.000e+01   T @ probe_mid
+   Axial total strain [-]                           -8.037e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +1.351e+07   @ probe_mid
+   Time after loading [days]                        +7.591e+01
+   Strain difference [1e-3, compression negative]   -8.037e-01
+   Compliance J [1/Pa]                              +1.276e-10
+────────────────────────────────────────────────────────────────────
+11:44:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+6.00e+01,  max=+6.00e+01)
+11:44:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-8.50e-04,  max=-8.50e-04)
+11:44:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.05e+07,  max=+2.05e+07)
+11:44:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:41 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 106.94 d · 7 queries ok ──────────────────────────────────────
+   Temperature [degC]                               +6.000e+01   T @ probe_mid
+   Axial total strain [-]                           -8.504e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +2.046e+07   @ probe_mid
+   Time after loading [days]                        +1.069e+02
+   Strain difference [1e-3, compression negative]   -8.504e-01
+   Compliance J [1/Pa]                              +1.350e-10
+────────────────────────────────────────────────────────────────────
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+5.57e+01,  max=+5.57e+01)
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-8.92e-04,  max=-8.92e-04)
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+3.12e+07,  max=+3.12e+07)
+11:44:48 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:44:48 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 155.02 d · 7 queries ok ──────────────────────────────────────
+   Temperature [degC]                               +5.574e+01   T @ probe_mid
+   Axial total strain [-]                           -8.924e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +3.121e+07   @ probe_mid
+   Time after loading [days]                        +1.550e+02
+   Strain difference [1e-3, compression negative]   -8.924e-01
+   Compliance J [1/Pa]                              +1.416e-10
+────────────────────────────────────────────────────────────────────
+11:45:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:45:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-9.19e-04,  max=-9.19e-04)
+11:45:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+3.12e+07,  max=+3.12e+07)
+11:45:00 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:00 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 155.23 d · 7 queries ok ──────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -9.189e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +3.124e+07   @ probe_mid
+   Time after loading [days]                        +1.552e+02
+   Strain difference [1e-3, compression negative]   -9.189e-01
+   Compliance J [1/Pa]                              +1.459e-10
+────────────────────────────────────────────────────────────────────
+11:45:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:45:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-9.34e-04,  max=-9.34e-04)
+11:45:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+3.13e+07,  max=+3.13e+07)
+11:45:10 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:10 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 155.44 d · 7 queries ok ──────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -9.339e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +3.125e+07   @ probe_mid
+   Time after loading [days]                        +1.554e+02
+   Strain difference [1e-3, compression negative]   -9.339e-01
+   Compliance J [1/Pa]                              +1.482e-10
+────────────────────────────────────────────────────────────────────
+11:45:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:45:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-9.45e-04,  max=-9.45e-04)
+11:45:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+3.13e+07,  max=+3.13e+07)
+11:45:14 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:14 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 155.65 d · 7 queries ok ──────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -9.446e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +3.127e+07   @ probe_mid
+   Time after loading [days]                        +1.556e+02
+   Strain difference [1e-3, compression negative]   -9.446e-01
+   Compliance J [1/Pa]                              +1.499e-10
+────────────────────────────────────────────────────────────────────
+11:45:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:45:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-9.62e-04,  max=-9.62e-04)
+11:45:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+3.13e+07,  max=+3.13e+07)
+11:45:21 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:21 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 156.16 d · 7 queries ok ──────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -9.620e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +3.131e+07   @ probe_mid
+   Time after loading [days]                        +1.562e+02
+   Strain difference [1e-3, compression negative]   -9.620e-01
+   Compliance J [1/Pa]                              +1.527e-10
+────────────────────────────────────────────────────────────────────
+11:45:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:45:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-9.92e-04,  max=-9.92e-04)
+11:45:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+3.15e+07,  max=+3.15e+07)
+11:45:33 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:33 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 157.89 d · 7 queries ok ──────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -9.919e-04   eyy @ probe_mid
+   mps equivalent age [s]                           +3.145e+07   @ probe_mid
+   Time after loading [days]                        +1.579e+02
+   Strain difference [1e-3, compression negative]   -9.919e-01
+   Compliance J [1/Pa]                              +1.574e-10
+────────────────────────────────────────────────────────────────────
+11:45:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:45:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-1.03e-03,  max=-1.03e-03)
+11:45:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+3.19e+07,  max=+3.19e+07)
+11:45:41 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:41 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 163.69 d · 7 queries ok ──────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -1.030e-03   eyy @ probe_mid
+   mps equivalent age [s]                           +3.192e+07   @ probe_mid
+   Time after loading [days]                        +1.637e+02
+   Strain difference [1e-3, compression negative]   -1.030e+00
+   Compliance J [1/Pa]                              +1.635e-10
+────────────────────────────────────────────────────────────────────
+11:45:46 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+2.30e+01,  max=+2.30e+01)
+11:45:46 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:46 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=-1.07e-03,  max=-1.07e-03)
+11:45:46 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:46 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          (min=+3.32e+07,  max=+3.32e+07)
+11:45:46 DEBUG    tools.simulations.post.evaluate.queries.display:                                                          1 nodes
+11:45:46 INFO     tools.simulations.post.evaluate.queries.display: ─ t = 180.00 d · 7 queries ok ──────────────────────────────────────
+   Temperature [degC]                               +2.300e+01   T @ probe_mid
+   Axial total strain [-]                           -1.068e-03   eyy @ probe_mid
+   mps equivalent age [s]                           +3.325e+07   @ probe_mid
+   Time after loading [days]                        +1.800e+02
+   Strain difference [1e-3, compression negative]   -1.068e+00
+   Compliance J [1/Pa]                              +1.695e-10
+────────────────────────────────────────────────────────────────────
+11:45:46 INFO     tools.simulations: VTU export: 916 file(s) -> benchmarks/bazant-2004-fahmi-transitional-thermal-creep/output/OOFEM/vtu
+11:45:47 INFO     tools.simulations: Checkpoint saved -> benchmarks/bazant-2004-fahmi-transitional-thermal-creep/output/OOFEM/checkpoint.h5  (1.2 MB)
+11:45:47 INFO     tools.simulations: == BENCHMARK COMPLETE (oofem, 458/458 steps ok) ==

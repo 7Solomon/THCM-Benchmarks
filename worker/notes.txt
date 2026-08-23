@@ -1,0 +1,6 @@
+llama-server \
+  -m DeepSeek-V4-Flash-UD-IQ3_XXS.gguf \
+  -ngl 99 \
+  --n-cpu-moe 30 \
+  -c 32768 \
+  -fa

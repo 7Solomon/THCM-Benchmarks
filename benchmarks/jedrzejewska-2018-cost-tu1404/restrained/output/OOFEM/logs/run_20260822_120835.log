@@ -1,0 +1,37 @@
+12:08:35 INFO     tools.simulations: Log file: benchmarks/jedrzejewska-2018-cost-tu1404/restrained/output/OOFEM/logs/run_20260822_120835.log
+12:08:35 INFO     tools.simulations: == STARTING BENCHMARK: restrained ==
+12:08:35 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/jedrzejewska-2018-cost-tu1404/restrained
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+12:08:35 INFO     tools.simulations: Loading benchmark config: benchmarks/jedrzejewska-2018-cost-tu1404/restrained/benchmark.json
+12:08:35 INFO     tools.simulations: Benchmark: Thermo-mechanical restraining frame experiment (COST TU1404 Task 3 - Turner et al.) (jedrzejewska-2018-cost-tu1404-task3-frame)
+12:08:35 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[320.4 -> 1922.6] s
+12:08:35 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[1326.6 -> 5306.5] s
+12:08:35 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[5945.4 -> 23781.7] s
+12:08:35 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[1930.5 -> 7721.9] s
+12:08:35 INFO     tools.simulations: Configurations loaded.
+12:08:35 INFO     tools.simulations: Loading mesh...
+12:08:35 INFO     tools.simulations: Mesh loaded: 529 nodes, 898 elements (triangle)
+12:08:35 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:08:35 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 529
+  Total DOFs: 1587
+  Fields: 2
+    - temperature: 529 DOFs (['T'])
+    - displacement: 1058 DOFs (['ux', 'uy'])
+12:08:35 INFO     tools.simulations: Building oofem problem...
+12:08:35 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[320.4 -> 1922.6] s
+12:08:35 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[1326.6 -> 5306.5] s
+12:08:35 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[5945.4 -> 23781.7] s
+12:08:35 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 30 steps, dt=[1930.5 -> 7721.9] s
+12:08:35 INFO     tools.simulations.oofem.src.builder.problem.single: 'temperature' sub-problem: skipping BC entries of other fields: displacement x3
+12:08:35 INFO     tools.simulations.oofem.src.builder.problem.single: 'displacement' sub-problem: skipping BC entries of other fields: temperature x1

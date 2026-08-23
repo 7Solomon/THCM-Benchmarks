@@ -276,6 +276,8 @@ def main():
         sys.exit(f"no benchmarks/ directory at {BENCH}")
 
     cases = []
+    # Only the curated corpus lives here; the worker queue writes to AutoBench/
+    # outside this tree, and enters via worker/promote.sh.
     for spec_path in sorted(BENCH.rglob("benchmark.json")):
         case = build_case(spec_path)
         if case:

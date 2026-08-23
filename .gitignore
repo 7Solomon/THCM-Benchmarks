@@ -2,3 +2,11 @@
 viewer/index.json
 benchmarks.html
 *__pycache__
+
+
+/AutoBench/
+
+
+package-lock.json
+package.json
+node_modules

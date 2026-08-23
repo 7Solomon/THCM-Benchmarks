@@ -1,0 +1,689 @@
+{
+  "metadata": {
+    "id": "jedrzejewska-2018-cost-tu1404-task3-frame",
+    "title": "Thermo-mechanical restraining frame experiment (COST TU1404 Task 3 - Turner et al.)",
+    "source": {
+      "authors": [
+        "Jedrzejewska, A.",
+        "Benboudjema, F.",
+        "Lacarriere, L.",
+        "Azenha, M.",
+        "Turner, K.",
+        "Schlicke, D.",
+        "et al."
+      ],
+      "year": 2018,
+      "journal": "Construction and Building Materials",
+      "doi": "10.1016/j.conbuildmat.2018.04.088"
+    },
+    "dimension": 2,
+    "physics_class": "thermo-chemo-mechanical",
+    "validation_method": "Temperature and average restrained stress vs time, compared to Fig.10 and Fig.22-25. Core temperature and stress history.",
+    "validation_target": "Fig.10: core temperature peak ~41 C at ~60 h, drop to ~21.5 C at formwork removal (265 h); average stress minimum -1.1 MPa at ~50 h, zero crossing ~100 h, +1.8 MPa just before stripping, jumping to +2.15 MPa and holding to 400 h. Core and corner are nearly identical because of the insulation.",
+    "notes": "Updated with user-extracted figure data: core/corner temperature (data 17) and stress (data 18) from Fig.10/Fig.22/Fig.25. Files converted to time_h,T_degC and time_h,stress_MPa format matching x_col/y_col. RISKY remains for creep and insulation discrete modeling. CORRECTED 2026-08-22: (1) physical groups made disjoint -- overlapping tags on the end edges were dropped by meshio and crashed the run; (2) h corrected from 10/20 to 0.94/37.5 (insulation + longitudinal-slice perimeter, see boundary_conditions); (3) B3 q1-q4 recomputed from the mix; (4) thermal_aging added so the creep chain ages on equivalent time; (5) uy released along fixed_end, pinned at one node; (6) t_end extended to 400 h. Previous validation_target values (44 C @ 35 h, +1.1 MPa) misread Fig.10.",
+    "_comment": "Task 3 of COST benchmark, based on Turner et al. [9] restraining frame"
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "concrete_specimen",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            3.7,
+            0.25
+          ]
+        },
+        "_comment": "PAPER_VALUE: specimen 3.7 x 0.25 x 0.25 m (Sec 2.3, Fig.8). 2D model length 3.7, height 0.25, thickness out-of-plane 0.25 modeled via plane_stress thickness."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "concrete_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "concrete_specimen"
+        ]
+      },
+      {
+        "name": "surface_exposed",
+        "dimension": 1,
+        "selection": {
+          "boxes": [
+            [
+              -1e-06,
+              -1e-06,
+              -1e-06,
+              3.700001,
+              1e-06,
+              1e-06
+            ],
+            [
+              -1e-06,
+              0.249999,
+              -1e-06,
+              3.700001,
+              0.250001,
+              1e-06
+            ]
+          ]
+        },
+        "_comment": "BOTTOM + TOP edges ONLY. The two END edges convect through their own groups (fixed_end / spring_end) because a gmsh entity carrying two physical tags loses one when meshio reads the mesh: meshio keeps a single tag per entity, so with surface_exposed (tag 2) also covering the end edges, tags 3 and 4 never reached the mesh and resolve_location_to_nodes('fixed_end') raised. Physical groups on edges must be DISJOINT; several BCs may then name the same group."
+      },
+      {
+        "name": "fixed_end",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            1e-06,
+            0.250001,
+            1e-06
+          ]
+        },
+        "_comment": "Left end fixed longitudinally, Fig.20"
+      },
+      {
+        "name": "spring_end",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            3.699999,
+            -1e-06,
+            -1e-06,
+            3.700001,
+            0.250001,
+            1e-06
+          ]
+        },
+        "_comment": "Right end with spring support kF=1053 MN/m Fig.20"
+      },
+      {
+        "name": "symmetry_dummy",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            1.85,
+            0.125,
+            -1e-06,
+            1.850001,
+            0.125001,
+            1e-06
+          ]
+        },
+        "_comment": "Dim-0 group auto-creates node at centre for point probe - ensures exact node at 1.85,0.125"
+      },
+      {
+        "name": "pin_node",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            1e-06,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "Single node at (0,0) carrying uy=0. Fixing uy along the WHOLE fixed_end edge blocks the end's Poisson/thermal contraction in y and injects spurious local stress; one node is enough to remove the rigid-body mode."
+      },
+      {
+        "name": "corner_probe_node",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.049999,
+            0.049999,
+            -1e-06,
+            0.050001,
+            0.050001,
+            1e-06
+          ]
+        },
+        "_comment": "Forces a mesh node at the corner probe; without it the probe resolved 1.89e-2 m away from the nearest node."
+      }
+    ],
+    "points": [
+      {
+        "name": "core_center",
+        "coordinates": [
+          1.85,
+          0.125,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: mid-point core"
+      },
+      {
+        "name": "corner_probe",
+        "coordinates": [
+          0.05,
+          0.05,
+          0.0
+        ],
+        "_comment": "Near corner for temperature gradient"
+      }
+    ],
+    "mesh": {
+      "element_size": 0.05,
+      "order": 1,
+      "_comment": "INFERRED: 50mm gives 74 elements along length, 5 through height, sufficient for thermal. Mechanical needs >=10 through bending depth? Bending not dominant, axial restraint dominant."
+    }
+  },
+  "physics": {
+    "heat_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "temperature",
+        "symbol": "T",
+        "type": "scalar",
+        "components": [
+          "T"
+        ]
+      }
+    },
+    "hydration": {
+      "type": "ode_source",
+      "dependent_variable": {
+        "name": "degree_of_hydration",
+        "symbol": "alpha",
+        "type": "ode",
+        "components": [
+          "alpha"
+        ],
+        "managed_by": "hydration"
+      }
+    },
+    "mechanics": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "displacement",
+        "symbol": "u",
+        "type": "vector",
+        "components": [
+          "ux",
+          "uy"
+        ]
+      }
+    },
+    "thermal_strain": {
+      "type": "coupling",
+      "source_field": "temperature",
+      "target_field": "displacement"
+    },
+    "autogenous_shrinkage": {
+      "type": "coupling",
+      "target_field": "displacement"
+    },
+    "b3_creep": {
+      "type": "coupling",
+      "target_field": "displacement"
+    },
+    "thermal_aging": {
+      "type": "coupling",
+      "source_field": "temperature",
+      "target_field": "displacement",
+      "_comment": "Canonical key -- the (temperature, displacement) pair is ambiguous between thermal_strain and thermal_aging, so it must be named exactly (D14)."
+    }
+  },
+  "materials": {
+    "concrete": {
+      "temperature": {
+        "k": 2.4,
+        "rho": 2333.0,
+        "cp": 1071.5,
+        "_comment_k": "PAPER_VALUE: Table 8 thermal conductivity 2.4 W/(K m3) meaning W/mK",
+        "_comment_rho": "INFERRED: mix Table7: 300+145+2000+3=2448 kg/m3 minus water loss, approx 2333 used to match volumetric 2500 kJ/K/m3",
+        "_comment_cp": "INFERRED: volumetric 2500 kJ/K/m3=2.5e6 /2333=1071.5 J/kgK",
+        "_comment_product": "PAPER_VALUE: 2500 kJ/K/m3 Table8"
+      },
+      "degree_of_hydration": {
+        "model": "affinity",
+        "B1": 0.0002707,
+        "B2": 0.0007,
+        "alpha_inf": 0.85,
+        "eta": 6.7,
+        "Ea": 46000.0,
+        "R": 8.314,
+        "T_ref": 298.15,
+        "Hu": 420.0,
+        "c_cement": 300.0,
+        "_comment_B1": "PAPER_VALUE: Table15 Team2 B1=0.0002707 1/s",
+        "_comment_B2": "PAPER_VALUE: Table15 Team2 B2=0.0007",
+        "_comment_alpha_inf": "PAPER_VALUE: Table15 amax=0.85",
+        "_comment_eta": "PAPER_VALUE: Table15 g=6.7",
+        "_comment_Ea": "PAPER_VALUE: Table8 activation energy 46,000 J/mol measured",
+        "_comment_T_ref": "PAPER_VALUE: 25C=298.15K (A25)",
+        "_comment_Hu": "PAPER_VALUE: Table15 Team2 Qpot=420 J/g",
+        "_comment_c_cement": "PAPER_VALUE: Table7 CEM III/A 300 kg/m3",
+        "_comment_sanity": "dT_ad=Hu*c*alpha/(rho cp)=420e3*300*0.85/2.5e6=42.84K, initial 22C => 64.8C adiabatic, measured peak 44C, so BCs carry ~20K - passes"
+      },
+      "displacement": {
+        "rho": 2333.0,
+        "E": 34133000000.0,
+        "nu": 0.2,
+        "plane_stress": true,
+        "thickness": 0.25,
+        "_comment_E": "IGNORED on the oofem backend -- the mps creep chain supplies the elastic response through b3_creep.q1. Kept for the legacy fem/ backend and for documentation. PAPER_VALUE Table 9: Ecm(28d) = 34.133 GPa.",
+        "_comment_nu": "PAPER_VALUE: Table8 Poisson 0.2",
+        "_comment_plane_stress": "INFERRED: specimen is beam-like 3.7m long 0.25x0.25 cross-section, loaded axially, plane stress with thickness 0.25m gives correct axial stiffness EA",
+        "_comment_thickness": "PAPER_VALUE: 0.25m out-of-plane thickness = specimen width"
+      },
+      "thermal_strain": {
+        "alpha_T": 1e-05,
+        "T_strain_free_ref": 22.0,
+        "_comment_alpha_T": "PAPER_VALUE: Table8 thermal expansion 1e-5 1/K",
+        "_comment_T_ref": "PAPER_VALUE: casting/ambient 22C Sec 2.3"
+      },
+      "autogenous_shrinkage": {
+        "shrinkage_max": -5e-05,
+        "age_at_start_days": 0.4375,
+        "_comment_shrinkage_max": "PAPER_VALUE: final shrinkage 0.05 per mille =0.05/1000=5e-5, compressive negative -5e-5 Sec 2.3",
+        "_comment_age": "PAPER_VALUE: setting time 10.5h=0.4375d Table8, material age at t=0 for shrinkage-only runs",
+        "_comment_model": "On OOFEM this is B4 asymptote on equivalent age, not alpha/alpha_inf, divergence D9 noted"
+      },
+      "b3_creep": {
+        "q1": 1.758e-11,
+        "q2": 8.336e-11,
+        "q3": 1.319e-12,
+        "q4": 5.38e-12,
+        "E28": 34133000000.0,
+        "age_at_start_days": 0.4375,
+        "_comment_q": "Bazant & Baweja B3, computed from Table 7 + Table 9: c = 300 kg/m3, w/c = 145/300 = 0.4833, a/c = 2000/300 = 6.667, fcm28 = 57.8 MPa, E28 = 34133 MPa.\n  q1 = 0.6/E28                  = 1.758e-11 1/Pa\n  q2 = 185.4*c^0.5*fcm^-0.9     = 8.336e-11 1/Pa\n  q3 = 0.29*(w/c)^4*q2          = 1.319e-12 1/Pa\n  q4 = 20.3*(a/c)^-0.7          = 5.380e-12 1/Pa\nMatches Table 16: Team 2 'estimated the B3 parameters q1-q4 from the composition of concrete mixture and compressive strength (fc, w/c, a/c)'. Previous q1=1.5e-11 and q3=2e-12 were hand estimates.",
+        "_comment_E28": "PAPER_VALUE Table 9: Ecm(28d) = 34,133 MPa. Used only to derive q1 -- materials.concrete.displacement.E is IGNORED by the mps chain (mps/host.py: 'E is deliberately ABSENT: the elastic response of an mps material comes from the chain (q1), not E'). Aging stiffness comes from mps solidification, which is the paper's Fig.24-right behaviour.",
+        "_comment_age": "PAPER_VALUE: setting time 10.5h"
+      },
+      "thermal_aging": {
+        "kTm": 0.0202,
+        "mus": 1.4633e-17,
+        "Q_E_over_R": 5532.8,
+        "Q_R_over_R": 5000.0,
+        "Q_S_over_R": 3000.0,
+        "_comment": "Without this section coupledanalysistype stays 0 (Basic) and the mps creep chain ages on REAL time while the specimen sits at 35-41 C for days. Every team used a maturity clock (Sec. 3.2: 'all of them were related to heat release, expressed with the equivalent age of concrete, teq').",
+        "_comment_kTm": "INFERRED: kTm replaces ln(h) in the microprestress equation. Table 16 gives Team 2 'sealed conditions'; self-desiccation h = 0.98 -> kTm = -ln(0.98) = 0.0202. Same convention as OOFEM regression test MPS_05_in.sm.",
+        "_comment_mus": "INFERRED: OOFEM muS = c0*c1^(p-1)*q4*(p-1)^p with p=2 -> muS = c0*c1*q4 = 0.235 1/(MPa*day) * 1 MPa * 5.380e-6 1/MPa = 1.264e-6 1/(MPa*day) = 1.4633e-17 1/(Pa*s). c0 is Havlasek & Jirasek's calibrated value, c1 = 1 MPa assumed (k1 and c0 are only identifiable as a product).",
+        "_comment_Q_E_over_R": "PAPER_VALUE Table 8: measured Ea = 46,000 J/mol -> Ea/R = 46000/8.314 = 5532.8 K. Set explicitly so the creep maturity clock agrees with hydratingConcreteMat's; oofem's default is 2700 K (Bazant 1995) and mps does NOT read the hydration degree (D14).",
+        "_comment_Q_R_over_R": "GENERIC_LITERATURE_VALUE: oofem/Bazant 1995 default 5000 K.",
+        "_comment_Q_S_over_R": "GENERIC_LITERATURE_VALUE: oofem/Bazant 1995 default 3000 K."
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "temperature",
+      "value": 22.0,
+      "location": "concrete_domain",
+      "_comment": "PAPER_VALUE: ambient 22C Sec 2.3, concrete initial assumed same"
+    },
+    {
+      "field": "degree_of_hydration",
+      "value": 0.0,
+      "location": "concrete_domain"
+    },
+    {
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "concrete_domain",
+      "_comment": "Zero initial displacement"
+    },
+    {
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "concrete_domain"
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "surface_exposed",
+      "alpha": {
+        "time_table": [
+          [
+            0.0,
+            0.94
+          ],
+          [
+            954000.0,
+            37.5
+          ]
+        ],
+        "interp": "step"
+      },
+      "u_ref": 22.0,
+      "_comment_alpha": "CORRECTED. Two compounding errors were fixed here.\n(a) The 10 / 20 W/(m2K) of Sec. 2.3 are NOT concrete-surface values: Fig.8 shows the specimen wrapped in 27 mm formwork PLUS 160 mm XPS (Table 6), and Sec. 4.3.2 states the lumped equivalent 'was computed to be h = 0.5 W/(m2K)'. Independent check: the measured cooling in Fig.10 has tau ~ 89 h; h=0.5 on the true 0.25x0.25 section gives tau = 87 h, while h=10 gives 4.3 h.\n(b) This model is a LONGITUDINAL 3.7 x 0.25 slice, whose cooled perimeter/area is 2*(3.7+0.25)/0.925 = 8.54 1/m against the real cross-section's 1.0/0.0625 = 16 1/m -- it sheds heat at half the correct rate per unit volume, so h must be scaled by 16/8.54 = 1.874.\n=> h = 0.5*1.874 = 0.94 while insulated, 20*1.874 = 37.5 after stripping.\nVerified: with the raw 10/20 the run peaks at 32.4 C @ 15.2 h (measured 41 C @ ~60 h) and is back at ambient by 100 h; an FD check of this geometry with 0.94 gives 45.7 C @ 36.6 h, matching the paper's own lumped-BC result in Fig.23 (47.5 C @ 42 h). RISKY: the paper is explicit that reproducing the EXPERIMENT (41 C @ 60 h) needs discrete formwork+XPS elements -- heat stored in the insulation both lowers and delays the peak. This value reproduces the teams' simplified boundary condition, not the measurement.",
+      "_comment_u_ref": "PAPER_VALUE: ambient 22C",
+      "_comment_time": "PAPER_VALUE: formwork removal 265h",
+      "_comment_alpha_paper": "PAPER_VALUE Sec.2.3: h = 10 W/(m2K) in formwork, 20 free, formwork removed at 265 h = 954000 s."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "spring_end",
+      "alpha": {
+        "time_table": [
+          [
+            0.0,
+            0.94
+          ],
+          [
+            954000.0,
+            37.5
+          ]
+        ],
+        "interp": "step"
+      },
+      "u_ref": 22.0,
+      "_comment_alpha": "Same convection as the rest of the surface; a separate entry only because gmsh entities carry one physical tag (see surface_exposed).",
+      "_comment_u_ref": "PAPER_VALUE: ambient 22C",
+      "_comment_time": "PAPER_VALUE: formwork removal 265h",
+      "_comment_alpha_paper": "PAPER_VALUE Sec.2.3: h = 10 W/(m2K) in formwork, 20 free, formwork removed at 265 h = 954000 s."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "fixed_end",
+      "alpha": {
+        "time_table": [
+          [
+            0.0,
+            0.94
+          ],
+          [
+            954000.0,
+            37.5
+          ]
+        ],
+        "interp": "step"
+      },
+      "u_ref": 22.0,
+      "_comment_alpha": "Same convection as the rest of the surface; a separate entry only because gmsh entities carry one physical tag (see surface_exposed).",
+      "_comment_u_ref": "PAPER_VALUE: ambient 22C",
+      "_comment_time": "PAPER_VALUE: formwork removal 265h",
+      "_comment_alpha_paper": "PAPER_VALUE Sec.2.3: h = 10 W/(m2K) in formwork, 20 free, formwork removed at 265 h = 954000 s."
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "fixed_end",
+      "_comment": "PAPER_VALUE: Fig.20 left end fixed"
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "pin_node",
+      "_comment": "Single node -- removes the rigid-body vertical mode without over-constraining the end."
+    },
+    {
+      "type": "robin",
+      "field": "displacement",
+      "component": "ux",
+      "location": "spring_end",
+      "alpha": 16848000000.0,
+      "u_ref": 0.0,
+      "_comment_alpha": "INFERRED: kF=1053 MN/m=1.053e9 N/m total, area Ac=0.25*0.25=0.0625 m2, alpha=kF/Ac=1.6848e10 N/m3. PAPER_VALUE kF Fig.20, INFERRED alpha conversion.",
+      "_comment_u_ref": "Mechanical Robin requires u_ref exactly 0"
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "concrete_domain": {
+        "active_fields": [
+          "temperature",
+          "degree_of_hydration",
+          "displacement"
+        ],
+        "material": "concrete"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 1440000.0,
+    "analysis_type": "transient",
+    "dt_strategy": {
+      "type": "piecewise",
+      "segments": [
+        {
+          "t_end": 36000.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 300.0,
+            "dt_max": 1800.0,
+            "n_steps": 40
+          }
+        },
+        {
+          "t_end": 180000.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 1800.0,
+            "dt_max": 7200.0,
+            "n_steps": 50
+          }
+        },
+        {
+          "t_end": 954000.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 3600.0,
+            "dt_max": 14400.0,
+            "n_steps": 60
+          }
+        },
+        {
+          "t_end": 1440000.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 1800.0,
+            "dt_max": 7200.0,
+            "n_steps": 30
+          }
+        }
+      ]
+    },
+    "_comment_t_end": "400 h. All three reference curves run to 400 h and the post-stripping plateau (265-400 h) carries the benchmark's headline result -- the previous 300 h cut it off."
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "temp_core_exp",
+        "file": "reference/temperature_core.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "Core temperature experiment Fig.10 left / Fig.22 - extracted",
+        "_comment": "PAPER_VALUE: extracted from user-provided data (17).csv core series, time_h vs T_degC, Fig.22 core"
+      },
+      {
+        "id": "temp_corner_exp",
+        "file": "reference/temperature_corner.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "Corner temperature experiment - extracted Fig.22",
+        "_comment": "PAPER_VALUE: extracted from user-provided data (17).csv corner series"
+      },
+      {
+        "id": "stress_exp",
+        "file": "reference/stress_avg.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "stress_MPa",
+        "label": "Avg stress experiment Fig.10 right / Fig.25 - extracted",
+        "_comment": "PAPER_VALUE: extracted from user-provided data (18).csv, time_h vs stress_MPa"
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_hours",
+        "type": "formula",
+        "formula": "t / 3600.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [h]"
+      },
+      {
+        "id": "T_core",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "core_center",
+        "reduce": "avg",
+        "label": "Core T [C]"
+      },
+      {
+        "id": "T_corner",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "corner_probe",
+        "reduce": "avg",
+        "label": "Corner T [C]"
+      },
+      {
+        "id": "alpha_core",
+        "type": "field",
+        "field": "degree_of_hydration",
+        "at": "core_center",
+        "reduce": "avg",
+        "label": "Hydration core"
+      },
+      {
+        "id": "stress_avg",
+        "type": "field",
+        "field": "stress",
+        "component": "sxx",
+        "at": "core_center",
+        "reduce": "avg",
+        "label": "Axial stress sxx [Pa]"
+      },
+      {
+        "id": "stress_MPa",
+        "type": "formula",
+        "formula": "stress_avg / 1e6",
+        "depends_on": [
+          "stress_avg"
+        ],
+        "label": "Stress [MPa]"
+      }
+    ],
+    "plots": [
+      {
+        "name": "temperature_history",
+        "title": "Temperature core - restraining frame",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [h]"
+        },
+        "y_axis": {
+          "label": "Temperature [C]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_core"
+            },
+            "label": "FEM core"
+          },
+          {
+            "source": "reference",
+            "ref_id": "temp_core_exp",
+            "label": "Exp core (extracted)"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_corner"
+            },
+            "label": "FEM corner"
+          },
+          {
+            "source": "reference",
+            "ref_id": "temp_corner_exp",
+            "label": "Exp corner (extracted)"
+          }
+        ]
+      },
+      {
+        "name": "stress_history",
+        "title": "Restrained stress",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [h]"
+        },
+        "y_axis": {
+          "label": "Stress [MPa]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "stress_MPa"
+            },
+            "label": "FEM axial stress"
+          },
+          {
+            "source": "reference",
+            "ref_id": "stress_exp",
+            "label": "Exp avg stress approx"
+          }
+        ]
+      }
+    ],
+    "console": {
+      "summary_every_steps": 20,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_hours",
+            "y": "T_core",
+            "ref_id": "temp_core_exp"
+          },
+          {
+            "x": "t_hours",
+            "y": "stress_MPa",
+            "ref_id": "stress_exp"
+          }
+        ]
+      }
+    },
+    "save_checkpoint": true,
+    "aux_fields": [
+      "*"
+    ],
+    "export_vtu": true,
+    "save_db": true
+  }
+}

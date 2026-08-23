@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "id": "faria-2006-restrained-slab-thermomechanical-no-creep",
-    "title": "Early-age fully restrained slab cross-section — thermoelastic no-creep variant",
+    "id": "faria-2006-slab-thermomech-1d",
+    "title": "Faria et al. (2006) \u2014 fully restrained through-thickness strip (Fig. 9; bound for Figs. 17\u201318)",
     "source": {
       "authors": [
         "Rui Faria",
@@ -9,19 +9,20 @@
         "Joaquim A. Figueiras"
       ],
       "year": 2006,
-      "journal": "Cement & Concrete Composites 28, 572-585",
+      "journal": "Cement & Concrete Composites",
       "doi": "10.1016/j.cemconcomp.2006.02.012"
     },
     "dimension": 2,
     "physics_class": "thermo-chemo-mechanical",
-    "validation_method": "2D through-thickness thermal solution followed in lockstep by fully restrained plane-strain thermoelastic mechanics",
-    "validation_target": "Temperature histories from Fig. 7 and no-creep restrained stress histories at top, centre, and bottom from Fig. 9b",
-    "notes": "RISKY: runnable thermoelastic NO-CREEP diagnostic, not a reproduction of the paper's principal creep analysis. The paper uses Double Power Law creep (phi1=2.26, m=0.35, n=0.3) and E(alpha)=29e9*alpha^0.5 Pa. The pipeline thermal_aging feature requires a B3/MPS chain with q1-q4, kTm and mus, none of which the paper supplies; they are not invented. Constant E=29 GPa is the paper's alpha=1 asymptote and over-stiffens early ages. The 2D cross-section restrains x explicitly and the out-of-plane in-plane direction through plane strain, approximating biaxial in-plane restraint while leaving thickness free. Use only as a transparent upper-bound/no-creep diagnostic. Thermal assumptions and Fig. 7 data limitations remain as documented. User-exported Fig. 9b curves now provide quantitative no-creep stress references. Fig. 9a creep-enabled curves are retained as reference data but are not compared to this no-creep model. Fig. 17 and Fig. 18 exports are normalized and registered as reference data, but intentionally not overlaid on this no-creep cross-section: Fig. 17 is a creep-enabled plan-model result at P3, and Fig. 18 is a monitored strain comparison requiring realistic pile restraint and creep."
+    "validation_method": "digitized paper curves: Fig. 9a (DPL on), Fig. 17 (2D/3D P3), Fig. 18 (\u03b5x bottom)",
+    "validation_target": "\u03c3x(t) at 5 cm from top / mid-plane / 5 cm from bottom over 9.2 d (Fig. 9a); secondary overlay of Fig. 17 and Fig. 18",
+    "notes": "RISKY: (1) Affinity B1/B2/eta/Hu/alpha_inf are NOT in the paper (Fig. 5 multi-component only) \u2014 peak T will not match Fig. 18 until those are fitted. (2) E=29 GPa * sqrt(alpha) is LEGACY-ONLY; this file uses constant E=29 GPa and OOFEM will ignore alpha_0/a_E. (3) This mesh is the Sec. 4.2 'infinite slab' (\u03b5x=\u03b5z=0), which is Fig. 9. Fig. 17 P3 is ~86% of that stress; Fig. 18 is a 3D sensor with finite pile restraint \u2014 expect the same shape, not the same amplitude. (4) Air history is missing; top u_ref=17 \u00b0C constant. (5) power_law_creep maps Table 2 DPL (phi1=2.26, m=0.35, n=0.3) onto doublepowerlaw; confirm your builder keys (E28/fi1/m/n). Do NOT add thermal_aging or b3_creep."
   },
   "geometry": {
+    "_comment": "PAPER_VALUE thickness 0.35 m (Sec. 4.1). y = through-thickness (y=0 soil, y=0.35 air). Width 0.10 m is ASSUMED; both vertical faces have ux=0 so the result is independent of width (infinite in-plane restraint, Fig. 9).",
     "entities": [
       {
-        "id": "slab_section",
+        "id": "slab_strip",
         "type": "rectangle",
         "parameters": {
           "origin": [
@@ -30,11 +31,11 @@
             0.0
           ],
           "size": [
-            0.05,
+            0.1,
             0.35
           ]
         },
-        "_comment": "PAPER_VALUE: slab thickness 0.35 m (Sec. 4.1 and Fig. 6). ASSUMED: 0.05 m in-plane width; side faces are adiabatic, so width does not affect the 1D thermal solution."
+        "_comment": "PAPER_VALUE: 0.35 m thick"
       }
     ],
     "physical_groups": [
@@ -42,135 +43,148 @@
         "name": "concrete_domain",
         "dimension": 2,
         "entity_ids": [
-          "slab_section"
+          "slab_strip"
         ]
       },
       {
-        "name": "surface_bottom",
+        "name": "face_bottom",
         "dimension": 1,
         "selection": {
           "box": [
             -1e-06,
             -1e-06,
             -1e-06,
-            0.050001,
+            0.101,
             1e-06,
             1e-06
           ]
         },
-        "_comment": "PAPER_VALUE: P1-P2 soil-side boundary in Fig. 6."
+        "_comment": "P1\u2013P2 soil (Fig. 6)"
       },
       {
-        "name": "surface_top",
+        "name": "face_top",
         "dimension": 1,
         "selection": {
           "box": [
             -1e-06,
-            0.349999,
+            0.349,
             -1e-06,
-            0.050001,
-            0.350001,
+            0.101,
+            0.351,
             1e-06
           ]
         },
-        "_comment": "PAPER_VALUE: P3-P4 air-side boundary in Fig. 6."
+        "_comment": "P3\u2013P4 air (Fig. 6)"
       },
       {
-        "name": "sensor_bottom",
-        "dimension": 0,
+        "name": "face_left",
+        "dimension": 1,
         "selection": {
           "box": [
-            0.024999,
-            0.049999,
             -1e-06,
-            0.025001,
-            0.050001,
+            -1e-06,
+            -1e-06,
+            1e-06,
+            0.351,
             1e-06
           ]
         },
-        "_comment": "PAPER_VALUE: 0.05 m above bottom; dim-0 group guarantees exact mesh vertex."
+        "_comment": "INFERRED: ux=0 \u2192 infinite in-plane restraint (Fig. 9 'infinite slab')"
       },
       {
-        "name": "sensor_centre",
-        "dimension": 0,
+        "name": "face_right",
+        "dimension": 1,
         "selection": {
           "box": [
-            0.024999,
-            0.174999,
+            0.099,
             -1e-06,
-            0.025001,
-            0.175001,
+            -1e-06,
+            0.101,
+            0.351,
             1e-06
           ]
-        },
-        "_comment": "PAPER_VALUE: slab middle plane; dim-0 group guarantees exact mesh vertex."
+        }
       },
       {
         "name": "sensor_top",
         "dimension": 0,
         "selection": {
           "box": [
-            0.024999,
+            0.049999,
             0.299999,
             -1e-06,
-            0.025001,
-            0.300001,
-            1e-06
-          ]
-        },
-        "_comment": "PAPER_VALUE: 0.05 m below top; dim-0 group guarantees exact mesh vertex."
-      },
-      {
-        "name": "restraint_left",
-        "dimension": 1,
-        "selection": {
-          "box": [
-            -1e-06,
-            -1e-06,
-            -1e-06,
-            1e-06,
-            0.350001,
-            1e-06
-          ]
-        },
-        "_comment": "ASSUMED: fully restrained in-plane boundary ux=0."
-      },
-      {
-        "name": "restraint_right",
-        "dimension": 1,
-        "selection": {
-          "box": [
-            0.049999,
-            -1e-06,
-            -1e-06,
             0.050001,
-            0.350001,
+            0.30000099999999996,
             1e-06
           ]
         },
-        "_comment": "ASSUMED: fully restrained in-plane boundary ux=0."
+        "_comment": "Forces a mesh node at the gauge. Without it gage_mid resolved 2.5e-2 m away (element_size 0.05 puts nodes at y=0.15/0.20, never 0.175)."
       },
       {
-        "name": "vertical_anchor",
+        "name": "sensor_centre",
         "dimension": 0,
         "selection": {
           "box": [
-            0.024999,
+            0.049999,
+            0.174999,
             -1e-06,
-            -1e-06,
-            0.025001,
-            1e-06,
+            0.050001,
+            0.175001,
             1e-06
           ]
         },
-        "_comment": "NUMERICAL_CONSTRAINT: one uy anchor removes rigid translation while allowing through-thickness expansion."
+        "_comment": "Forces a mesh node at the gauge. Without it gage_mid resolved 2.5e-2 m away (element_size 0.05 puts nodes at y=0.15/0.20, never 0.175)."
+      },
+      {
+        "name": "sensor_bottom",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.049999,
+            0.049999,
+            -1e-06,
+            0.050001,
+            0.050001000000000004,
+            1e-06
+          ]
+        },
+        "_comment": "Forces a mesh node at the gauge. Without it gage_mid resolved 2.5e-2 m away (element_size 0.05 puts nodes at y=0.15/0.20, never 0.175)."
+      }
+    ],
+    "points": [
+      {
+        "name": "gage_top",
+        "coordinates": [
+          0.05,
+          0.3,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: 5 cm from top (Fig. 7a / Fig. 9 top)"
+      },
+      {
+        "name": "gage_mid",
+        "coordinates": [
+          0.05,
+          0.175,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: mid-plane (Fig. 8 / Fig. 9 centre)"
+      },
+      {
+        "name": "gage_bottom",
+        "coordinates": [
+          0.05,
+          0.05,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: 5 cm from bottom (Fig. 7b / Fig. 9 bottom / Fig. 18 \u00b7 bottom)"
       }
     ],
     "mesh": {
       "element_size": 0.05,
       "order": 1,
       "recombine": false,
-      "_comment": "PAPER_VALUE: seven finite elements through 0.35 m thickness (Sec. 4.2), corresponding to 0.05 m nominal size. The OOFEM pipeline uses 2D triangles rather than the paper's quadrilaterals."
+      "_comment": "PAPER_VALUE: 7 elements through 0.35 m (Sec. 4.2)"
     }
   },
   "physics": {
@@ -213,6 +227,11 @@
       "type": "coupling",
       "source_field": "temperature",
       "target_field": "displacement"
+    },
+    "power_law_creep": {
+      "type": "coupling",
+      "target_field": "displacement",
+      "_comment": "Canonical key. No source_field \u2014 DPL reads its own history. Do not rename (thermal_strain vs thermal_aging ambiguity)."
     }
   },
   "materials": {
@@ -221,9 +240,8 @@
         "k": 2.6,
         "rho": 2400.0,
         "cp": 1000.0,
-        "_comment_k": "PAPER_VALUE: k = 2.6 W/(m K), Table 1.",
-        "_comment_rho_cp": "INFERRED/ASSUMED decomposition: Table 1's volumetric heat capacity is interpreted as rho*cp = 2400 kJ/(m3 K) = 2.4e6 J/(m3 K). rho=2400 kg/m3 and cp=1000 J/(kg K) preserve that product exactly. Thermal response depends on the product, not this decomposition.",
-        "_comment_conductivity_gap": "MODEL_GAP: Eq. (2) proposes hydration-dependent conductivity, but Sec. 4 states an average conductivity was assumed in all application analyses. Constant k therefore follows the application."
+        "_comment_k": "PAPER_VALUE: Table 1, 2.6 W/mK",
+        "_comment_rho_cp": "INFERRED: Table 1 qc=2400 J/m3K is a unit error \u2192 2400 kJ/m3K = rho*cp"
       },
       "degree_of_hydration": {
         "model": "affinity",
@@ -236,91 +254,111 @@
         "T_ref": 298.15,
         "Hu": 420.2,
         "c_cement": 285.0,
-        "_comment_Ea": "PAPER_VALUE: activation energy 50 kJ/mol = 50000 J/mol, Table 1.",
-        "_comment_cement": "PAPER_VALUE: cement content 285 kg/m3, Sec. 4.1.",
-        "_comment_T_ref": "ASSUMED: 298.15 K, the OOFEM affinity model's reference temperature. This is KELVIN; all temperature IC/BC values below are degrees Celsius.",
-        "_comment_calibration": "CALIBRATED: B1, B2 and eta fit an approximate digitization of the pseudo-adiabatic curve in Fig. 5 using the OOFEM affinity equation and Ea=50 kJ/mol. B2 reached the imposed calibration bound 1.0, indicating model-form mismatch; do not treat these as independently measured kinetics.",
-        "_comment_alpha_inf": "INFERRED: alpha_inf=0.93 from the approximately 0.92-0.93 plateau at 9 days in Fig. 8b.",
-        "_comment_Hu": "INFERRED sanity calculation from Fig. 5: rise about 46.4 K, so Hu = 46.4*(2.4e6)/(285*0.93)/1000 = 420.2 J/g.",
-        "_comment_sanity": "Adiabatic rise = Hu*1000*c_cement*alpha_inf/(rho*cp) = 420.2e3*285*0.93/(2400*1000) = 46.4 K. Measured slab peak rise in Fig. 7 is about 14-15 K, so the adiabatic rise exceeds it by about 31-32 K, as required."
+        "_comment_source": "CALIBRATED: taken verbatim from the sibling thermal benchmark (../thermal/benchmark.json), which fitted these against Fig. 7a/7b. Previously this file carried unfitted placeholders (B1=3.6e-4, B2=5.0e-4, alpha_inf=0.85, eta=6.0, Hu=450, T_ref=293.15) and its own notes flagged them MISSING/CALIBRATE -- with those the peak temperature, and therefore every stress in Fig. 9, was meaningless.",
+        "_comment_T_ref": "PAPER-ADJACENT: 25 C = 298.15 K. KELVIN only (the BC/IC fields stay degC).",
+        "_comment_Ea": "PAPER_VALUE: Table 1, 50 kJ/mol.",
+        "_comment_c_cement": "PAPER_VALUE: 285 kg/m3 (Sec. 4.1).",
+        "_comment_sanity": "dT_ad = Hu*c*alpha_inf/(rho*cp) = 420.2e3*285*0.93/(2400*1000) = 46.4 K. Fig. 5's pseudo-adiabatic curve rises 15 -> 61.4 C = 46.4 K. Exact match -- this is what fig5_pseudo_adiabatic.csv is for."
       },
       "displacement": {
         "model": "linear_elastic",
         "E": 29000000000.0,
         "nu": 0.2,
-        "rho": 2400.0,
-        "_comment_E": "PAPER_VALUE with limitation: Table 2 gives Ec=29e9*alpha^0.5 Pa. This backend variant uses the alpha=1 asymptote 29 GPa because direct E(alpha) is not available through thermal_aging; HIGH-impact early-age approximation.",
-        "_comment_nu": "PAPER_VALUE: Poisson ratio 0.2, Table 2.",
-        "_comment_plane_state": "INFERRED: default plane strain represents restraint in the second in-plane slab direction; the modeled y direction is thickness."
+        "plane_stress": false,
+        "alpha_0": 0.0,
+        "alpha_inf": 1.0,
+        "a_E": 0.5,
+        "E_min": 100000000.0,
+        "_comment_E_nu": "PAPER_VALUE: Table 2 Ec=29e9*a^0.5 Pa, nu=0.2. a_E=0.5, alpha_0=0 match Table 2. On OOFEM those ageing keys are SILENTLY IGNORED \u2014 stiffness stays 29 GPa from t=0. RISKY for early compression.",
+        "_comment_plane": "Default plane strain + ux=0 on both sides = \u03b5x=\u03b5z=0 = infinite slab (Fig. 9). Do NOT set plane_stress."
       },
       "thermal_strain": {
         "alpha_T": 1e-05,
-        "T_strain_free_ref": 17.25,
-        "_comment_alpha_T": "PAPER_VALUE: 10e-6 K^-1, Table 2.",
-        "_comment_T_ref": "INFERRED: uniform casting/stress-free temperature equals the thermal IC, 17.25 degC."
+        "T_strain_free_ref": 20.0,
+        "_comment": "PAPER_VALUE: Table 2 aT=10e-6 /K. T_strain_free_ref ASSUMED 20 C (Fig. 18 T(0)=20). DEGREES CELSIUS. Free strain aT*13 K = 130 \u00b5\u03b5 \u2014 same order as Fig. 18 (~80 \u00b5\u03b5 after they zero at cooling start)."
+      },
+      "power_law_creep": {
+        "E28": 29000000000.0,
+        "phi_inf": 2.26,
+        "fi1": 2.26,
+        "m": 0.35,
+        "n": 0.3,
+        "alpha": 0.0,
+        "t1": 1.0,
+        "age_at_start_days": 0.01,
+        "_comment": "PAPER_VALUE: Table 2 DPL phi1=2.26, m=0.35, n=0.3. E0 taken as Ec1=29 GPa. Extra keys (fi1, m, alpha) are what oofem doublepowerlaw actually reads \u2014 keep both spellings until the builder is documented. age_at_start_days ASSUMED 0.01 d so t0^{-m} is finite. Time unit of DPL in oofem is DAYS."
       }
     }
   },
   "initial_conditions": [
     {
       "field": "temperature",
-      "value": 17.25,
+      "value": 20.0,
       "location": "concrete_domain",
-      "_comment": "INFERRED from user-exported Fig. 7 values at t=0: top/bottom paper-analysis temperatures are 17.0/17.5 degC. The backend requires a uniform IC, so their mean 17.25 degC is used."
+      "_comment": "INFERRED from Fig. 18 T(0)=20 C (digitized). DEGREES CELSIUS."
     },
     {
       "field": "degree_of_hydration",
       "value": 0.0,
-      "location": "concrete_domain",
-      "_comment": "ASSUMED/documentary OOFEM hydration start. Fig. 8b appears to begin near alpha=0.1, but the paper gives no numerical initial degree."
+      "location": "concrete_domain"
+    },
+    {
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "concrete_domain"
+    },
+    {
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "concrete_domain"
     }
   ],
   "boundary_conditions": [
     {
       "type": "robin",
       "field": "temperature",
-      "location": "surface_bottom",
+      "location": "face_bottom",
       "alpha": 4.5,
       "u_ref": 17.0,
-      "_comment": "PAPER_VALUE/CALIBRATED_BY_PAPER: h=4.5 W/(m2 K) and soil temperature 17 degC, Table 1. The authors obtained the lower coefficient and soil temperature by trial and error against cooling data (Sec. 4.2)."
+      "_comment": "PAPER_VALUE: Table 1 h=4.5 W/m2K, soil 17 C"
     },
     {
       "type": "robin",
       "field": "temperature",
-      "location": "surface_top",
+      "location": "face_top",
       "alpha": 7.5,
       "u_ref": {
         "file": "input/ambient_temperature_fig7a.csv",
         "column": "T_ambient_degC",
         "time_column": "t_s",
-        "interp": "linear",
-        "_comment": "DIGITIZED: exact user-exported environmental-temperature series from Fig. 7a (data (7).csv), converted from days to absolute seconds."
+        "interp": "linear"
       },
-      "_comment": "PAPER_VALUE: h=7.5 W/(m2 K), Table 1. The published model did not account for the provisional textile cover during the first 24 h (Sec. 4.2), and this benchmark follows that choice."
+      "_comment": "PAPER_VALUE h=7.5 W/m2K (Table 1). The air history is the digitized Fig. 7a environmental series, already present in input/ and already used by the sibling thermal benchmark -- this file previously pinned u_ref to a constant 17 C and noted the history as 'missing', which flattened the daily swing after day 5 that Sec. 4.2 says the boundary conditions were tuned to reproduce."
     },
     {
       "type": "dirichlet",
       "field": "displacement",
       "component": "ux",
       "value": 0.0,
-      "location": "restraint_left",
-      "_comment": "ASSUMED: fully restrained in-plane expansion."
+      "location": "face_left",
+      "_comment": "Infinite in-plane restraint (Fig. 9)"
     },
     {
       "type": "dirichlet",
       "field": "displacement",
       "component": "ux",
       "value": 0.0,
-      "location": "restraint_right",
-      "_comment": "ASSUMED: fully restrained in-plane expansion."
+      "location": "face_right"
     },
     {
       "type": "dirichlet",
       "field": "displacement",
       "component": "uy",
       "value": 0.0,
-      "location": "vertical_anchor",
-      "_comment": "NUMERICAL_CONSTRAINT only; thickness surfaces otherwise free."
+      "location": "face_bottom",
+      "_comment": "PAPER_VALUE 3D: bottom plane uz=0 (Sec. 4.4). Vertical faces remain thermally Robin-only."
     }
   ],
   "assignment": {
@@ -337,178 +375,84 @@
   },
   "time_stepping": {
     "t_start": 0.0,
-    "t_end": 792000.0,
+    "t_end": 794880.0,
     "analysis_type": "transient",
-    "dt_strategy": {
-      "type": "uniform",
-      "n_steps": 220
-    },
-    "linear_solver": "dss",
-    "_comment": "PAPER_VALUE: 1 h steps over approximately 9.2 days (Sec. 4.2). 220 h = 9.167 days keeps exact 3600 s steps; the paper's rounded 9.2 days is not an integer number of hours."
+    "dt": 3600.0,
+    "_comment": "PAPER_VALUE: 9.2 days, 1 h steps (Sec. 4.2)"
   },
   "results": {
     "reference_curves": [
       {
-        "id": "fig7_top_sensor",
-        "file": "reference/fig7a_thermal_sensor.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "temperature_degC",
-        "label": "Top thermal sensor, 0.05 m from top (Fig. 7a)",
-        "_comment": "USER_EXPORTED: Thermal sensor series from data (7).csv; values preserved exactly, headers normalized."
-      },
-      {
-        "id": "fig7_top_paper_model",
-        "file": "reference/fig7a_thermal_analysis.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "temperature_degC",
-        "label": "Paper thermal analysis, 0.05 m from top (Fig. 7a)",
-        "_comment": "USER_EXPORTED: Thermal analysis series from data (7).csv; useful for model-vs-model comparison."
-      },
-      {
-        "id": "fig7_bottom_sensor",
-        "file": "reference/fig7b_thermal_sensor.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "temperature_degC",
-        "label": "Bottom thermal sensor, 0.05 m from bottom (Fig. 7b)",
-        "_comment": "USER_EXPORTED: Thermal sensor series from data (8).csv; values preserved exactly, headers normalized."
-      },
-      {
-        "id": "fig7_bottom_paper_model",
-        "file": "reference/fig7b_thermal_analysis.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "temperature_degC",
-        "label": "Paper thermal analysis, 0.05 m from bottom (Fig. 7b)",
-        "_comment": "USER_EXPORTED: Thermal analysis series from data (8).csv; useful for model-vs-model comparison."
-      },
-      {
-        "id": "fig7a_environment_reference",
-        "file": "reference/fig7a_environment.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "temperature_degC",
-        "label": "Environmental temperature exported from Fig. 7a",
-        "_comment": "The same values also drive the top Robin BC through input/ambient_temperature_fig7a.csv, where time is converted to seconds."
-      },
-      {
-        "id": "fig7b_environment_reference",
-        "file": "reference/fig7b_environment.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "temperature_degC",
-        "label": "Environmental temperature exported from Fig. 7b",
-        "_comment": "Retained for provenance. It differs from the Fig. 7a export even though both panels nominally show environmental temperature; it is not used as a second boundary input."
-      },
-      {
-        "id": "fig5_pseudo_adiabatic",
-        "file": "reference/fig5_pseudo_adiabatic.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "temperature_degC",
-        "label": "Pseudo-adiabatic characterization (Fig. 5)",
-        "_comment": "Earlier approximate digitization; calibration evidence only."
-      },
-      {
-        "id": "fig9a_sigma_x_top",
+        "id": "fig9a_top",
         "file": "reference/fig9a_sigma_x_top.csv",
         "has_header": true,
         "x_col": "time_days",
         "y_col": "sigma_x_MPa",
-        "label": "Paper σx — top, with creep (Fig. 9a)",
-        "_comment": "USER_EXPORTED: Paper DPL creep analysis, top series. Values preserved exactly; no sign or axis flip. Tension is positive, compression negative."
+        "label": "Fig. 9a top (DPL on)"
       },
       {
-        "id": "fig9a_sigma_x_centre",
+        "id": "fig9a_mid",
         "file": "reference/fig9a_sigma_x_centre.csv",
         "has_header": true,
         "x_col": "time_days",
         "y_col": "sigma_x_MPa",
-        "label": "Paper σx — centre, with creep (Fig. 9a)",
-        "_comment": "USER_EXPORTED: Paper DPL creep analysis, centre series. Values preserved exactly; no sign or axis flip. Tension is positive, compression negative."
+        "label": "Fig. 9a centre (DPL on)"
       },
       {
-        "id": "fig9a_sigma_x_bottom",
+        "id": "fig9a_bot",
         "file": "reference/fig9a_sigma_x_bottom.csv",
         "has_header": true,
         "x_col": "time_days",
         "y_col": "sigma_x_MPa",
-        "label": "Paper σx — bottom, with creep (Fig. 9a)",
-        "_comment": "USER_EXPORTED: Paper DPL creep analysis, bottom series. Values preserved exactly; no sign or axis flip. Tension is positive, compression negative."
+        "label": "Fig. 9a bottom (DPL on)"
       },
       {
-        "id": "fig9b_sigma_x_top",
-        "file": "reference/fig9b_sigma_x_top.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "sigma_x_MPa",
-        "label": "Paper σx — top, without creep (Fig. 9b)",
-        "_comment": "USER_EXPORTED: Paper no-creep analysis, top series. Values preserved exactly; no sign or axis flip. Tension is positive, compression negative."
-      },
-      {
-        "id": "fig9b_sigma_x_centre",
+        "id": "fig9b_mid",
         "file": "reference/fig9b_sigma_x_centre.csv",
         "has_header": true,
         "x_col": "time_days",
         "y_col": "sigma_x_MPa",
-        "label": "Paper σx — centre, without creep (Fig. 9b)",
-        "_comment": "USER_EXPORTED: Paper no-creep analysis, centre series. Values preserved exactly; no sign or axis flip. Tension is positive, compression negative."
+        "label": "Fig. 9b centre (no creep)"
       },
       {
-        "id": "fig9b_sigma_x_bottom",
-        "file": "reference/fig9b_sigma_x_bottom.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "sigma_x_MPa",
-        "label": "Paper σx — bottom, without creep (Fig. 9b)",
-        "_comment": "USER_EXPORTED: Paper no-creep analysis, bottom series. Values preserved exactly; no sign or axis flip. Tension is positive, compression negative."
-      },
-      {
-        "id": "fig17_sigma_x_3d_model",
-        "file": "reference/fig17_sigma_x_3d_model.csv",
-        "has_header": true,
-        "x_col": "time_days",
-        "y_col": "sigma_x_MPa",
-        "label": "Paper 3D model σx at critical point P3 (Fig. 17)",
-        "_comment": "USER_EXPORTED: creep-enabled paper 3D plan-model result at P3. Not comparable to the current no-creep through-thickness section."
-      },
-      {
-        "id": "fig17_sigma_x_2d_model",
+        "id": "fig17_2d",
         "file": "reference/fig17_sigma_x_2d_model.csv",
         "has_header": true,
         "x_col": "time_days",
         "y_col": "sigma_x_MPa",
-        "label": "Paper 2D model σx at critical point P3 (Fig. 17)",
-        "_comment": "USER_EXPORTED: creep-enabled paper 2D plan-model result at P3. Not comparable to the current no-creep through-thickness section."
+        "label": "Fig. 17 2D P3"
       },
       {
-        "id": "fig18_calculated_strain",
+        "id": "fig17_3d",
+        "file": "reference/fig17_sigma_x_3d_model.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "sigma_x_MPa",
+        "label": "Fig. 17 3D P3"
+      },
+      {
+        "id": "fig18_eps_num",
         "file": "reference/fig18_calculated_strain.csv",
         "has_header": true,
         "x_col": "time_days",
         "y_col": "strain_microstrain",
-        "label": "Paper calculated X strain at bottom sensor × (Fig. 18)",
-        "_comment": "USER_EXPORTED: strain kept in the plotted unit microstrain. For comparison, an OOFEM strain query in m/m needs y scale 1e6 or a formula multiplying by 1e6."
+        "label": "Fig. 18 calculated \u03b5x"
       },
       {
-        "id": "fig18_measured_strain",
+        "id": "fig18_eps_exp",
         "file": "reference/fig18_measured_strain.csv",
         "has_header": true,
         "x_col": "time_days",
         "y_col": "strain_microstrain",
-        "label": "Measured X strain at bottom sensor × (Fig. 18)",
-        "_comment": "USER_EXPORTED: measured strain in microstrain. The paper discusses uncertain sensor bonding and comparison after cooling begins."
+        "label": "Fig. 18 measured \u03b5x"
       },
       {
-        "id": "fig18_measured_temperature",
+        "id": "fig18_T",
         "file": "reference/fig18_measured_temperature.csv",
         "has_header": true,
         "x_col": "time_days",
         "y_col": "temperature_degC",
-        "label": "Measured temperature at bottom sensor × (Fig. 18)",
-        "_comment": "USER_EXPORTED: temperature series from Fig. 18. Kept separate because the source CSV combines temperature and microstrain on one value column."
+        "label": "Fig. 18 measured T (\u00b7 bottom)"
       }
     ],
     "queries": [
@@ -520,7 +464,7 @@
       {
         "id": "t_days",
         "type": "formula",
-        "formula": "t / 86400.0",
+        "formula": "t * 1.157407407e-5",
         "depends_on": [
           "t"
         ],
@@ -531,127 +475,133 @@
         "type": "field",
         "field": "temperature",
         "component": "T",
-        "at": "sensor_top",
+        "at": "gage_top",
         "reduce": "avg",
         "evaluate_in": "fem",
-        "label": "Top sensor temperature [degC]",
-        "_comment": "Temperature field is already in degC; no Kelvin conversion."
+        "label": "T top [degC]"
       },
       {
-        "id": "T_bottom",
+        "id": "T_mid",
         "type": "field",
         "field": "temperature",
         "component": "T",
-        "at": "sensor_bottom",
+        "at": "gage_mid",
         "reduce": "avg",
         "evaluate_in": "fem",
-        "label": "Bottom sensor temperature [degC]"
+        "label": "T mid [degC]"
       },
       {
-        "id": "T_centre",
+        "id": "T_bot",
         "type": "field",
         "field": "temperature",
         "component": "T",
-        "at": "sensor_centre",
+        "at": "gage_bottom",
         "reduce": "avg",
         "evaluate_in": "fem",
-        "label": "Centre temperature [degC]"
+        "label": "T bottom [degC]"
       },
       {
-        "id": "hydration_equivalent_age_centre",
+        "id": "alpha_mid",
         "type": "field",
-        "field": "equivalent_age",
-        "at": "sensor_centre",
+        "field": "degree_of_hydration",
+        "at": "gage_mid",
         "reduce": "avg",
         "evaluate_in": "fem",
-        "label": "Hydration equivalent age [s]",
-        "_comment": "NEW_PIPELINE_CAPABILITY: hydration material element field; scalar, so no component."
+        "label": "alpha mid"
       },
       {
-        "id": "hydration_equivalent_age_days",
-        "type": "formula",
-        "formula": "hydration_equivalent_age_centre / 86400.0",
-        "depends_on": [
-          "hydration_equivalent_age_centre"
-        ],
-        "label": "Hydration equivalent age [days]"
-      },
-      {
-        "id": "sigma_x_top",
+        "id": "sx_top",
         "type": "field",
         "field": "stress",
         "component": "sxx",
-        "at": "sensor_top",
+        "at": "gage_top",
         "reduce": "avg",
         "evaluate_in": "fem",
-        "label": "Restrained stress at top [Pa]"
+        "label": "sigma_x top [Pa]",
+        "_comment": "OOFEM field query, prefixed component. NOT type=stress (COMSOL-only)."
       },
       {
-        "id": "sigma_x_centre",
+        "id": "sx_mid",
         "type": "field",
         "field": "stress",
         "component": "sxx",
-        "at": "sensor_centre",
+        "at": "gage_mid",
         "reduce": "avg",
         "evaluate_in": "fem",
-        "label": "Restrained stress at centre [Pa]"
+        "label": "sigma_x mid [Pa]"
       },
       {
-        "id": "sigma_x_bottom",
+        "id": "sx_bot",
         "type": "field",
         "field": "stress",
         "component": "sxx",
-        "at": "sensor_bottom",
+        "at": "gage_bottom",
         "reduce": "avg",
         "evaluate_in": "fem",
-        "label": "Restrained stress at bottom [Pa]"
+        "label": "sigma_x bot [Pa]"
       },
       {
-        "id": "sigma_x_top_MPa",
+        "id": "sx_top_MPa",
         "type": "formula",
-        "formula": "sigma_x_top / 1.0e6",
+        "formula": "sx_top / 1.0e6",
         "depends_on": [
-          "sigma_x_top"
+          "sx_top"
         ],
-        "label": "Top stress [MPa]"
+        "label": "sigma_x top [MPa]"
       },
       {
-        "id": "sigma_x_centre_MPa",
+        "id": "sx_mid_MPa",
         "type": "formula",
-        "formula": "sigma_x_centre / 1.0e6",
+        "formula": "sx_mid / 1.0e6",
         "depends_on": [
-          "sigma_x_centre"
+          "sx_mid"
         ],
-        "label": "Centre stress [MPa]"
+        "label": "sigma_x mid [MPa]"
       },
       {
-        "id": "sigma_x_bottom_MPa",
+        "id": "sx_bot_MPa",
         "type": "formula",
-        "formula": "sigma_x_bottom / 1.0e6",
+        "formula": "sx_bot / 1.0e6",
         "depends_on": [
-          "sigma_x_bottom"
+          "sx_bot"
         ],
-        "label": "Bottom stress [MPa]"
+        "label": "sigma_x bot [MPa]"
+      },
+      {
+        "id": "ex_bot",
+        "type": "field",
+        "field": "strain",
+        "component": "exx",
+        "at": "gage_bottom",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "eps_x bot [-]",
+        "_comment": "Total strain. Fig. 18 zeros the gauge at onset of cooling (~1 d)."
+      },
+      {
+        "id": "ex_bot_ue",
+        "type": "formula",
+        "formula": "ex_bot * 1.0e6",
+        "depends_on": [
+          "ex_bot"
+        ],
+        "label": "eps_x bot [\u00b5\u03b5]"
       }
     ],
     "plots": [
       {
-        "name": "top_temperature_history",
-        "title": "Temperature 0.05 m from slab top",
+        "name": "fig9a_sigma_x",
+        "title": "Fig. 9a \u2014 \u03c3x with DPL (infinite-slab strip)",
         "grid": true,
         "x_axis": {
           "label": "Time [days]"
         },
         "y_axis": {
-          "label": "Temperature [degC]"
+          "label": "\u03c3x [MPa]"
         },
         "xlim": [
           0.0,
           9.2
-        ],
-        "ylim": [
-          10.0,
-          35.0
         ],
         "curves": [
           {
@@ -660,39 +610,60 @@
               "key": "t_days"
             },
             "y": {
-              "key": "T_top"
+              "key": "sx_top_MPa"
             },
-            "label": "OOFEM"
+            "label": "FEM top"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "sx_mid_MPa"
+            },
+            "label": "FEM mid"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "sx_bot_MPa"
+            },
+            "label": "FEM bottom"
           },
           {
             "source": "reference",
-            "ref_id": "fig7_top_paper_model",
-            "label": "Paper thermal analysis"
+            "ref_id": "fig9a_top",
+            "label": "Fig. 9a top"
           },
           {
             "source": "reference",
-            "ref_id": "fig7_top_sensor",
-            "label": "Thermal sensor"
+            "ref_id": "fig9a_mid",
+            "label": "Fig. 9a centre"
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig9a_bot",
+            "label": "Fig. 9a bottom"
           }
         ]
       },
       {
-        "name": "bottom_temperature_history",
-        "title": "Temperature 0.05 m from slab bottom",
+        "name": "fig17_overlay",
+        "title": "Fig. 17 overlay \u2014 this run is the infinite-slab bound (~2.9 MPa); P3 is ~86% of that",
         "grid": true,
         "x_axis": {
           "label": "Time [days]"
         },
         "y_axis": {
-          "label": "Temperature [degC]"
+          "label": "\u03c3x [MPa]"
         },
         "xlim": [
           0.0,
           9.2
-        ],
-        "ylim": [
-          10.0,
-          35.0
         ],
         "curves": [
           {
@@ -701,31 +672,31 @@
               "key": "t_days"
             },
             "y": {
-              "key": "T_bottom"
+              "key": "sx_mid_MPa"
             },
-            "label": "OOFEM"
+            "label": "FEM infinite-slab mid"
           },
           {
             "source": "reference",
-            "ref_id": "fig7_bottom_paper_model",
-            "label": "Paper thermal analysis"
+            "ref_id": "fig17_2d",
+            "label": "Fig. 17 2D P3"
           },
           {
             "source": "reference",
-            "ref_id": "fig7_bottom_sensor",
-            "label": "Thermal sensor"
+            "ref_id": "fig17_3d",
+            "label": "Fig. 17 3D P3"
           }
         ]
       },
       {
-        "name": "no_creep_restrained_stress_history",
-        "title": "Fully restrained thermoelastic stress — no creep diagnostic",
+        "name": "fig18_strain",
+        "title": "Fig. 18 \u2014 \u03b5x at 5 cm from bottom (raw \u00b5\u03b5; paper zeros at cooling start)",
         "grid": true,
         "x_axis": {
           "label": "Time [days]"
         },
         "y_axis": {
-          "label": "Stress [MPa]"
+          "label": "\u03b5x [\u00b5\u03b5]"
         },
         "xlim": [
           0.0,
@@ -738,101 +709,78 @@
               "key": "t_days"
             },
             "y": {
-              "key": "sigma_x_top_MPa"
+              "key": "ex_bot_ue"
             },
-            "label": "OOFEM top"
-          },
-          {
-            "source": "simulation",
-            "x": {
-              "key": "t_days"
-            },
-            "y": {
-              "key": "sigma_x_centre_MPa"
-            },
-            "label": "OOFEM centre"
-          },
-          {
-            "source": "simulation",
-            "x": {
-              "key": "t_days"
-            },
-            "y": {
-              "key": "sigma_x_bottom_MPa"
-            },
-            "label": "OOFEM bottom"
+            "label": "FEM \u03b5x bottom"
           },
           {
             "source": "reference",
-            "ref_id": "fig9b_sigma_x_top",
-            "label": "Paper no creep — top"
+            "ref_id": "fig18_eps_num",
+            "label": "Fig. 18 calculated"
           },
           {
             "source": "reference",
-            "ref_id": "fig9b_sigma_x_centre",
-            "label": "Paper no creep — centre"
-          },
-          {
-            "source": "reference",
-            "ref_id": "fig9b_sigma_x_bottom",
-            "label": "Paper no creep — bottom"
+            "ref_id": "fig18_eps_exp",
+            "label": "Fig. 18 measured"
           }
+        ]
+      },
+      {
+        "name": "fig18_temperature",
+        "title": "Temperature at \u00b7 bottom vs Fig. 18",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "T [degC]"
+        },
+        "xlim": [
+          0.0,
+          9.2
         ],
-        "_comment": "Fig. 9b is the correct reference for this no-creep variant. Fig. 9a is stored separately for a future calibrated creep variant and must not be used to validate this model.",
-        "ylim": [
-          -6.0,
-          6.0
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_bot"
+            },
+            "label": "FEM T bottom"
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig18_T",
+            "label": "Fig. 18 measured T"
+          }
         ]
       }
     ],
     "console": {
-      "summary_every_steps": 12,
+      "summary_every_steps": 24,
       "reference_deviation": {
         "enabled": true,
         "show_in_progress_bar": true,
         "pairs": [
           {
             "x": "t_days",
-            "y": "T_top",
-            "ref_id": "fig7_top_sensor"
+            "y": "sx_mid_MPa",
+            "ref_id": "fig9a_mid"
           },
           {
             "x": "t_days",
-            "y": "T_top",
-            "ref_id": "fig7_top_paper_model"
-          },
-          {
-            "x": "t_days",
-            "y": "T_bottom",
-            "ref_id": "fig7_bottom_sensor"
-          },
-          {
-            "x": "t_days",
-            "y": "T_bottom",
-            "ref_id": "fig7_bottom_paper_model"
-          },
-          {
-            "x": "t_days",
-            "y": "sigma_x_top_MPa",
-            "ref_id": "fig9b_sigma_x_top"
-          },
-          {
-            "x": "t_days",
-            "y": "sigma_x_centre_MPa",
-            "ref_id": "fig9b_sigma_x_centre"
-          },
-          {
-            "x": "t_days",
-            "y": "sigma_x_bottom_MPa",
-            "ref_id": "fig9b_sigma_x_bottom"
+            "y": "T_bot",
+            "ref_id": "fig18_T"
           }
         ]
       }
     },
+    "save_checkpoint": true,
     "aux_fields": [
       "*"
     ],
-    "save_checkpoint": true,
     "export_vtu": true,
     "save_db": true
   }

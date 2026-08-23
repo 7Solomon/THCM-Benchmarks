@@ -1,0 +1,33 @@
+12:35:55 INFO     tools.simulations: Log file: benchmarks/jedrzejewska-2018-cost-tu1404/cube/output/OOFEM/logs/run_20260822_123555.log
+12:35:55 INFO     tools.simulations: == STARTING BENCHMARK: cube ==
+12:35:55 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/jedrzejewska-2018-cost-tu1404/cube
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [ok]  checkpoint               output/OOFEM/checkpoint.h5
+    [ok]  db_file_path             output/OOFEM/query_results.db
+12:35:55 INFO     tools.simulations: Loading benchmark config: benchmarks/jedrzejewska-2018-cost-tu1404/cube/benchmark.json
+12:35:55 INFO     tools.simulations: Benchmark: Temperature development in a massive concrete cube (COST TU1404 Task 2 - Azenha et al.) (jedrzejewska-2018-cost-tu1404-task2-cube)
+12:35:55 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[115.4 -> 577.0] s
+12:35:55 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[165.7 -> 828.5] s
+12:35:55 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[329.7 -> 1978.2] s
+12:35:55 INFO     tools.simulations: Configurations loaded.
+12:35:55 INFO     tools.simulations: Loading mesh...
+12:35:55 INFO     tools.simulations: Mesh loaded: 511 nodes, 940 elements (triangle)
+12:35:55 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+12:35:55 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 511
+  Total DOFs: 511
+  Fields: 1
+    - temperature: 511 DOFs (['T'])
+12:35:55 INFO     tools.simulations: Building oofem problem...
+12:35:55 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 50 steps, dt=[115.4 -> 577.0] s
+12:35:55 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 40 steps, dt=[165.7 -> 828.5] s
+12:35:55 INFO     tools.simulations.fem.solver.utils: Log dt strategy: 60 steps, dt=[329.7 -> 1978.2] s
+12:35:55 INFO     tools.simulations: oofem problem built: 511 nodes, 940 elements, 150 steps (t=[0 -> 8.64e+04])
