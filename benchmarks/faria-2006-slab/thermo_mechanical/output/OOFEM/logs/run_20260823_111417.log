@@ -1,0 +1,34 @@
+11:14:17 INFO     tools.simulations: Log file: benchmarks/faria-2006-slab/thermo_mechanical/output/OOFEM/logs/run_20260823_111417.log
+11:14:17 INFO     tools.simulations: == STARTING BENCHMARK: thermo_mechanical ==
+11:14:17 INFO     tools.simulations: BenchmarkPaths [OOFEM] @ benchmarks/faria-2006-slab/thermo_mechanical
+  Inputs:
+    [ok]  benchmark.json           benchmark.json
+    [ok]  geometry.msh             input/geometry.msh
+  Outputs:
+    [ok]  output_dir               output/OOFEM
+    [ok]  plots_dir                output/OOFEM/plots
+    [ok]  logs_dir                 output/OOFEM/logs
+    [ok]  vtu_output_dir           output/OOFEM/vtu
+    [--]  checkpoint               output/OOFEM/checkpoint.h5
+    [--]  db_file_path             output/OOFEM/query_results.db
+11:14:17 INFO     tools.simulations: Loading benchmark config: benchmarks/faria-2006-slab/thermo_mechanical/benchmark.json
+11:14:17 INFO     tools.simulations: Benchmark: Faria et al. (2006) — fully restrained through-thickness strip (Fig. 9; bound for Figs. 17–18) (faria-2006-slab-thermomech-1d)
+11:14:17 INFO     tools.simulations.fem.solver.utils: dt from config: 3.60e+03
+11:14:17 WARNING  tools.simulations.fem.boundaries.time_files: boundary_conditions[1].u_ref (robin on 'face_top'): the time grid does not resolve this table -- 18 of 36 breakpoints where the value changes have no step on them, the first at t = 17280 s. The grid has 221 steps over [0, 794880] s. The table is resampled onto the grid; with interp 'linear' the signal is approximated rather than dropped.
+11:14:17 INFO     tools.simulations.fem.boundaries.time_files:   time table  boundary_conditions[1].u_ref (robin on 'face_top')   <- input/ambient_temperature_fig7a.csv:T_ambient_degC
+11:14:17 INFO     tools.simulations: Expanded 1 file-backed BC time table(s)
+11:14:17 INFO     tools.simulations: Configurations loaded.
+11:14:17 INFO     tools.simulations: Loading mesh...
+11:14:17 INFO     tools.simulations: Mesh loaded: 31 nodes, 42 elements (triangle)
+11:14:17 INFO     tools.simulations: Setting up (legacy-compatible) DOF manager...
+11:14:17 INFO     tools.simulations: DOF Manager Summary:
+  Layout: blocked
+  Nodes: 31
+  Total DOFs: 93
+  Fields: 2
+    - temperature: 31 DOFs (['T'])
+    - displacement: 62 DOFs (['ux', 'uy'])
+11:14:17 INFO     tools.simulations: Building oofem problem...
+11:14:17 INFO     tools.simulations.fem.solver.utils: dt from config: 3.60e+03
+11:14:17 INFO     tools.simulations.oofem.src.builder.problem.single: 'temperature' sub-problem: skipping BC entries of other fields: displacement x3
+11:14:17 INFO     tools.simulations.oofem.src.builder.problem.single: 'displacement' sub-problem: skipping BC entries of other fields: temperature x2

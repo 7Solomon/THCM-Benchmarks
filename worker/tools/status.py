@@ -19,33 +19,75 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-# needs_human parks a run: it stops, but it is not a verdict. The queue skips it
-# on normal passes (nothing has changed, a fresh agent would fail identically)
-# and picks it up only on `run_queue.sh --resume`, after a human filled in the
-# extraction handoff.
-TERMINAL = ["done", "infeasible", "extract_failed", "run_failed", "stuck"]
-PARKED = ["needs_human"]
+# THREE stops, and each answers ONE question: what does the human do now?
+#
+#   done      the investigation finished -- read RESULT.md
+#   needs_you blocked on data or a decision only a person has -- RESULT.md says
+#             exactly what to drop where
+#   failed    the pipeline broke -- RESULT.md names the phase and the error
+#
+# The older model had five terminal states that described the AGENT's situation
+# (infeasible / extract_failed / run_failed / stuck) and left the reader to work
+# out the consequence. "This paper needs axisymmetric elements, which are not
+# wired" is a complete, correct answer, not a failure; so is "it does not
+# reproduce and here is why". Both are `done` with a VERDICT.
+TERMINAL = ["done", "failed"]
+PARKED = ["needs_you"]
 STOPPED = TERMINAL + PARKED
 STATES = ["in_progress"] + STOPPED
+
+# What happened, separate from what you do about it. Only meaningful when done.
+VERDICTS = ["reproduced", "not_reproduced", "infeasible"]
+
+# Legacy -> new, so an old workdir still reads. `stuck` is `done`: the agent had
+# a complete analysis, it just was not a match.
+LEGACY_STATE = {
+    "infeasible": ("done", "infeasible"),
+    "stuck": ("done", "not_reproduced"),
+    "extract_failed": ("failed", None),
+    "run_failed": ("failed", None),
+    "needs_human": ("needs_you", None),
+}
+
+# A key_result is a table cell, not an essay. Today's longest is 700 characters.
+KEY_RESULT_MAX = 160
 
 
 def now():
     return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
 
 
+RUNDIR = ".run"
+
+
 def path_of(workdir):
+    """`.run/status.json`. Dot-prefixed so `ls` and file explorers hide the
+    machine's bookkeeping -- the human should see paper.pdf, RESULT.md and the
+    case directory, and nothing else."""
+    return Path(workdir) / RUNDIR / "status.json"
+
+
+def legacy_path_of(workdir):
     return Path(workdir) / "STATUS.json"
 
 
 def load(workdir):
     p = path_of(workdir)
     if not p.exists():
+        p = legacy_path_of(workdir)          # a workdir written before the move
+    if not p.exists():
         return {"slug": Path(workdir).name, "state": "in_progress",
                 "phase_reached": None, "phase_log": [], "fix_iterations": 0}
     try:
-        return json.loads(p.read_text(encoding="utf-8"))
+        d = json.loads(p.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
-        sys.exit(f"STATUS.json is not valid JSON ({e}) — fix or delete it: {p}")
+        sys.exit(f"{p.name} is not valid JSON ({e}) — fix or delete it: {p}")
+    old = d.get("state")
+    if old in LEGACY_STATE:                  # read an old workdir without rewriting it
+        d["state"], verdict = LEGACY_STATE[old]
+        d.setdefault("verdict", verdict)
+        d["migrated_from"] = old
+    return d
 
 
 def save(workdir, d):
@@ -60,10 +102,10 @@ def save(workdir, d):
     # "what happened here?" without knowing the workdir convention.
     case = d.get("case")
     if case:
-        link = Path(workdir) / case / "STATUS.json"
+        link = Path(workdir) / case / "status.json"
         if link.parent.is_dir() and not link.exists():
             try:
-                link.symlink_to(Path("..") / "STATUS.json")
+                link.symlink_to(Path("..") / RUNDIR / "status.json")
             except OSError:
                 pass                        # filesystem without symlinks: not fatal
     return p
@@ -105,21 +147,31 @@ def cmd_finish(a):
                  "the runner keys on this string and anything else reads as a crash")
     d = load(a.workdir)
     d["state"] = a.state
+    if a.state == "done" and not (a.verdict or d.get("verdict")):
+        sys.exit("--state done requires --verdict "
+                 f"{VERDICTS}: what happened is separate from what to do next")
+    if a.verdict:
+        d["verdict"] = a.verdict
     if a.key_result:
-        d["key_result"] = a.key_result
+        kr = " ".join(a.key_result.split())
+        if len(kr) > KEY_RESULT_MAX:
+            kr = kr[:KEY_RESULT_MAX - 1].rstrip() + "\u2026"
+        d["key_result"] = kr                 # the long version belongs in RESULT.md
     if a.case:
         d["case"] = a.case
-    d.setdefault("report", str(Path(a.workdir) / "REPORT.md"))
+    d.setdefault("report", str(Path(a.workdir) / "RESULT.md"))
     d.setdefault("phase_log", []).append(
         {"phase": d.get("phase_reached"), "at": now(), "note": f"stopped: {a.state}"})
     apply_sets(d, a.set)
-    print(f"STATUS: {a.state} | {a.key_result or ''}")
+    v = d.get("verdict")
+    print(f"STATUS: {a.state}{('/' + v) if v else ''} | {d.get('key_result') or ''}")
     save(a.workdir, d)
 
 
 def cmd_show(a):
     d = load(a.workdir)
-    print(f"{d.get('state','?'):<14} {d.get('slug','?')}  "
+    v = d.get("verdict")
+    print(f"{d.get('state','?'):<10}{('/' + v) if v else '':<16} {d.get('slug','?')}  "
           f"phase {d.get('phase_reached','?')}  {d.get('key_result') or ''}")
     for e in d.get("phase_log", []):
         print(f"   {e.get('at','?')}  phase {e.get('phase','?')}  {e.get('note','')}")
@@ -151,6 +203,8 @@ def main():
     p = sub.add_parser("finish", help="write the terminal state")
     common(p)
     p.add_argument("--state", required=True, choices=STOPPED)
+    p.add_argument("--verdict", choices=VERDICTS,
+                   help="required with --state done: what actually happened")
     p.add_argument("--key-result", default="")
     p.add_argument("--case", default=None)
     p.set_defaults(fn=cmd_finish)

@@ -43,9 +43,9 @@ and why the two verification steps in section 4 are not optional.
 ### 1. Render the page, then crop the panel
 
 ```bash
-{{PY}} {{RENDER}} render "{{PDF}}" <page> "<case>/web/" --dpi 300
-{{PY}} {{RENDER}} crop "<case>/web/page<N>.png" <x0> <y0> <x1> <y1> \
-       "<case>/web/fig<N>_<panel>.png"
+{{PY}} {{RENDER}} render "{{PDF}}" <page> ".run/figures/" --dpi 300
+{{PY}} {{RENDER}} crop ".run/figures/page<N>.png" <x0> <y0> <x1> <y1> \
+       ".run/figures/fig<N>_<panel>.png"
 ```
 
 Open the rendered page and read the panel's bounding box off it as fractions of page
@@ -72,7 +72,7 @@ site is the reader.
 
 ### 3. Save raw, then normalize
 
-- Save the site's CSV export unmodified to `<case>/reference/_web_raw/`
+- Save the site's CSV export unmodified to `<case>/.run/_web_raw/`
   (check the browser's download directory, usually `~/Downloads`). Provenance: if the
   normalized data is ever questioned, the raw export answers for it.
 - Write the normalized reference CSVs to `<case>/reference/`, one file per

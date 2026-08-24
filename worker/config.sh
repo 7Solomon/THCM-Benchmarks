@@ -14,12 +14,20 @@ FEM_ROOT="${THCM_FEM_ROOT:-$HOME/programme/THCM-Fem}"
 PY="$BENCH_ROOT/.venv/bin/python"
 THCM="$BENCH_ROOT/.venv/bin/thcm"
 
-# Skills. CREATE/ANALYSIS/schema are symlinks into FEM_ROOT (they describe the
-# solver and must never be forked); EXTRACT-WEB is worker-owned.
+# Skills. CREATE.md and the schema are symlinks into FEM_ROOT (they describe the
+# solver). DEBUGGING-PLAYBOOK and EXTRACT-WEB are worker-owned: they are method,
+# not solver surface. (The old ANALYSIS.md was retired 2026-08-23.)
 SKILL_CREATE="$WORKER_DIR/SKILLs/CREATE.md"
-SKILL_ANALYSIS="$WORKER_DIR/SKILLs/ANALYSIS.md"
-SKILL_WEB="$WORKER_DIR/SKILLs/EXTRACT-WEB.md"
+SKILL_ANALYSIS="$WORKER_DIR/SKILLs/DEBUGGING-PLAYBOOK.md"
+SKILL_EXTRACT="$WORKER_DIR/SKILLs/EXTRACT.md"        # the ROUTER: pick a route
+SKILL_WEB="$WORKER_DIR/SKILLs/EXTRACT-WEB.md"        # browser sub-route, optional
 SCHEMA="$WORKER_DIR/schemas/benchmark.schema.json"
+# CREATE.md is the CORE, loaded every run. The physics detail lives in modules/,
+# loaded only when the START-HERE table routes to it, and the mechanical authoring
+# rules live in tools/check_benchmark.py rather than in prose.
+SKILL_MODULES="$WORKER_DIR/SKILLs/modules"
+CHECK_PY="$WORKER_DIR/tools/check_benchmark.py"
+DIGITIZE="$WORKER_DIR/tools/plot_digitize.py"
 RENDER="$WORKER_DIR/tools/pdf_render.py"
 
 # Work areas. AutoBench sits OUTSIDE benchmarks/: it holds unreviewed machine

@@ -22,7 +22,7 @@
 # have them and just run the queue again — it notices and hands them to the
 # agent, which does the reshaping.
 #
-# Resume: a PDF whose STATUS.json holds a terminal state is never re-dispatched;
+# Resume: a PDF whose .run/status.json holds a terminal state is never re-dispatched;
 # a crashed one is retried until MAX_ATTEMPTS, with the workdir left in place so
 # the next agent resumes from what is already on disk (WORKER.md Phase 0).
 set -uo pipefail
@@ -30,10 +30,10 @@ shopt -s extglob
 
 source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
 
-TERMINAL='["done","infeasible","extract_failed","run_failed","stuck"]'
+TERMINAL='["done","failed"]'
 # Parked, not finished: waiting on a human to fill in the extraction handoff
 # (tools/handoff.py). Skipped on normal passes, dispatched by --resume.
-PARKED='["needs_human"]'
+PARKED='["needs_you"]'
 STATUS_PY="$WORKER_DIR/tools/status.py"
 HANDOFF_PY="$WORKER_DIR/tools/handoff.py"
 
@@ -48,14 +48,30 @@ is_parked()   { jq -e --argjson t "$PARKED"   '.state as $s | $t | index($s)' "$
 summary() {
   echo "=== queue summary ==="
   { printf 'STATE\tSLUG\tPHASE\tTRY\tRESULT\n'
-    for s in "$WORK_ROOT"/*/STATUS.json "$AUTOBENCH"/dryrun/*/STATUS.json; do
+    for s in "$WORK_ROOT"/*/.run/status.json "$WORK_ROOT"/*/STATUS.json \
+             "$AUTOBENCH"/dryrun/*/.run/status.json "$AUTOBENCH"/dryrun/*/STATUS.json; do
       [[ -f "$s" ]] || continue
-      jq -r '[(.state // "?" | ascii_upcase), .slug,
-              ((.phase_reached // "?")|tostring), ((.attempts // 0)|tostring),
-              (.key_result // .reason // "")] | @tsv' "$s" 2>/dev/null
+      # Map legacy states here too: the table reads files directly, so it never
+      # goes through status.py's migration. And truncate -- a summary row is a
+      # glance, not the report. The full text is in RESULT.md.
+      jq -r '
+        def newstate:
+          {"infeasible":"done","stuck":"done","extract_failed":"failed",
+           "run_failed":"failed","crashed":"failed","needs_human":"needs_you"}[.] // .;
+        def newverdict:
+          {"infeasible":"infeasible","stuck":"not_reproduced"}[.] // null;
+        (.state // "?") as $raw
+        | (.key_result // .reason // "") as $k
+        | [ (($raw | newstate) + (((.verdict // ($raw | newverdict)) // "") | if . == "" then "" else "/" + . end) | ascii_upcase),
+            .slug,
+            ((.phase_reached // "?")|tostring),
+            ((.attempts // 0)|tostring),
+            (if ($k|length) > 96 then ($k[:95] + "\u2026") else $k end) ]
+        | @tsv' "$s" 2>/dev/null
     done; } | column -t -s $'\t'
   local parked
-  parked=$(grep -l '"needs_human"' "$WORK_ROOT"/*/STATUS.json 2>/dev/null | wc -l)
+  parked=$(grep -lE '"(needs_you|needs_human)"' "$WORK_ROOT"/*/.run/status.json \
+             "$WORK_ROOT"/*/STATUS.json 2>/dev/null | wc -l)
   (( parked )) && {
     echo
     echo "$parked run(s) parked on a human. For each:"
@@ -72,10 +88,12 @@ preflight() {
     [[ -x "$f" || -f "$f" ]] || { echo "missing: $f"; bad=1; }
   done
   # Symlinked from FEM_ROOT — a dangling link means the solver repo moved.
-  for f in "$SKILL_CREATE" "$SKILL_ANALYSIS" "$SCHEMA"; do
+  for f in "$SKILL_CREATE" "$SCHEMA" "$SKILL_MODULES"; do
     [[ -e "$f" ]] || { echo "missing (dangling symlink? set THCM_FEM_ROOT): $f"; bad=1; }
   done
-  [[ -f "$SKILL_WEB" ]] || { echo "missing: $SKILL_WEB"; bad=1; }
+  for f in "$SKILL_WEB" "$SKILL_EXTRACT" "$SKILL_ANALYSIS" "$CHECK_PY" "$DIGITIZE"; do
+    [[ -f "$f" ]] || { echo "missing: $f"; bad=1; }
+  done
   # A Windows-side CLI reached from WSL cannot execute the Linux venv at all:
   # it sees the repo over a UNC path and every {{PY}}/{{THCM}} call is an ELF
   # binary it cannot run. Costs a full agent run to discover.
@@ -114,7 +132,8 @@ process_pdf() {
 
   slug="$(slug_of "$pdf")"
   work="$root/$slug"
-  status="$work/STATUS.json"
+  status="$work/.run/status.json"
+  [[ -f "$status" ]] || status="$work/STATUS.json"      # workdir written before the move
 
   # Did a human put extraction data anywhere in this workdir? That question comes
   # FIRST, before any skip rule. Someone who has just done the digitizing by hand
@@ -153,7 +172,7 @@ process_pdf() {
     if ! "$PY" "$RENDER" prepare "$pdf" "$work_pdf"; then
       # A password-protected paper is a permanent property of the file, not a
       # failed attempt: record it and never dispatch an agent for it.
-      "$PY" "$STATUS_PY" finish "$work" --state infeasible \
+      "$PY" "$STATUS_PY" finish "$work" --state done --verdict infeasible \
         --key-result "PDF is password-protected and cannot be opened" > /dev/null
       echo "[skip ] $slug — unreadable PDF, no agent dispatched"
       return 0
@@ -167,6 +186,8 @@ process_pdf() {
     "PY|$PY" "THCM|$THCM" "RENDER|$RENDER" "STATUS_PY|$STATUS_PY" \
     "HANDOFF_PY|$HANDOFF_PY" "SCHEMA|$SCHEMA" \
     "SKILL_CREATE|$SKILL_CREATE" "SKILL_ANALYSIS|$SKILL_ANALYSIS" "SKILL_WEB|$SKILL_WEB" \
+    "SKILL_MODULES|$SKILL_MODULES" "CHECK_PY|$CHECK_PY" \
+    "SKILL_EXTRACT|$SKILL_EXTRACT" "DIGITIZE|$DIGITIZE" \
     "SOLVER_TIMEOUT|$SOLVER_TIMEOUT" "ATTEMPT|$attempt" "MAX_ATTEMPTS|$MAX_ATTEMPTS"
   do
     prompt="${prompt//\{\{${pair%%|*}\}\}/${pair#*|}}"
@@ -213,7 +234,8 @@ process_pdf() {
       echo "         add your data under $work/<case>/reference/_needs_human/,"
       echo "         then just run the queue again"
     else
-      echo "[ ok  ] $slug — $(state_of "$status"): $(jq -r '.key_result // ""' "$status")"
+      verdict=$(jq -r '.verdict // ""' "$status" 2>/dev/null)
+      echo "[ ok  ] $slug — $(state_of "$status")${verdict:+/$verdict}: $(jq -r '.key_result // ""' "$status")"
     fi
   else
     # Preserve whatever the agent managed to write — its phase log is the only
@@ -221,14 +243,19 @@ process_pdf() {
     [[ -f "$status" ]] && cp "$status" "$work/STATUS.attempt$attempt.json"
     case $rc in
       124|137) why="timeout after $TIMEOUT" ;;
-      0)       why="agent exited cleanly without a terminal STATUS.json (max-turns?)" ;;
+      0)       why="agent exited cleanly without a terminal status.json (max-turns?)" ;;
       *)       why="agent exited $rc" ;;
     esac
+    # A crash is `failed`: the pipeline broke and a person has to look. It is
+    # NOT a bespoke state -- the runner and status.py must agree on three.
+    mkdir -p "$work/.run"
     jq -n --arg pdf "$work_pdf" --arg slug "$slug" --arg why "$why" \
           --argjson a "$attempt" --argjson rc "$rc" --arg t "$(date -Is)" \
           --argjson prev "$(jq -c '{phase_reached, phase_log, case, fix_iterations}' "$status" 2>/dev/null || echo '{}')" \
-          '$prev + {pdf:$pdf, slug:$slug, state:"crashed", reason:$why,
-                    attempts:$a, runner_exit:$rc, updated:$t}' > "$status"
+          '$prev + {pdf:$pdf, slug:$slug, state:"failed", reason:$why,
+                    key_result:$why, attempts:$a, runner_exit:$rc, updated:$t}' \
+      > "$work/.run/status.json"
+    status="$work/.run/status.json"
     echo "[crash] $slug — $why, stopped in phase $(phase_of "$status"); see $log"
   fi
 

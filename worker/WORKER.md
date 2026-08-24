@@ -13,12 +13,16 @@ nothing is carried over to any other agent or run.
 | `{{PY}}` | the Python interpreter (all deps installed) |
 | `{{THCM}}` | the solver entry point |
 | `{{RENDER}}` | `pdf_render.py` — page render / panel crop |
-| `{{STATUS_PY}}` | `status.py` — the ONLY way you write `STATUS.json` |
+| `{{STATUS_PY}}` | `status.py` — the ONLY way you write `.run/status.json` |
 | `{{HANDOFF_PY}}` | `handoff.py` — park a figure a human must digitize, and read it back |
 | `{{SCHEMA}}` | `benchmark.schema.json`, the structural source of truth |
-| `{{SKILL_CREATE}}` | CREATE.md — authoring `benchmark.json`. Read it FIRST and completely |
-| `{{SKILL_WEB}}` | EXTRACT-WEB.md — the ONLY extraction route |
-| `{{SKILL_ANALYSIS}}` | ANALYSIS.md — output analysis |
+| `{{SKILL_CREATE}}` | CREATE.md — the authoring CORE. Read it FIRST and completely |
+| `{{SKILL_MODULES}}` | `modules/` — physics detail. Read ONLY the files CREATE.md's START-HERE table routes you to |
+| `{{CHECK_PY}}` | `check_benchmark.py` — the mechanical authoring rules, as a script. Run it; do not re-derive it by reading |
+| `{{SKILL_EXTRACT}}` | EXTRACT.md — how to get a figure into a reference CSV. Routes to one of four techniques |
+| `{{SKILL_WEB}}` | EXTRACT-WEB.md — the browser digitizer. One sub-route, no longer the default |
+| `{{DIGITIZE}}` | `plot_digitize.py` — local extraction: colour / markers / curve, plus `verify` |
+| `{{SKILL_ANALYSIS}}` | DEBUGGING-PLAYBOOK.md — how to work out WHY the output disagrees |
 
 Budgets: at most **2 fix iterations** (Phase 6) — a hard cap, not a target. This is
 attempt **{{ATTEMPT}} of {{MAX_ATTEMPTS}}**; if it is not the first, a previous agent
@@ -33,24 +37,31 @@ placeholders above are authoritative, and your output layout is the one below.
 ```
 {{WORKDIR}}/
   {{SLUG}}.pdf              the paper (already there)
+  RESULT.md                 THE ONE FILE A HUMAN READS. Write it last, write it well.
   <case>/                   ONE case dir, named for the physics: thermal,
-    benchmark.json          thermo_mechanical, hygric, ...
+    benchmark.json            thermo_mechanical, hygric, ...
     reference/              digitized reference curves (CSV)
-      _web_raw/             the digitizer's unmodified exports
-    web/                    rendered pages and panel crops
+      _needs_human/           figures parked for a person (handoff.py owns this)
     input/  output/         created by the solver
-  STATUS.json   REPORT.md   at the top level, one per workdir
+  .run/                     machine-owned. Dot-prefixed so `ls` and file
+    status.json               explorers hide it. NEVER put anything here that a
+    figures/                  human is expected to find.
 ```
 
-There is no `OOFEM/` level — CREATE.md's `debug/<bm>/OOFEM/benchmark.json` becomes
-`{{WORKDIR}}/<case>/benchmark.json` here. The layout matches the curated corpus so a
-finished benchmark can be promoted with a single `git mv`.
+Two rules about this shape:
+
+- **`RESULT.md` is the deliverable, not a log.** Someone who has never seen this
+  run opens it and learns: what the paper is, whether it reproduced, the numbers,
+  and what to do next. Everything else in the workdir is supporting evidence.
+- **Rendered pages and figure crops go in `.run/figures/`**, not next to the
+  reference CSVs. `reference/` holds validation data the benchmark uses; `.run/`
+  holds things this run happened to produce.
 
 ## Rules above all
 
 1. One PDF only. Never create, edit, or read another benchmark's directory — not
    under `AutoBench/`, not under `benchmarks/`. In particular do not read
-   another benchmark's `REPORT.md` or `STATUS.json`: your analysis must be
+   another benchmark's `RESULT.md` or `.run/status.json`: your analysis must be
    independent. Your OWN `{{WORKDIR}}` is the one exception (Phase 0).
 2. **`_needs_human/` is the human's, not yours.** You may READ anything in it. You
    may never write, move, rename, empty or delete anything in it — not to tidy it,
@@ -69,9 +80,9 @@ finished benchmark can be promoted with a single `git mv`.
    to force a fit.
 4. Work through the phases in order. Each phase has explicit exit verdicts — when one
    fires, stop immediately.
-5. Whatever happens, your LAST two actions are writing `{{WORKDIR}}/REPORT.md` and
-   the terminal `STATUS.json` (`finish`, below). A run without a terminal
-   `STATUS.json` is treated as crashed and retried.
+5. Whatever happens, your LAST two actions are writing `{{WORKDIR}}/RESULT.md` and
+   the terminal `.run/status.json` (`finish`, below). A run without a terminal
+   `.run/status.json` is treated as crashed and retried.
 6. **Log every phase transition.** On ENTERING each phase, before doing its work:
 
    ```bash
@@ -84,10 +95,10 @@ finished benchmark can be promoted with a single `git mv`.
    of where you got to, and it is what the next attempt reads in Phase 0. An agent
    that runs for three hours and logs nothing has produced nothing.
 
-   Write `STATUS.json` ONLY through `{{STATUS_PY}}` — never by hand. It validates the
+   Write `.run/status.json` ONLY through `{{STATUS_PY}}` — never by hand. It validates the
    state string (the runner keys on it; anything else reads as a crash and burns a
    retry), keeps the phase log append-only, and writes atomically. It also drops a
-   `STATUS.json` symlink next to your `benchmark.json`, so the case directory answers
+   `.run/status.json` symlink next to your `benchmark.json`, so the case directory answers
    "what happened here?" on its own.
 
 ## Phase 0 — Resume check
@@ -100,21 +111,21 @@ finished benchmark can be promoted with a single `git mv`.
 Run BOTH, always. If the scan reports human data, go to Phase 3b — **whatever the
 recorded state says, and wherever the files are**. A person who could not find a
 handoff folder (because an earlier attempt died before making one) will have put
-their export somewhere sensible instead: next to the crop in `<case>/web/`, or loose
+their export somewhere sensible instead: next to the crop in `.run/figures/`, or loose
 in the case directory. The scan looks there too. Data outside `_needs_human/` is
-human data like any other — use it, and afterwards say in REPORT.md where you found
+human data like any other — use it, and afterwards say in RESULT.md where you found
 it. A run can be parked for a human and then be recorded as
 crashed by a later mishap; the files on disk are the truth, the state string is only
 a summary of them.
 
-Read `{{WORKDIR}}` (and only it). If a `STATUS.json` or `STATUS.attempt*.json` is
-there, a previous attempt stopped: read them and `REPORT.md`. The phase log tells you
+Read `{{WORKDIR}}` (and only it). If a `.run/status.json` or `STATUS.attempt*.json` is
+there, a previous attempt stopped: read them and `RESULT.md`. The phase log tells you
 where it stopped and when — start from there, not from scratch. Then verify on disk what
 actually got finished — `<case>/benchmark.json` exists and validates, which
 `reference/*.csv` exist and are wired into `results.reference_curves`, whether
 `output/` holds a completed run. Keep verified work, redo nothing that passes its own
 check, and carry `fix_iterations` forward — the 2-iteration budget is per benchmark,
-not per attempt. Say in REPORT.md what you inherited. On a fresh workdir this phase
+not per attempt. Say in RESULT.md what you inherited. On a fresh workdir this phase
 is a no-op.
 
 ## Phase 1 — Feasibility → verdict FEASIBLE / NOT_FEASIBLE
@@ -130,7 +141,9 @@ is a no-op.
   paper), per CREATE.md Authoring Workflow step 1. No JSON before this table exists.
 - Answer CREATE.md's four START-HERE questions (physics, dimension, hydration
   kinetics given?, creep/shrinkage data given?). The physics answer names your
-  `<case>` directory.
+  `<case>` directory AND the `{{SKILL_MODULES}}` files you must read. Read those
+  and no others — a thermal benchmark has no business loading the poromechanics
+  module, and the context you save is context you keep for the paper.
 - Capability check: cross-check the required physics against CREATE.md "What this
   backend CAN and CANNOT do" and the schema's `x-model-status`. Use the four-state
   vocabulary (wired / unverified / not wired / legacy only / impossible).
@@ -139,81 +152,73 @@ is a no-op.
   extraction route is the same either way.
 - Verdict NOT_FEASIBLE if either: required physics is `impossible`; or a
   validation-critical parameter is `MISSING` and cannot be soundly inferred. Write
-  STATUS.json (`state: "infeasible"`, with the concrete reason — which physics, which
-  parameter) and a short REPORT.md. STOP. `not wired` is reported as effort, not as a
+  .run/status.json (`state: "infeasible"`, with the concrete reason — which physics, which
+  parameter) and a short RESULT.md. STOP. `not wired` is reported as effort, not as a
   wall — name the OOFEM class and continue only if the benchmark is meaningful
   without it.
 
 ## Phase 2 — Author benchmark.json
 
-Follow CREATE.md exactly: unit conventions box, hand sanity checks against the
-paper's own numbers, then write `{{WORKDIR}}/<case>/benchmark.json` with a `_comment`
-provenance tag on every value. Validate:
+Follow CREATE.md exactly: the units box, the routed `{{SKILL_MODULES}}` files, and the
+hand sanity checks against the paper's own numbers. **No JSON exists before the value
+table (Phase 1) and Sanity Checks 2/3 exist** — record those two numbers in
+`_comment`s, the Pre-Flight step looks for them.
+
+Write `{{WORKDIR}}/<case>/benchmark.json` with a `_comment` provenance tag on every
+value. Then check it:
 
 ```bash
-{{PY}} -c "import json,sys; from jsonschema import Draft202012Validator as V; \
-s=json.load(open('{{SCHEMA}}',encoding='utf-8')); \
-d=json.load(open('{{WORKDIR}}/<case>/benchmark.json',encoding='utf-8')); \
-[print(list(e.path), e.message) for e in V(s).iter_errors(d)] or print('OK')"
+{{PY}} {{CHECK_PY}} "{{WORKDIR}}/<case>/benchmark.json" --schema "{{SCHEMA}}"
 ```
 
-Fix every error. Finish the Pre-Flight Checklist and the (mandatory) Assumptions
-Report — put it in REPORT.md.
+That one command replaces the old hand-walked checklist: it runs JSON-Schema
+validation AND every mechanical authoring rule (locations that do not exist, a
+coupling without its material section, a Kelvin `T_ref`, a Dirichlet with
+`start_time`, a `line_profile` with the wrong arity, dangling plot keys, missing
+reference CSVs, ...).
 
-## Phase 3 — Extract reference data — `{{SKILL_WEB}}` ONLY
+- **Exit 0 with no ERROR before you go on.** Every ERROR is a hard stop.
+- Every WARN is either fixed or explained in a `_comment` naming the rule id.
+- Do NOT re-derive these rules by reading CREATE.md, and do not hand-check what the
+  script already checks. Read prose for the things it cannot decide — which BC type,
+  what the paper's numbers mean.
 
-Read `{{SKILL_WEB}}` and follow it. It is the only extraction route: every figure is
-digitized by the AI reader at plot2data.com through the browser, whether the figure
-is vector or raster. Do NOT look for the vector extraction tool
-(`pdfplot2csv.py`) — it is not available here, and any skill text pointing at it does
-not apply.
+Then the four things the script cannot see (CREATE.md Pre-Flight): the mesh console
+reports ≥1 entity for every physical group and no probe is far from its node; Sanity
+Checks 2/3 are recorded; every Dirichlet can name what physically holds it; the
+Assumptions Report is written into RESULT.md.
 
-The two PDF-side commands you need:
+## Phase 3 — Extract reference data — `{{SKILL_EXTRACT}}`
+
+Read `{{SKILL_EXTRACT}}` and follow its route table. It picks between four
+techniques by what the figure actually is; the browser digitizer is one of them, not
+the default, and it needs Claude in Chrome to be working.
+
+Default route is local, with `{{DIGITIZE}}`:
 
 ```bash
-{{PY}} {{RENDER}} render "{{PDF}}" <page> "{{WORKDIR}}/<case>/web/" [--dpi 300]
-{{PY}} {{RENDER}} crop "{{WORKDIR}}/<case>/web/page<N>.png" <x0> <y0> <x1> <y1> \
-       "{{WORKDIR}}/<case>/web/fig<N>_<panel>.png"
+{{PY}} {{RENDER}} pages "{{PDF}}"
+{{PY}} {{RENDER}} render "{{PDF}}" <page> "{{WORKDIR}}/.run/figures/" --dpi 300
+{{PY}} {{RENDER}} crop "{{WORKDIR}}/.run/figures/page<N>.png" <x0> <y0> <x1> <y1> \
+       "{{WORKDIR}}/.run/figures/<fig>.png"
+{{PY}} {{DIGITIZE}} axes      "{{WORKDIR}}/.run/figures/<fig>.png"
+{{PY}} {{DIGITIZE}} calibrate "{{WORKDIR}}/.run/figures/<fig>.png" --x .. --y .. -o <fig>.cal.json
+{{PY}} {{DIGITIZE}} series    "{{WORKDIR}}/.run/figures/<fig>.png" -c <fig>.cal.json ... \
+       -o "{{WORKDIR}}/<case>/reference/<fig>.csv"
+{{PY}} {{DIGITIZE}} verify    "{{WORKDIR}}/.run/figures/<fig>.png" -c <fig>.cal.json \
+       --csv "{{WORKDIR}}/<case>/reference/<fig>.csv" -o "{{WORKDIR}}/.run/figures/<fig>_check.png"
 ```
 
-Render the page, LOOK at it, read off the panel's bounding box as fractions of the
-page, crop tight (axes + tick labels + legend, no caption, no neighbouring panel),
-upload that crop. Everything downstream is per EXTRACT-WEB.md: raw export to
-`reference/_web_raw/`, normalized CSVs to `reference/`, units converted to the
-benchmark's conventions by you, the overlay check, the cross-check against a number
-from the paper's text or tables, the `AI-DIGITIZED` note in `metadata.notes`, and the
-wiring into `results.reference_curves`.
+**`verify` is mandatory, and you must open the overlay.** Every replotted point must
+sit on its curve; offset or sheared means the calibration is wrong, not the
+extraction. A digitization nobody looked at does not go into `reference/`.
 
-Decide, per figure, whether it is **validation-critical**: does the benchmark's claim
-rest on it? Say so in REPORT.md before you start uploading — deciding afterwards is
-how a failed figure gets quietly demoted to "optional".
+`render` and `crop` clamp the longest edge (`--max-side`, default 1600) because image
+input is size-gated — a 300-dpi A4 page is ~2481x3308 and gets refused. If a clamped
+panel is blurry, crop tighter rather than raising the clamp.
 
-Budget: **2 upload attempts per figure** (the second with a tighter crop). Then:
-
-- **A non-critical figure fails** → record it in `extraction.figures_failed` with the
-  reason and continue. Do not park the run for it.
-- **A critical figure fails** → hand it to a human (Phase 3a). Do not continue to
-  Phase 4 without it: a scorecard against the figures that happened to work is not a
-  validation of this paper.
-- **The browser or the site is unavailable** (extension not connected, site down or
-  refusing) → this is not a figure that cannot be read, it is a run that cannot
-  start. Do not spend upload attempts on a broken browser, and never record
-  `extract_failed` — that verdict is permanent and this condition is not. What you do
-  next depends on how much rope is left:
-
-  - **Attempt {{ATTEMPT}} < {{MAX_ATTEMPTS}}** → stop immediately WITHOUT a terminal
-    state, saying so on stdout. The runner records a crash and retries, which is the
-    right answer for an outage that may clear on its own.
-  - **Attempt {{ATTEMPT}} == {{MAX_ATTEMPTS}} (this is the last one)** → do NOT just
-    stop. Park the critical figures for a human first (Phase 3a): render the page,
-    crop the panel, write the request, then `--state needs_human`. Otherwise the run
-    dead-ends — attempts exhausted, no folder for anyone to fill in, and the queue
-    can only report "needs a human" without saying where to put anything. A broken
-    extension is not always transient; after two failures, assume it is not.
-
-Never weaken the overlay or cross-check to make a curve pass, and never fall back to
-reading points off the figure yourself — hand it over instead. Your reading of a plot
-is not more reliable than the digitizer's, and it arrives without the audit trail.
+If a figure defeats every route, park it with `{{HANDOFF_PY}}` (Phase 3a). A wrong
+number is worse than a missing one.
 
 ## Phase 3a — Hand a figure to a human
 
@@ -335,7 +340,7 @@ Then:
 6. **Do not raise the same concern twice.** If `CONCERNS.md` already exists for a
    figure from an earlier attempt and the human has re-run the queue without changing
    those files, that IS their answer: they have seen it and want you to proceed. Use
-   the data, keep the reservation in REPORT.md, and do not park again on that point.
+   the data, keep the reservation in RESULT.md, and do not park again on that point.
    `{{HANDOFF_PY}} scan` tells you whether the files changed since the concern was
    written.
 
@@ -349,24 +354,32 @@ timeout {{SOLVER_TIMEOUT}} {{THCM}} oofem "{{WORKDIR}}/<case>" --remesh
 
 First run must remesh; later runs only after a geometry change. If it errors and the
 cause is a mistake in your JSON, fix it (this consumes one fix iteration). If it hits
-the timeout, say so in REPORT.md with the step count reached and treat it as
+the timeout, say so in RESULT.md with the step count reached and treat it as
 `run_failed` unless a whitelist fix (Phase 6 — dt strategy, `linear_solver: "dss"`)
 plausibly brings it inside budget. If the evidence points to a pipeline bug, do not
-attempt code fixes — STATUS.json `state: "run_failed"`, document the evidence. STOP.
+attempt code fixes — .run/status.json `state: "run_failed"`, document the evidence. STOP.
 
 ## Phase 5 — Analyze — `{{SKILL_ANALYSIS}}`
 
-Follow ANALYSIS.md in its mandated order: Phase 0 (read the JSON), 0b (capability),
-0c (time base / dropped kwargs / probe snap / mesh integrity) BEFORE any physics,
-then the Phase 1 scorecard, VTU fields, and the thought pipelines. Obey the honesty
-rules: every claim carries a number; quantify the unexplained remainder.
+Read `{{SKILL_ANALYSIS}}` and follow it. Its ordering is the point: establish that
+the run reproduces (0), localize to a line (1), build an INDEPENDENT estimate of the
+expected answer (2), and only then argue about physics. Take ground truth from the
+paper, never from a `_comment` — the playbook lists three comments that were written
+in good faith and were false.
+
+Two rules it makes that this pipeline depends on: derive the MAGNITUDE of a
+discrepancy, not just its direction (it is what separates a mis-set parameter from a
+structural limit); and never tune a parameter to close a gap — that is Phase 6's
+whitelist, and it is deliberately narrow.
+
+Every claim carries a number; quantify the unexplained remainder.
 
 One addition here: your reference curves are AI-digitized, not exact. Before blaming
 the model for a deviation, ask whether the digitizer could account for it — state the
 digitization error character (from the Phase 3 overlay and cross-check) alongside the
 model deviation, and do not attribute to physics what is inside the reading error.
 
-Write the Phase-5 report into REPORT.md. Verdicts:
+Write the Phase-5 report into RESULT.md. Verdicts:
 
 - ACCEPTABLE — deviations explained or within a tolerance you state and justify.
 - FIXABLE — a whitelist fix exists (Phase 6).
@@ -379,7 +392,7 @@ Whitelist — mechanical, paper-grounded corrections ONLY:
 - unit conversion errors (CREATE.md units box)
 - axis calibration / tick misreads from Phase 3 (re-crop and re-digitize the panel)
 - probe coordinates vs the sensor positions given in the paper
-- schema violations and missing required keys
+- schema violations, missing required keys, and any ERROR from `{{CHECK_PY}}`
 - time grid / dt strategy; `linear_solver: "dss"` for slow runs
 - BC values or event times that are stated in the paper and were transcribed wrong
 
@@ -388,53 +401,79 @@ Forbidden:
 - tuning material parameters to improve the fit (that is calibration, not correction)
 - inventing values the paper does not give
 - weakening the overlay/cross-check, or loosening thresholds
-- editing pipeline or tool code (ANALYSIS.md Phase 4: report pipeline findings, do
-  not fix code)
+- editing pipeline or tool code (report pipeline findings in RESULT.md, do not
+  fix code)
 
 Loop: at most 2 iterations total across Phases 4–6, carried across attempts. ONE
-whitelist fix per iteration, then a full re-run and re-analysis. If no whitelist fix
+whitelist fix per iteration, then re-run `{{CHECK_PY}}` (it is cheap and catches
+what the edit broke), then a full re-run and re-analysis. If no whitelist fix
 applies, or the budget is spent: go to Phase 7.
+
+## RESULT.md — the shape
+
+One file, written for someone who has never seen this run. Lead with the answer.
+
+```markdown
+# <paper title>  (<author year>)
+
+**<reproduced | not reproduced | infeasible>** — <one sentence with the number that
+decides it, e.g. "core peak 55.1 C @ 7.2 h vs 55.0 measured (+0.2%)">
+
+## What was compared
+| quantity | paper | this run | delta |
+|---|---|---|---|
+| ... | ... | ... | ... |
+
+Which figure each reference came from, and how it was digitized.
+
+## What does not match, and why
+Every deviation gets a number and a cause, or an explicit "unexplained". If two
+errors could be cancelling, say so — agreement is not validation.
+
+## Assumptions
+The Assumptions Report: parameter, value, tag, why, impact on the validation target.
+Anything HIGH-impact and ASSUMED/MISSING means this is not a validated benchmark.
+
+## What a human should do next
+- promote it, or
+- exactly which file to drop in which folder (needs_you), or
+- which phase broke and what was already ruled out (failed)
+```
+
+Rules: no phase-by-phase narration — that is what `.run/status.json` holds. Every
+claim carries a number. If it did not reproduce, that is a **result**: say what you
+established, not what you tried.
 
 ## Phase 7 — Terminate
 
-Write REPORT.md (what you inherited, scorecard, what matched, findings ranked by
-impact with numbers, digitization error character, unexplained remainder, fixes
-applied, remaining deviations + the discriminating test that would resolve them),
-then close the status file:
+Write `RESULT.md`, then record the stop. **There are three stops, and each answers
+one question: what does the human do now?**
+
+| state | means | write in RESULT.md |
+|---|---|---|
+| `done` | the investigation finished | the verdict, the numbers, what is left uncertain |
+| `needs_you` | blocked on data or a decision only a person has | exactly WHICH file goes in WHICH folder |
+| `failed` | the pipeline broke | which phase, the error, what you already ruled out |
+
+`done` additionally requires a **verdict** — what actually happened, as opposed to
+what to do about it:
+
+| verdict | use when |
+|---|---|
+| `reproduced` | the benchmark matches the paper within a tolerance you state |
+| `not_reproduced` | you have a complete analysis and it does NOT match. **This is a result, not a failure** — a well-evidenced negative is worth as much as a match. |
+| `infeasible` | the paper cannot be benchmarked here (missing physics, missing validation-critical data). Say which. |
 
 ```bash
-{{PY}} {{STATUS_PY}} finish "{{WORKDIR}}" --state <state> --case <case> \
-  --key-result "peak 70.0 vs 59.0 °C (+11.0 K), cause: ..." \
-  --set 'fixes_applied=["units: MPa->Pa"]' \
-  --set 'feasibility={"physics":"thermal","missing":[]}' \
-  --set 'extraction={"figures_digitized":["fig7a"],"figures_failed":[]}'
+{{PY}} {{STATUS_PY}} finish "{{WORKDIR}}" --state done --verdict reproduced \
+    --key-result "TP18 peak 55.1 C @ 7.2 h vs 55.0 measured (+0.2%)"
 ```
 
-The resulting file:
+`--key-result` is **one line for a summary table** and is truncated at 160
+characters. Do not put the analysis there — put it in RESULT.md, which has room.
 
-```json
-{
-  "pdf": "{{PDF}}",
-  "slug": "{{SLUG}}",
-  "case": "<case dir name>",
-  "state": "done | infeasible | extract_failed | run_failed | stuck | needs_human",
-  "phase_reached": 7,
-  "phase_log": [{"phase": 1, "at": "<ISO-8601>", "note": "feasibility"}, "..."],
-  "fix_iterations": 0,
-  "fixes_applied": ["..."],
-  "feasibility": {"physics": "...", "missing": []},
-  "extraction": {"figures_digitized": [], "figures_failed": []},
-  "key_result": "peak 70.0 vs 59.0 °C (+11.0 K), cause: ...",
-  "report": "{{WORKDIR}}/REPORT.md",
-  "updated": "<ISO-8601>"
-}
-```
-
-`--state` accepts only the listed strings, so a typo fails loudly at the command
-instead of silently reading as a crash. `needs_human` is the one non-verdict among
-them — the run is parked, not judged. `done` includes "runs and matches
-with stated, explained deviations". `stuck` means: a human should look — say exactly
-what you checked and what would discriminate the remaining causes.
+Only `done`/`reproduced` promotes into the corpus without a manual override, so the
+verdict is a real gate, not decoration.
 
 ## Final stdout line (the runner greps for it)
 

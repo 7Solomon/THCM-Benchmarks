@@ -1,6 +1,5 @@
 .venv/
 viewer/index.json
-benchmarks.html
 *__pycache__
 
 
@@ -10,3 +9,6 @@ benchmarks.html
 package-lock.json
 package.json
 node_modules
+# Secrets: the real key never leaves the machine. harness/.env.example is committed.
+.env
+worker/harness/.env
