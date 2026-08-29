@@ -1,0 +1,1287 @@
+{
+  "metadata": {
+    "id": "hitec-cox-isotropic-temperature",
+    "title": "HITEC near-field benchmark - COx claystone, isotropic, heat conduction from gallery (10 y)",
+    "source": {
+      "authors": [
+        "Simo",
+        "de Lesquen",
+        "Leon-Vargas",
+        "Vu",
+        "Raude",
+        "El Tabbal",
+        "Dizier",
+        "Seetharam",
+        "Narkuniene",
+        "Collin",
+        "Song",
+        "Gens",
+        "Song",
+        "Tatomir",
+        "Nagel",
+        "Buchwald"
+      ],
+      "year": 2025,
+      "journal": "Acta Geotechnica 20:1621-1642",
+      "doi": "10.1007/s11440-024-02502-w"
+    },
+    "dimension": 2,
+    "physics_class": "thermal (conduction-only leg of the THM benchmark)",
+    "validation_method": "Digitized temperature histories at observation points P1-P4, Fig. 7, all SEVEN participating codes (ANDRA COMSOL / ANDRA Code_Aster / BGE OpenGeoSys / EDF Code_Aster / LEI COMSOL / ULg LAGAMINE / UPC Code_Bright)",
+    "validation_target": "T(P1) rises 22 degC to ~75 degC after 10 y at 200 W/m; T(P4) ~40 degC (Boom fig.); overlay on paper day axis",
+    "notes": "Conduction-only is NOT an approximation here: the benchmark's own code comparison (Tab. 7) shows FLAC3D omits advective transport with negligible T deviation - at k=2.3e-20 m2 advection is negligible. Anisotropic case NOT reproducible (isotropic lambda only). Heating starts at t=183.6 d (86400 s excavation + 6 months waiting) via Neumann start_time, so curves align with the paper's day axis.",
+    "paper_pdf": "hitec.pdf"
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "plate",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            100.0,
+            100.0
+          ]
+        },
+        "_comment": "PAPER_VALUE: 100 m x 100 m quarter cross-section, Sec. 3"
+      },
+      {
+        "id": "gallery",
+        "type": "cylinder",
+        "parameters": {
+          "base_center": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "radius": 1.25,
+          "height": 1.0
+        },
+        "_comment": "INFERRED: gallery radius 1.25 m - P1 (1.25,0) lies on the wall and P2 (1.9,0) is described as '0.65 m behind the wall'. Cylinder through z in [0,1]; z-extent is irrelevant in 2D."
+      }
+    ],
+    "operations": [
+      {
+        "type": "cut",
+        "targets": [
+          "plate"
+        ],
+        "tools": [
+          "gallery"
+        ],
+        "remove_tools": true,
+        "result_id": "host_rock"
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "host_domain",
+        "dimension": 2,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            100.000001,
+            100.000001,
+            1e-06
+          ]
+        }
+      },
+      {
+        "name": "gallery_wall",
+        "dimension": 1,
+        "selection": {
+          "type": "distance_from_axis",
+          "axis_point": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "radius": 1.25,
+          "tolerance": 0.05
+        }
+      },
+      {
+        "name": "sym_bottom",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            0.0,
+            -1e-06,
+            -1e-06,
+            100.000001,
+            1e-06,
+            1e-06
+          ]
+        }
+      },
+      {
+        "name": "sym_left",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            0.0,
+            -1e-06,
+            1e-06,
+            100.000001,
+            1e-06
+          ]
+        }
+      },
+      {
+        "name": "far_right",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            99.999999,
+            -1e-06,
+            -1e-06,
+            100.000001,
+            100.000001,
+            1e-06
+          ]
+        }
+      },
+      {
+        "name": "far_top",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            99.999999,
+            -1e-06,
+            100.000001,
+            100.000001,
+            1e-06
+          ]
+        }
+      },
+      {
+        "name": "P1",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            1.249999,
+            -1e-06,
+            -1e-06,
+            1.250001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "probe at r=1.25 m. dim-0 group -> gmsh creates a vertex at the box centre, so the query reads the EXACT location instead of snapping to the nearest node."
+      },
+      {
+        "name": "P2",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            1.899999,
+            -1e-06,
+            -1e-06,
+            1.9000009999999998,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "probe at r=1.9 m. dim-0 group -> gmsh creates a vertex at the box centre, so the query reads the EXACT location instead of snapping to the nearest node."
+      },
+      {
+        "name": "P3",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            2.499999,
+            -1e-06,
+            -1e-06,
+            2.500001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "probe at r=2.5 m. dim-0 group -> gmsh creates a vertex at the box centre, so the query reads the EXACT location instead of snapping to the nearest node."
+      },
+      {
+        "name": "P4",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            6.249999,
+            -1e-06,
+            -1e-06,
+            6.250001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "probe at r=6.25 m. dim-0 group -> gmsh creates a vertex at the box centre, so the query reads the EXACT location instead of snapping to the nearest node."
+      }
+    ],
+    "mesh": {
+      "element_size": 2.0,
+      "refinement": [
+        {
+          "around": "gallery_wall",
+          "element_size": 0.15,
+          "distance_min": 5.5,
+          "transition": 25.0,
+          "_comment": "0.15 m held out to 5.5 m from the wall so all four probes (r = 1.25..6.25 m) sit in the fine zone, grading to 2 m by 25 m. Thermal diffusion length sqrt(k/(rho*cp)*t_end) = 14.9 m, so nothing beyond ~25 m changes. No recombine here -> pure triangles -> the mixed-element trap does not apply."
+        }
+      ],
+      "_comment": "element_size is the FAR-FIELD size; the near field comes from refinement."
+    }
+  },
+  "physics": {
+    "heat_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "temperature",
+        "symbol": "T",
+        "type": "scalar",
+        "components": [
+          "T"
+        ]
+      }
+    }
+  },
+  "materials": {
+    "cox": {
+      "temperature": {
+        "k": 1.67,
+        "rho": 2386.0,
+        "cp": 1045.7,
+        "_comment_k": "PAPER_VALUE Tab. 1: 1.67 W/(m.K)",
+        "_comment_rho": "PAPER_VALUE Tab. 1: saturated bulk density 2386 kg/m3",
+        "_comment_cp": "INFERRED: mixture cp = [(1-n)*rho_s*cp_s + n*rho_w*cp_w]/rho_sat with n=0.18, rho_s=2690, cp_s=790 (Tab. 1), rho_w=1000, cp_w=4180 (Sec. 3) -> 1045.7 J/(kg.K)"
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "temperature",
+      "value": 22.0,
+      "location": "host_domain",
+      "_comment": "PAPER_VALUE Tab. 4: T0 = 22 degC (isotropic COx). DEGREES CELSIUS."
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "neumann",
+      "field": "temperature",
+      "value": 25.46,
+      "location": "gallery_wall",
+      "start_time": 15865200.0,
+      "_comment": "PAPER_VALUE Tab. 3: constant power 200 W/m per gallery metre from T0+6 months for 10 y. Flux density = 200/((pi/2)*1.25) = 101.86 W/m2 over the quarter-circle wall. start_time = 86400 + 182.625 d = 1.5886e7 s."
+    },
+    {
+      "type": "dirichlet",
+      "field": "temperature",
+      "value": 22.0,
+      "location": "far_right"
+    },
+    {
+      "type": "dirichlet",
+      "field": "temperature",
+      "value": 22.0,
+      "location": "far_top",
+      "_comment": "ASSUMED: outer thermal BC not explicitly stated in extracted text. Impact LOW: 10-y thermal diffusion length sqrt(kappa*t) = sqrt(6.69e-7*3.16e8) ~ 14.5 m << 100 m, so the boundary is never reached. Symmetry edges carry NO BC (zero flux)."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "host_domain": {
+        "active_fields": [
+          "temperature"
+        ],
+        "material": "cox"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 331441200.0,
+    "analysis_type": "transient",
+    "dt_strategy": {
+      "type": "piecewise",
+      "segments": [
+        {
+          "t_end": 86400.0,
+          "dt": 7200.0,
+          "_comment": "excavation day, no thermal load - coarse"
+        },
+        {
+          "t_end": 15865200.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 21600.0,
+            "dt_max": 2592000.0,
+            "n_steps": 30
+          },
+          "_comment": "waiting phase, no load. dt range 0.19-29.3 d, series sums exactly to span."
+        },
+        {
+          "t_end": 16470000.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 1800.0,
+            "dt_max": 21600.0,
+            "n_steps": 40
+          },
+          "_comment": "first 7 d of heating, finest. Unchanged - already consistent."
+        },
+        {
+          "t_end": 47422800.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 86400.0,
+            "dt_max": 432000.0,
+            "n_steps": 120
+          },
+          "_comment": "rest of heating year 1. dt grows 1.69 d -> 4.82 d; 120 log steps cover the 358.2 d span exactly (dt/t ~ 0.9% per step)."
+        },
+        {
+          "t_end": 331441200.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 432000.0,
+            "dt_max": 5184000.0,
+            "n_steps": 160
+          },
+          "_comment": "years 1-10. dt grows 6.7 d -> 46.3 d; 160 log steps cover the 3287 d span exactly (dt/t ~ 1.2%)."
+        }
+      ]
+    },
+    "linear_solver": "dss",
+    "_comment_linear_solver": "Skyline costs 107 s/step on this 11857-node gmsh mesh (bandwidth-bound) -> ~11 h for 362 steps; DSS reorders internally: 0.8 s/step, identical results. Safe here -- the caveat is free/unloaded mechanics, this is pure conduction with Dirichlet far-field."
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "fig7_T_P1_AND_COMSOL",
+        "file": "reference/fig7_cox_T_P1_AND_COMSOL.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P1 ANDRA COMSOL",
+        "_comment": "Fig. 7 digitisations, ONE FILE PER TEAM PER POINT (7 teams x 4 points = 28). The loader takes a single file per entry, so a per-team overlay needs a per-team entry -- there is no glob or file-list form. x is the paper's absolute day axis (heating starts ~183.6 d), which is why the Neumann start_time must stay at 183.6 d for the curves to align."
+      },
+      {
+        "id": "fig7_T_P1_AND_Code_Aster",
+        "file": "reference/fig7_cox_T_P1_AND_Code_Aster.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P1 ANDRA Code_Aster"
+      },
+      {
+        "id": "fig7_T_P1_BGE_OpenGeoSys",
+        "file": "reference/fig7_cox_T_P1_BGE_OpenGeoSys.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P1 BGE OpenGeoSys"
+      },
+      {
+        "id": "fig7_T_P1_EDF_Code_Aster",
+        "file": "reference/fig7_cox_T_P1_EDF_Code_Aster.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P1 EDF Code_Aster"
+      },
+      {
+        "id": "fig7_T_P1_LEI_COMSOL",
+        "file": "reference/fig7_cox_T_P1_LEI_COMSOL.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P1 LEI COMSOL"
+      },
+      {
+        "id": "fig7_T_P1_ULG_LAGAMINE",
+        "file": "reference/fig7_cox_T_P1_ULG_LAGAMINE.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P1 ULg LAGAMINE"
+      },
+      {
+        "id": "fig7_T_P1_UPC_Code_Bright",
+        "file": "reference/fig7_cox_T_P1_UPC_Code_Bright.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P1 UPC Code_Bright"
+      },
+      {
+        "id": "fig7_T_P2_AND_COMSOL",
+        "file": "reference/fig7_cox_T_P2_AND_COMSOL.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P2 ANDRA COMSOL"
+      },
+      {
+        "id": "fig7_T_P2_AND_Code_Aster",
+        "file": "reference/fig7_cox_T_P2_AND_Code_Aster.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P2 ANDRA Code_Aster"
+      },
+      {
+        "id": "fig7_T_P2_BGE_OpenGeoSys",
+        "file": "reference/fig7_cox_T_P2_BGE_OpenGeoSys.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P2 BGE OpenGeoSys"
+      },
+      {
+        "id": "fig7_T_P2_EDF_Code_Aster",
+        "file": "reference/fig7_cox_T_P2_EDF_Code_Aster.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P2 EDF Code_Aster"
+      },
+      {
+        "id": "fig7_T_P2_LEI_COMSOL",
+        "file": "reference/fig7_cox_T_P2_LEI_COMSOL.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P2 LEI COMSOL"
+      },
+      {
+        "id": "fig7_T_P2_ULG_LAGAMINE",
+        "file": "reference/fig7_cox_T_P2_ULG_LAGAMINE.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P2 ULg LAGAMINE"
+      },
+      {
+        "id": "fig7_T_P2_UPC_Code_Bright",
+        "file": "reference/fig7_cox_T_P2_UPC_Code_Bright.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P2 UPC Code_Bright"
+      },
+      {
+        "id": "fig7_T_P3_AND_COMSOL",
+        "file": "reference/fig7_cox_T_P3_AND_COMSOL.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P3 ANDRA COMSOL"
+      },
+      {
+        "id": "fig7_T_P3_AND_Code_Aster",
+        "file": "reference/fig7_cox_T_P3_AND_Code_Aster.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P3 ANDRA Code_Aster"
+      },
+      {
+        "id": "fig7_T_P3_BGE_OpenGeoSys",
+        "file": "reference/fig7_cox_T_P3_BGE_OpenGeoSys.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P3 BGE OpenGeoSys"
+      },
+      {
+        "id": "fig7_T_P3_EDF_Code_Aster",
+        "file": "reference/fig7_cox_T_P3_EDF_Code_Aster.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P3 EDF Code_Aster"
+      },
+      {
+        "id": "fig7_T_P3_LEI_COMSOL",
+        "file": "reference/fig7_cox_T_P3_LEI_COMSOL.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P3 LEI COMSOL"
+      },
+      {
+        "id": "fig7_T_P3_ULG_LAGAMINE",
+        "file": "reference/fig7_cox_T_P3_ULG_LAGAMINE.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P3 ULg LAGAMINE"
+      },
+      {
+        "id": "fig7_T_P3_UPC_Code_Bright",
+        "file": "reference/fig7_cox_T_P3_UPC_Code_Bright.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P3 UPC Code_Bright"
+      },
+      {
+        "id": "fig7_T_P4_AND_COMSOL",
+        "file": "reference/fig7_cox_T_P4_AND_COMSOL.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P4 ANDRA COMSOL"
+      },
+      {
+        "id": "fig7_T_P4_AND_Code_Aster",
+        "file": "reference/fig7_cox_T_P4_AND_Code_Aster.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P4 ANDRA Code_Aster"
+      },
+      {
+        "id": "fig7_T_P4_BGE_OpenGeoSys",
+        "file": "reference/fig7_cox_T_P4_BGE_OpenGeoSys.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P4 BGE OpenGeoSys"
+      },
+      {
+        "id": "fig7_T_P4_EDF_Code_Aster",
+        "file": "reference/fig7_cox_T_P4_EDF_Code_Aster.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P4 EDF Code_Aster"
+      },
+      {
+        "id": "fig7_T_P4_LEI_COMSOL",
+        "file": "reference/fig7_cox_T_P4_LEI_COMSOL.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P4 LEI COMSOL"
+      },
+      {
+        "id": "fig7_T_P4_ULG_LAGAMINE",
+        "file": "reference/fig7_cox_T_P4_ULG_LAGAMINE.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P4 ULg LAGAMINE"
+      },
+      {
+        "id": "fig7_T_P4_UPC_Code_Bright",
+        "file": "reference/fig7_cox_T_P4_UPC_Code_Bright.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "P4 UPC Code_Bright"
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_days",
+        "type": "formula",
+        "formula": "t / 86400.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [days]"
+      },
+      {
+        "id": "T_P1",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "P1",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "T at P1 [degC]"
+      },
+      {
+        "id": "T_P2",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "P2",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "T at P2 [degC]"
+      },
+      {
+        "id": "T_P3",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "P3",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "T at P3 [degC]"
+      },
+      {
+        "id": "T_P4",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "P4",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "T at P4 [degC]",
+        "_comment": "Field is already degC - no 273.15 conversion (skill units box)."
+      }
+    ],
+    "plots": [
+      {
+        "name": "temperature_P1",
+        "title": "HITEC COx isotropic - T at P1 (gallery wall, r = 1.25 m)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Temperature [degC]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_P1"
+            },
+            "label": "FEM (this backend)",
+            "style": {
+              "color": "#2a78d6",
+              "linewidth": 2.6,
+              "zorder": 20
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P1_AND_COMSOL",
+            "label": "ANDRA COMSOL",
+            "style": {
+              "color": "#eb6834",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P1_AND_Code_Aster",
+            "label": "ANDRA Code_Aster",
+            "style": {
+              "color": "#1baf7a",
+              "linestyle": "-.",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "o",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P1_BGE_OpenGeoSys",
+            "label": "BGE OpenGeoSys",
+            "style": {
+              "color": "#eda100",
+              "linestyle": ":",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "s",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P1_EDF_Code_Aster",
+            "label": "EDF Code_Aster",
+            "style": {
+              "color": "#e87ba4",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "^",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P1_LEI_COMSOL",
+            "label": "LEI COMSOL",
+            "style": {
+              "color": "#008300",
+              "linestyle": "-.",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P1_ULG_LAGAMINE",
+            "label": "ULg LAGAMINE",
+            "style": {
+              "color": "#4a3aa7",
+              "linestyle": ":",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P1_UPC_Code_Bright",
+            "label": "UPC Code_Bright",
+            "style": {
+              "color": "#e34948",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          }
+        ],
+        "_comment": "One plot per observation point: 8 lines is the documented ceiling for a line chart (adjacent-pair palette). All four points on one axes with all seven codes would be 32."
+      },
+      {
+        "name": "temperature_P2",
+        "title": "HITEC COx isotropic - T at P2 (r = 1.90 m)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Temperature [degC]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_P2"
+            },
+            "label": "FEM (this backend)",
+            "style": {
+              "color": "#2a78d6",
+              "linewidth": 2.6,
+              "zorder": 20
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P2_AND_COMSOL",
+            "label": "ANDRA COMSOL",
+            "style": {
+              "color": "#eb6834",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P2_AND_Code_Aster",
+            "label": "ANDRA Code_Aster",
+            "style": {
+              "color": "#1baf7a",
+              "linestyle": "-.",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "o",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P2_BGE_OpenGeoSys",
+            "label": "BGE OpenGeoSys",
+            "style": {
+              "color": "#eda100",
+              "linestyle": ":",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "s",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P2_EDF_Code_Aster",
+            "label": "EDF Code_Aster",
+            "style": {
+              "color": "#e87ba4",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "^",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P2_LEI_COMSOL",
+            "label": "LEI COMSOL",
+            "style": {
+              "color": "#008300",
+              "linestyle": "-.",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P2_ULG_LAGAMINE",
+            "label": "ULg LAGAMINE",
+            "style": {
+              "color": "#4a3aa7",
+              "linestyle": ":",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P2_UPC_Code_Bright",
+            "label": "UPC Code_Bright",
+            "style": {
+              "color": "#e34948",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          }
+        ]
+      },
+      {
+        "name": "temperature_P3",
+        "title": "HITEC COx isotropic - T at P3 (r = 2.50 m)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Temperature [degC]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_P3"
+            },
+            "label": "FEM (this backend)",
+            "style": {
+              "color": "#2a78d6",
+              "linewidth": 2.6,
+              "zorder": 20
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P3_AND_COMSOL",
+            "label": "ANDRA COMSOL",
+            "style": {
+              "color": "#eb6834",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P3_AND_Code_Aster",
+            "label": "ANDRA Code_Aster",
+            "style": {
+              "color": "#1baf7a",
+              "linestyle": "-.",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "o",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P3_BGE_OpenGeoSys",
+            "label": "BGE OpenGeoSys",
+            "style": {
+              "color": "#eda100",
+              "linestyle": ":",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "s",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P3_EDF_Code_Aster",
+            "label": "EDF Code_Aster",
+            "style": {
+              "color": "#e87ba4",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "^",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P3_LEI_COMSOL",
+            "label": "LEI COMSOL",
+            "style": {
+              "color": "#008300",
+              "linestyle": "-.",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P3_ULG_LAGAMINE",
+            "label": "ULg LAGAMINE",
+            "style": {
+              "color": "#4a3aa7",
+              "linestyle": ":",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P3_UPC_Code_Bright",
+            "label": "UPC Code_Bright",
+            "style": {
+              "color": "#e34948",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          }
+        ]
+      },
+      {
+        "name": "temperature_P4",
+        "title": "HITEC COx isotropic - T at P4 (r = 6.25 m)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Temperature [degC]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_P4"
+            },
+            "label": "FEM (this backend)",
+            "style": {
+              "color": "#2a78d6",
+              "linewidth": 2.6,
+              "zorder": 20
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P4_AND_COMSOL",
+            "label": "ANDRA COMSOL",
+            "style": {
+              "color": "#eb6834",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P4_AND_Code_Aster",
+            "label": "ANDRA Code_Aster",
+            "style": {
+              "color": "#1baf7a",
+              "linestyle": "-.",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "o",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P4_BGE_OpenGeoSys",
+            "label": "BGE OpenGeoSys",
+            "style": {
+              "color": "#eda100",
+              "linestyle": ":",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "s",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P4_EDF_Code_Aster",
+            "label": "EDF Code_Aster",
+            "style": {
+              "color": "#e87ba4",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "^",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P4_LEI_COMSOL",
+            "label": "LEI COMSOL",
+            "style": {
+              "color": "#008300",
+              "linestyle": "-.",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P4_ULG_LAGAMINE",
+            "label": "ULg LAGAMINE",
+            "style": {
+              "color": "#4a3aa7",
+              "linestyle": ":",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P4_UPC_Code_Bright",
+            "label": "UPC Code_Bright",
+            "style": {
+              "color": "#e34948",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          }
+        ]
+      },
+      {
+        "name": "temperature_history",
+        "title": "HITEC COx isotropic - temperature histories, P1-P4",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Temperature [degC]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_P1"
+            },
+            "label": "FEM P1",
+            "style": {
+              "color": "#2a78d6",
+              "linewidth": 2.6,
+              "zorder": 20
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_P2"
+            },
+            "label": "FEM P2",
+            "style": {
+              "color": "#eb6834",
+              "linewidth": 2.6,
+              "zorder": 20
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_P3"
+            },
+            "label": "FEM P3",
+            "style": {
+              "color": "#1baf7a",
+              "linewidth": 2.6,
+              "zorder": 20,
+              "marker": "o",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_P4"
+            },
+            "label": "FEM P4",
+            "style": {
+              "color": "#eda100",
+              "linewidth": 2.6,
+              "zorder": 20,
+              "marker": "s",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P1_EDF_Code_Aster",
+            "label": "EDF Code_Aster P1",
+            "style": {
+              "color": "#2a78d6",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P2_EDF_Code_Aster",
+            "label": "EDF Code_Aster P2",
+            "style": {
+              "color": "#eb6834",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P3_EDF_Code_Aster",
+            "label": "EDF Code_Aster P3",
+            "style": {
+              "color": "#1baf7a",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "o",
+              "markersize": 3
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig7_T_P4_EDF_Code_Aster",
+            "label": "EDF Code_Aster P4",
+            "style": {
+              "color": "#eda100",
+              "linestyle": "--",
+              "linewidth": 1.3,
+              "alpha": 0.9,
+              "zorder": 5,
+              "marker": "s",
+              "markersize": 3
+            }
+          }
+        ],
+        "_comment": "Colour identifies the POINT, linestyle the SOURCE (solid = FEM, dashed = reference). One code only (EDF_Code_Aster, the densest digitisation); the per-point plots carry the full seven-code spread."
+      }
+    ],
+    "console": {
+      "summary_every_steps": 10,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_days",
+            "y": "T_P1",
+            "ref_id": "fig7_T_P1_EDF_Code_Aster"
+          },
+          {
+            "x": "t_days",
+            "y": "T_P4",
+            "ref_id": "fig7_T_P4_EDF_Code_Aster"
+          }
+        ],
+        "_comment": "Deviation is measured against ONE code (EDF_Code_Aster); the seven agree to ~0.5 degC at 3500 d, so the choice does not change the verdict."
+      }
+    },
+    "save_checkpoint": true,
+    "aux_fields": [
+      "*"
+    ],
+    "export_vtu": true,
+    "save_db": true
+  },
+  "_comment_sanity": "E1 line-source check (infinite medium, constant 200 W/m for 10 y): Boom Clay (lam=1.47, rho_cp=2.868e6, T0=16.5) gives T_wall = 75.5 degC vs paper 76 degC, T_P4 = 41.3 vs ~40 degC; COx (lam=1.67, rho_cp=2.495e6, T0=22) gives 76.5 vs ~75 degC. Confirms flux conversion, mixture cp and BCs BEFORE running."
+}

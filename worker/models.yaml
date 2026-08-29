@@ -1,0 +1,51 @@
+# Which models the eval sweeps, and anything one of them needs done differently.
+#
+#   worker/run_queue.sh --list-models        what the endpoint serves right now
+#
+# BUDGET: the KIT Toolbox meters externally-routed models (azure.*, google.*)
+# against a per-user budget and refuses them with HTTP 400 "ExceededBudget" once
+# it is spent. KIT-hosted models (kit.*, standard-local) are not metered that way.
+#
+# `metered: true` is a HARD GATE, not a label: run_eval.py refuses to sweep those
+# models unless you pass --allow-metered. Default runs cost nothing.
+# `run_eval.py --probe` reports reachability and budget state for everything.
+
+endpoint: https://ki-toolbox.scc.kit.edu/api/v1
+
+defaults:
+  max_tokens: 32000        # a benchmark.json is 3-25k output tokens
+  temperature: 0.0
+  timeout_seconds: 900     # per-model override below; large models need more
+
+# `default: true` is what runs when --models is not given.
+models:
+  - id: kit.gpt-oss-120b
+    default: true
+    note: KIT-hosted, unmetered
+  - id: kit.qwen3.5-397b-A17b
+    default: true
+    # 9 of 19 attempts in the 2026-08-27 run were lost to read timeouts at the
+    # 900 s default -- 47%, and every one of them a transport error rather than
+    # a bad answer. It is the largest model here and generates a 3-25k-token
+    # document in one shot, so it needs the room.
+    timeout_seconds: 2400
+    note: KIT-hosted, unmetered, largest open model here -- slowest, needs a long timeout
+  - id: kit.mistral-small-4-119b-a8b
+    default: true
+    note: KIT-hosted, unmetered
+  - id: kit.gemma4-31b-it
+    default: true
+    max_tokens: 16000
+    timeout_seconds: 1800
+    # 0 of 3 attempts produced a candidate on 2026-08-27 (2 timeouts, 1 with no
+    # response at all). Not yet shown to be viable for authoring; keep it in the
+    # set to find out whether the timeout was the whole story.
+    note: smallest KIT chat model; lower cap. UNPROVEN -- produced no candidate in the last run
+  - id: azure.gpt-5.1
+    metered: true
+  - id: azure.gpt-5-mini
+    metered: true
+  - id: google.gemini-2.5-pro
+    metered: true
+  - id: google.claude-sonnet-5
+    metered: true

@@ -1,0 +1,649 @@
+{
+  "metadata": {
+    "id": "jedrzejewska-2018-cost-tu1404-task2-cube",
+    "title": "Temperature development in a massive concrete cube (COST TU1404 Task 2 - Azenha et al.)",
+    "source": {
+      "authors": [
+        "Jedrzejewska, A.",
+        "Benboudjema, F.",
+        "Lacarriere, L.",
+        "Azenha, M.",
+        "Schlicke, D.",
+        "Dal Pont, S.",
+        "Delaplace, A.",
+        "Granja, J.",
+        "Hajkova, K.",
+        "Heinrich, P.J.",
+        "Sciume, G.",
+        "Strieder, E.",
+        "Stierschneider, E.",
+        "Smilauer, V.",
+        "Troyan, V."
+      ],
+      "year": 2018,
+      "journal": "Construction and Building Materials",
+      "doi": "10.1016/j.conbuildmat.2018.04.088"
+    },
+    "dimension": 2,
+    "physics_class": "thermo-chemo",
+    "validation_method": "Comparison with experimental temperature histories at 3 thermocouples (core TP18, surface TP9 mid-height 5cm from side, TP3 5cm from side and 5cm from bottom) from Azenha et al. 2011, digitized from Fig.7 / Fig.18-19 of benchmark paper",
+    "validation_target": "Core (TP18) peak 55.1 C at 7.2 h and 27.6 C at 24 h; TP9 peak ~50.5 C, TP3 peak ~47 C (Fig.7/18/19). Teams 1,2,3,7 land within 0.2-2.5 C, which the paper states is the measurement precision.",
+    "notes": "2D cross-section 0.4m cube. Hydration Team2 OOFEM Table13. Bottom 5.208 W/m2K, lateral 5.208->10 at 8.6h, top 10. Reference CSVs now from user-extracted Fig7 (TP18,TP9,TP3) data (19).csv and Fig18 core measured data (20).csv. Converted from time_d [days] to time_h [hours] (time_h=time_d*24). Headers cleaned to time_h,T_degC matching x_col/y_col. CORRECTED 2026-08-22: all convection coefficients scaled by 1.5 to compensate the missing third dimension (see boundary_conditions _comment_alpha); TP18_core.csv digitized from Fig.7; the dangling TP18_measured_fig18 reference was replaced by the team-envelope plot.",
+    "_comment_dimension": "PAPER_VALUE: 2D model used by several teams (Fig.14-15), quarter symmetry optional. Full 0.4x0.4 square chosen for simplicity, dimension must match mesh (2).",
+    "paper_pdf": "jedrzejewska-2018-cost-tu1404.pdf"
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "concrete_cube",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.4,
+            0.4
+          ]
+        },
+        "_comment_origin_size": "PAPER_VALUE: 400 mm edge side cube (Sec 2.2, Fig.6). 2D cross-section 0.4x0.4 m, origin at bottom-left."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "concrete_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "concrete_cube"
+        ],
+        "_comment": "PAPER_VALUE: concrete domain only"
+      },
+      {
+        "name": "surface_top",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            0.399999,
+            -1e-06,
+            0.400001,
+            0.400001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: top free surface, exposed to air (Sec 2.2). Box padded +-1e-6, z padded for 2D."
+      },
+      {
+        "name": "surface_bottom",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            0.400001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: bottom boundary with formwork throughout (Sec 2.2, Table 5). 5.208 W/m2K constant."
+      },
+      {
+        "name": "surface_lateral",
+        "dimension": 1,
+        "selection": {
+          "boxes": [
+            [
+              -1e-06,
+              -1e-06,
+              -1e-06,
+              1e-06,
+              0.400001,
+              1e-06
+            ],
+            [
+              0.399999,
+              -1e-06,
+              -1e-06,
+              0.400001,
+              0.400001,
+              1e-06
+            ]
+          ]
+        },
+        "_comment": "PAPER_VALUE: lateral boundaries, 4 sides in 3D, left+right edges in 2D. Formwork 0-8.6h (5.208) then free (10) - Table 5. Two boxes for left and right edges."
+      }
+    ],
+    "points": [
+      {
+        "name": "TP18_core",
+        "coordinates": [
+          0.2,
+          0.2,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: core sensor TP18, center of cube (Fig.6)"
+      },
+      {
+        "name": "TP9_mid",
+        "coordinates": [
+          0.35,
+          0.2,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: TP9 - 5 cm beneath lateral surface at mid-height (Sec 2.2, Fig.6). Right side: x=0.4-0.05=0.35, y=0.2"
+      },
+      {
+        "name": "TP3_bottom",
+        "coordinates": [
+          0.35,
+          0.05,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: TP3 - 5 cm beneath lateral surface and 5 cm from lower face (Fig.6). x=0.35, y=0.05"
+      }
+    ],
+    "mesh": {
+      "element_size": 0.02,
+      "order": 1,
+      "recombine": false,
+      "_comment_element_size": "INFERRED: 20 mm gives 20 elements per side, sufficient to resolve thermal gradient. 400mm/10 =40mm max for bending, but thermal needs finer. Teams used 5mm (Fig.15) - we use 20mm for speed, refinement possible via CLI preset.",
+      "_comment_order": "PAPER_VALUE: linear elements typical"
+    },
+    "_comment_dimension_correction": "NB the _comment_dimension above is wrong: Fig.14 is a 3D model (Teams 1,2,3,7); only Team 4's Fig.15 is 2D. This file stays 2D and corrects for it through the convection coefficients."
+  },
+  "physics": {
+    "heat_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "temperature",
+        "symbol": "T",
+        "type": "scalar",
+        "components": [
+          "T"
+        ]
+      },
+      "_comment": "PAPER_VALUE: thermal field, Eq (1) k div grad T + Qdot = rho c Tdot"
+    },
+    "hydration": {
+      "type": "ode_source",
+      "dependent_variable": {
+        "name": "degree_of_hydration",
+        "symbol": "alpha",
+        "type": "ode",
+        "components": [
+          "alpha"
+        ],
+        "managed_by": "hydration"
+      },
+      "_comment": "PAPER_VALUE: hydration degree drives heat release, affinity model Eq (3)"
+    }
+  },
+  "materials": {
+    "concrete": {
+      "temperature": {
+        "k": 2.6,
+        "rho": 2335.1,
+        "cp": 1028.0,
+        "_comment_k": "PAPER_VALUE: Table 5 thermal conductivity 2.6 W/(K m) (written as W/(K m3) but meaning W/mK)",
+        "_comment_rho": "INFERRED: sum of mix components Table 4: 430+301.5+339.7+335+729.7+193.4+6.8 = 2336.1 kg/m3, rounded 2335.1. Density not given directly, inferred from mix.",
+        "_comment_cp": "INFERRED: volumetric heat capacity 2400 kJ/(K m3) =2.4e6 J/K/m3 Table 5 divided by rho 2335 => 1028 J/kgK. Product rho*cp =2.4e6 matches Table 5.",
+        "_comment_rho_cp_product": "PAPER_VALUE: rho*cp = 2400 kJ/K/m3 =2.4e6 J/K/m3",
+        "_comment_sanity": "Sanity Check 2 & 3: dT_ad = Hu*c_cement*alpha_inf/(rho*cp) = 500e3*430*0.875/2.4e6=78.4K. Measured rise ~22K (26->48 core), so dT_ad > measured, BCs must carry off ~56K - passes. Cooling tau = rho cp V/(h A) =2.4e6*0.064/(10*0.96)=16000s~4.4h matches observed cooling over 24h."
+      },
+      "degree_of_hydration": {
+        "model": "affinity",
+        "B1": 0.0002916,
+        "B2": 0.0024229,
+        "alpha_inf": 0.875,
+        "eta": 5.554,
+        "Ea": 46999.042,
+        "R": 8.314,
+        "T_ref": 298.15,
+        "Hu": 500.0,
+        "c_cement": 430.0,
+        "_comment_B1": "PAPER_VALUE: Team 2 (OOFEM) Table 13 B1=0.0002916 1/s, affinity law after [14]",
+        "_comment_B2": "PAPER_VALUE: Team 2 Table 13 B2=0.0024229 [-]",
+        "_comment_alpha_inf": "PAPER_VALUE: Team 2 Table 13 amax=0.875 ultimate hydration degree",
+        "_comment_eta": "PAPER_VALUE: Team 2 Table 13 g=5.554 microdiffusion parameter, maps to eta in OOFEM",
+        "_comment_Ea": "INFERRED: Ea/R=5653 1/K Table 13 Team 2, *R 8.314 =46999 J/mol. PAPER_VALUE Ea/R, INFERRED Ea.",
+        "_comment_R": "GENERIC_LITERATURE_VALUE: gas constant 8.314 J/molK",
+        "_comment_T_ref": "PAPER_VALUE: affinity ~A25 at 25C, so T_ref=25C=298.15K KELVIN - only Kelvin temp in file",
+        "_comment_Hu": "PAPER_VALUE: Team 2 Table 13 Qpot=500 J/g total hydration heat for complete hydration",
+        "_comment_c_cement": "PAPER_VALUE: Table 4 cement content 430 kg/m3 CEM I 52.5R",
+        "_comment_B1_unit": "PAPER_VALUE: B1 already in 1/s, no conversion",
+        "_comment_sanity_Hu": "PAPER_VALUE: Qpot 500 J/g matches CEM I typical 400-500 J/g literature"
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "temperature",
+      "value": 26.0,
+      "location": "concrete_domain",
+      "_comment": "PAPER_VALUE: Table 5 concrete initial temperature 26 C, DEGREES CELSIUS"
+    },
+    {
+      "field": "degree_of_hydration",
+      "value": 0.0,
+      "location": "concrete_domain",
+      "_comment": "PAPER_VALUE: zero hydration at casting"
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "surface_top",
+      "alpha": 15.0,
+      "u_ref": 20.0,
+      "_comment_alpha": "2D->3D CORRECTION (factor 1.5): the benchmark specimen is a 400 mm CUBE cooled on 6 faces (A/V = 6/L = 15 1/m); this 2D cross-section is cooled on 4 edges only (A/V = 4/L = 10 1/m), so it loses heat 1/3 too slowly. Verified: uncorrected 2D gives core peak 64.0 C @ 9.8 h and T(24h)=36.0 C against a measured 55.1 C @ 7.2 h and 27.6 C; an independent 3D FD run with these exact parameters gives 57.0/27.5 and the h*1.5 2D run gives 57.4/29.5. Teams 1,2,3,7 modelled this in 3D (Fig.14); only Team 4 used 2D (Fig.15) and deviates. Raw h from Table 5 is quoted in _comment_alpha_paper below.",
+      "_comment_u_ref": "PAPER_VALUE: Table 5 climatic chamber 20 C, DEGREES CELSIUS",
+      "_comment_alpha_paper": "PAPER_VALUE Table 5: 10.0 W/K/m2."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "surface_bottom",
+      "alpha": 7.812,
+      "u_ref": 20.0,
+      "_comment_alpha": "2D->3D CORRECTION (factor 1.5): the benchmark specimen is a 400 mm CUBE cooled on 6 faces (A/V = 6/L = 15 1/m); this 2D cross-section is cooled on 4 edges only (A/V = 4/L = 10 1/m), so it loses heat 1/3 too slowly. Verified: uncorrected 2D gives core peak 64.0 C @ 9.8 h and T(24h)=36.0 C against a measured 55.1 C @ 7.2 h and 27.6 C; an independent 3D FD run with these exact parameters gives 57.0/27.5 and the h*1.5 2D run gives 57.4/29.5. Teams 1,2,3,7 modelled this in 3D (Fig.14); only Team 4 used 2D (Fig.15) and deviates. Raw h from Table 5 is quoted in _comment_alpha_paper below.",
+      "_comment_u_ref": "PAPER_VALUE: ambient 20 C",
+      "_comment_alpha_paper": "PAPER_VALUE Table 5: 5.208 W/K/m2."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "surface_lateral",
+      "alpha": {
+        "time_table": [
+          [
+            0.0,
+            7.812
+          ],
+          [
+            30960.0,
+            15.0
+          ]
+        ],
+        "interp": "step"
+      },
+      "u_ref": 20.0,
+      "_comment_alpha": "2D->3D CORRECTION (factor 1.5): the benchmark specimen is a 400 mm CUBE cooled on 6 faces (A/V = 6/L = 15 1/m); this 2D cross-section is cooled on 4 edges only (A/V = 4/L = 10 1/m), so it loses heat 1/3 too slowly. Verified: uncorrected 2D gives core peak 64.0 C @ 9.8 h and T(24h)=36.0 C against a measured 55.1 C @ 7.2 h and 27.6 C; an independent 3D FD run with these exact parameters gives 57.0/27.5 and the h*1.5 2D run gives 57.4/29.5. Teams 1,2,3,7 modelled this in 3D (Fig.14); only Team 4 used 2D (Fig.15) and deviates. Raw h from Table 5 is quoted in _comment_alpha_paper below.",
+      "_comment_u_ref": "PAPER_VALUE: 20 C ambient",
+      "_comment_time": "PAPER_VALUE: formwork removal at 8.6h Sec 2.2",
+      "_comment_alpha_paper": "PAPER_VALUE Table 5: 5.208 W/K/m2 with formwork 0-8.6h, 10 after removal at 8.6h = 30960 s."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "concrete_domain": {
+        "active_fields": [
+          "temperature",
+          "degree_of_hydration"
+        ],
+        "material": "concrete",
+        "_comment": "Both fields active in same domain, required for hydration heat"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 86400.0,
+    "analysis_type": "transient",
+    "dt_strategy": {
+      "type": "piecewise",
+      "segments": [
+        {
+          "t_end": 14400.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 60.0,
+            "dt_max": 300.0,
+            "n_steps": 50
+          },
+          "_comment": "0-4h heating phase fine resolution, log coarsening"
+        },
+        {
+          "t_end": 30960.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 120.0,
+            "dt_max": 600.0,
+            "n_steps": 40
+          },
+          "_comment": "4h to formwork removal 8.6h, includes breakpoint 30960 exactly to satisfy step table guard"
+        },
+        {
+          "t_end": 86400.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 300.0,
+            "dt_max": 1800.0,
+            "n_steps": 60
+          },
+          "_comment": "8.6h-24h cooling phase, coarser"
+        }
+      ]
+    },
+    "_comment_t_end": "PAPER_VALUE: teams asked to provide 0-1 day (Sec 2.2)",
+    "_comment_dt": "Event alignment: breakpoint 30960 matches formwork removal, n_steps resolves hourly climate-like data"
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "TP18_exp_fig7",
+        "file": "reference/TP18_core.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "TP18 core measured Fig.7 (digitized)",
+        "_comment": "PAPER_VALUE: digitized from Fig.7 by colour extraction of the red TP18 series at 300 dpi (axes calibrated on the 0/1 d ticks and the 20..60 C gridlines). Peak 55.1 C at 7.21 h, T(24h)=27.6 C. The record starts at 3.6 h -- Fig.7 has no continuous data before that, only an isolated t~0 cluster at 24-28 C -- so the curve legitimately begins mid-plot."
+      },
+      {
+        "id": "TP9_exp_fig7",
+        "file": "reference/TP9_surface.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "TP9 5cm from side mid-height Fig.7 - extracted",
+        "_comment": "PAPER_VALUE: Fig.7 TP9 series from data (19).csv"
+      },
+      {
+        "id": "TP3_exp_fig7",
+        "file": "reference/TP3_surface_bottom.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "TP3 5cm from side 5cm bottom Fig.7 - extracted",
+        "_comment": "PAPER_VALUE: Fig.7 TP3 series"
+      },
+      {
+        "id": "TP18_team2_fig18",
+        "file": "reference/TP18_team2_fig18.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "TP18 team2 simulation Fig.18 - for model-vs-model",
+        "_comment": "PAPER_VALUE: Fig.18 team2 series, digitized, for model-vs-model comparison"
+      },
+      {
+        "id": "TP18_team1_fig18",
+        "file": "reference/TP18_team1_fig18.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "TP18 team1 Fig.18",
+        "_comment": "PAPER_VALUE: Fig.18 team series, digitized, model-vs-model spread."
+      },
+      {
+        "id": "TP18_team3_fig18",
+        "file": "reference/TP18_team3_fig18.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "TP18 team3 Fig.18",
+        "_comment": "PAPER_VALUE: Fig.18 team series, digitized, model-vs-model spread."
+      },
+      {
+        "id": "TP18_team4_fig18",
+        "file": "reference/TP18_team4_fig18.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "TP18 team4 Fig.18",
+        "_comment": "PAPER_VALUE: Fig.18 team series, digitized, model-vs-model spread."
+      },
+      {
+        "id": "TP18_team7_fig18",
+        "file": "reference/TP18_team7_fig18.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "TP18 team7 Fig.18",
+        "_comment": "PAPER_VALUE: Fig.18 team series, digitized, model-vs-model spread."
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_hours",
+        "type": "formula",
+        "formula": "t / 3600.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [hours]",
+        "_comment": "Natural time in hours for plots"
+      },
+      {
+        "id": "T_core",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "TP18_core",
+        "reduce": "avg",
+        "label": "Core T [C] TP18",
+        "_comment": "Field already in degC, no 273.15 conversion"
+      },
+      {
+        "id": "T_mid",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "TP9_mid",
+        "reduce": "avg",
+        "label": "Surface T [C] TP9 mid-height 5cm from side"
+      },
+      {
+        "id": "T_bottom",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "TP3_bottom",
+        "reduce": "avg",
+        "label": "Surface T [C] TP3 5cm from side 5cm bottom"
+      },
+      {
+        "id": "alpha_core",
+        "type": "field",
+        "field": "degree_of_hydration",
+        "at": "TP18_core",
+        "reduce": "avg",
+        "label": "Hydration degree core",
+        "_comment": "Element field, no component, nearest element IP"
+      }
+    ],
+    "plots": [
+      {
+        "name": "temperature_history_core_fig7",
+        "title": "Core temperature TP18 Fig.7 - massive cube 400mm",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [hours]"
+        },
+        "y_axis": {
+          "label": "Temperature [°C]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_core"
+            },
+            "label": "FEM core TP18"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP18_exp_fig7",
+            "label": "Exp TP18 Fig.7"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP18_team2_fig18",
+            "label": "Team2 OOFEM Fig.18"
+          }
+        ]
+      },
+      {
+        "name": "temperature_history_core_team_envelope",
+        "title": "Core temperature TP18 - measured vs all benchmark teams (Fig.18)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [hours]"
+        },
+        "y_axis": {
+          "label": "Temperature [°C]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_core"
+            },
+            "label": "FEM core TP18"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP18_exp_fig7",
+            "label": "Measured Fig.7"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP18_team1_fig18",
+            "label": "Team 1 Fig.18"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP18_team2_fig18",
+            "label": "Team 2 Fig.18"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP18_team3_fig18",
+            "label": "Team 3 Fig.18"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP18_team4_fig18",
+            "label": "Team 4 Fig.18"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP18_team7_fig18",
+            "label": "Team 7 Fig.18"
+          }
+        ],
+        "_comment": "Uses the four previously orphaned team CSVs; Fig.18 is the paper's own model-vs-model plot."
+      },
+      {
+        "name": "temperature_history_surface_fig7",
+        "title": "Surface temperatures TP9 and TP3 Fig.7",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [hours]"
+        },
+        "y_axis": {
+          "label": "Temperature [°C]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_mid"
+            },
+            "label": "FEM TP9 mid"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP9_exp_fig7",
+            "label": "Exp TP9 Fig.7"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_bottom"
+            },
+            "label": "FEM TP3 bottom"
+          },
+          {
+            "source": "reference",
+            "ref_id": "TP3_exp_fig7",
+            "label": "Exp TP3 Fig.7"
+          }
+        ]
+      },
+      {
+        "name": "hydration_evolution",
+        "title": "Hydration degree core",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [hours]"
+        },
+        "y_axis": {
+          "label": "Degree of hydration [-]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "alpha_core"
+            },
+            "label": "alpha core"
+          }
+        ]
+      }
+    ],
+    "console": {
+      "summary_every_steps": 10,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_hours",
+            "y": "T_core",
+            "ref_id": "TP18_exp_fig7"
+          },
+          {
+            "x": "t_hours",
+            "y": "T_mid",
+            "ref_id": "TP9_exp_fig7"
+          },
+          {
+            "x": "t_hours",
+            "y": "T_bottom",
+            "ref_id": "TP3_exp_fig7"
+          }
+        ]
+      }
+    },
+    "save_checkpoint": true,
+    "aux_fields": [
+      "*"
+    ],
+    "export_vtu": true,
+    "save_db": true
+  }
+}

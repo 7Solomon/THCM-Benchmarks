@@ -8,6 +8,10 @@
 #   ./run_queue.sh --dry-run           resolve everything, dispatch nothing
 #   ./run_queue.sh --summary           print the table and exit
 #   ./run_queue.sh --preflight         check the environment and exit
+#   ./run_queue.sh --harness dsh       run turns on DeepSeek Harness (default: claude)
+#   ./run_queue.sh --model NAME        route dsh at one model (see --list-models)
+#   ./run_queue.sh --allow-metered     permit a model that costs money
+#   ./run_queue.sh --list-models       what the configured endpoint serves
 #
 # Runs from anywhere: every path is derived from this script's own location
 # (config.sh). The agent's cwd is BENCH_ROOT.
@@ -28,7 +32,7 @@
 set -uo pipefail
 shopt -s extglob
 
-source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/config.sh"
 
 TERMINAL='["done","failed"]'
 # Parked, not finished: waiting on a human to fill in the extraction handoff
@@ -82,6 +86,36 @@ summary() {
   echo "phase log of one benchmark:  $PY $STATUS_PY show $WORK_ROOT/<slug>"
 }
 
+# What the configured endpoint actually serves. Cheap, and it is the difference
+# between a typo in --model and a model that is genuinely unavailable to you.
+list_models() {
+  local env_file="$ENV_FILE" key=""
+  [[ -f "$env_file" ]] && key=$(sed -nE 's/^(KI_TOOLBOX_API_KEY|DEEPSEEK_API_KEY)=//p' \
+                                 "$env_file" | head -1 | tr -d '\042\047')
+  key="${WORKER_API_KEY:-${KI_TOOLBOX_API_KEY:-$key}}"
+  [[ -n "$key" ]] || { echo "no API key in $env_file" >&2; return 1; }
+  echo "$WORKER_BASE_URL"
+  curl -fsS --max-time 30 -H "Authorization: Bearer $key" "$WORKER_BASE_URL/models" \
+    | jq -r '.data[].id' | sort
+}
+
+# A model marked `metered: true` in worker/models.yaml costs real money. The eval
+# job has always refused those without --allow-metered; a queue run is hours of
+# agent turns rather than one call, so it needs the same gate more, not less.
+check_metered() {
+  [[ -n "$WORKER_MODEL" && -f "$MODELS_YAML" ]] || return 0
+  (( ALLOW_METERED )) && return 0
+  awk -v want="$WORKER_MODEL" '
+    /^[[:space:]]*-[[:space:]]*id:/ { id=$3; metered=0; next }
+    /^[[:space:]]*metered:[[:space:]]*true/ { if (id == want) { print "yes"; exit } }
+  ' "$MODELS_YAML" | grep -q yes || return 0
+  echo "'$WORKER_MODEL' is metered in worker/models.yaml — and an authoring run is" >&2
+  echo "hours of agent turns, not one call." >&2
+  echo "  --allow-metered   spend anyway" >&2
+  echo "  --list-models     what the endpoint serves (kit.* are unmetered)" >&2
+  return 1
+}
+
 preflight() {
   local bad=0
   for f in "$PY" "$THCM" "$PROMPT_FILE" "$RENDER" "$STATUS_PY" "$HANDOFF_PY"; do
@@ -91,7 +125,8 @@ preflight() {
   for f in "$SKILL_CREATE" "$SCHEMA" "$SKILL_MODULES"; do
     [[ -e "$f" ]] || { echo "missing (dangling symlink? set THCM_FEM_ROOT): $f"; bad=1; }
   done
-  for f in "$SKILL_WEB" "$SKILL_EXTRACT" "$SKILL_ANALYSIS" "$CHECK_PY" "$DIGITIZE"; do
+  for f in "$SKILL_WEB" "$SKILL_EXTRACT" "$SKILL_ANALYSIS" "$CHECK_PY" "$DIGITIZE" \
+          "$DISPATCH_DIR/claude.sh" "$DISPATCH_DIR/dsh.py"; do
     [[ -f "$f" ]] || { echo "missing: $f"; bad=1; }
   done
   # A Windows-side CLI reached from WSL cannot execute the Linux venv at all:
@@ -193,33 +228,34 @@ process_pdf() {
     prompt="${prompt//\{\{${pair%%|*}\}\}/${pair#*|}}"
   done
 
+  printf '%s\n' "$prompt" > "$LOG_DIR/$slug.prompt.txt"
   if (( DRY )); then
-    printf '%s\n' "$prompt" > "$LOG_DIR/$slug.prompt.txt"
     echo "[dry  ] $slug  attempt $attempt/$MAX_ATTEMPTS"
     echo "         pdf      $work_pdf"
     echo "         workdir  $work"
     echo "         run      timeout $SOLVER_TIMEOUT $THCM oofem $work/<case> --remesh"
     echo "         prompt   $LOG_DIR/$slug.prompt.txt"
     echo "         unresolved placeholders: $(grep -c '{{' "$LOG_DIR/$slug.prompt.txt")"
+    echo "         harness  $WORKER_HARNESS"
+    echo "         model    ${WORKER_MODEL:-<sdk default>}  @ $WORKER_BASE_URL"
     echo "         (no agent dispatched)"
     return 0
   fi
 
-  echo "[run  ] $slug  attempt $attempt/$MAX_ATTEMPTS  $(date +%F' '%T)"
+  echo "[run  ] $slug  attempt $attempt/$MAX_ATTEMPTS  harness=$WORKER_HARNESS${WORKER_MODEL:+  model=$WORKER_MODEL}  $(date +%F' '%T)"
 
-  # Fresh context per PDF: each `claude -p` is an isolated session with no
-  # conversation history. --max-turns and timeout are the anti-loop backstops.
-  # --output-format json so the log carries cost, turns and stop reason, not
-  # just the final message.
+  # The dispatcher owns how one turn happens; everything else in this file is
+  # harness-independent. Both present the same interface: prompt file, workdir,
+  # log json, log stderr -> final message on stdout, timeout/crash in the exit
+  # code. --max-turns and the wall clock are the anti-loop backstops.
   log="$LOG_DIR/$slug.$attempt.json"
-  timeout -k 30s --foreground "$TIMEOUT" \
-    claude -p "$prompt" \
-      --chrome \
-      --output-format json \
-      --max-turns "$MAX_TURNS" \
-      "${CLAUDE_PERMS[@]}" \
-      --add-dir "$FEM_ROOT" \
-      > "$log" 2>"$LOG_DIR/$slug.$attempt.err"
+  case "$WORKER_HARNESS" in
+    claude) dispatcher=("$DISPATCH_DIR/claude.sh") ;;
+    dsh)    dispatcher=("$PY" "$DISPATCH_DIR/dsh.py") ;;
+    *)      echo "unknown WORKER_HARNESS '$WORKER_HARNESS' (claude|dsh)" >&2; return 1 ;;
+  esac
+  "${dispatcher[@]}" "$LOG_DIR/$slug.prompt.txt" "$work" \
+      "$log" "$LOG_DIR/$slug.$attempt.err" > "$LOG_DIR/$slug.$attempt.out" 2>&1
   rc=$?
   # CLAUDE_PERMS comes from config.sh. It must grant Bash outright: this session
   # is non-interactive, so any command needing approval is DENIED, not queued —
@@ -259,7 +295,7 @@ process_pdf() {
     echo "[crash] $slug — $why, stopped in phase $(phase_of "$status"); see $log"
   fi
 
-  jq -r '.result // empty' "$log" 2>/dev/null | grep '^STATUS:' | tail -1
+  grep '^STATUS:' "$LOG_DIR/$slug.$attempt.out" 2>/dev/null | tail -1
   jq -r 'select(.total_cost_usd) | "        cost $\(.total_cost_usd*1000|round/1000)  turns \(.num_turns)"' \
      "$log" 2>/dev/null
 }
@@ -299,7 +335,7 @@ fetch_pdf() {
 
 # --- argument parsing ------------------------------------------------------
 
-DRY=0; RESUME=0; LOOP_INTERVAL=""; ONE_PDF=""; ONLY_SLUG=""
+DRY=0; RESUME=0; LOOP_INTERVAL=""; ONE_PDF=""; ONLY_SLUG=""; ALLOW_METERED=0
 while (( $# )); do
   case "$1" in
     --summary)   summary; exit 0 ;;
@@ -317,6 +353,11 @@ while (( $# )); do
                  shift 2 ;;
     --loop)      if [[ "${2:-}" =~ ^[0-9]+$ ]]; then LOOP_INTERVAL="$2"; shift 2
                  else LOOP_INTERVAL=300; shift; fi ;;
+    --harness)   WORKER_HARNESS="${2:?--harness needs claude|dsh}"; shift 2 ;;
+    --model)     WORKER_MODEL="${2:?--model needs a model id}"; export WORKER_MODEL
+                 shift 2 ;;
+    --allow-metered) ALLOW_METERED=1; shift ;;
+    --list-models) list_models; exit $? ;;
     -h|--help)   sed -n '2,11p' "${BASH_SOURCE[0]}" | sed 's/^# \?//'; exit 0 ;;
     *)           echo "unknown option: $1" >&2; exit 2 ;;
   esac
@@ -324,6 +365,7 @@ done
 [[ -n "$ONE_PDF" && -n "$LOOP_INTERVAL" ]] && {
   echo "--pdf and --loop are mutually exclusive" >&2; exit 2; }
 
+check_metered || exit 2
 preflight || { echo "preflight failed — fix the above before dispatching agents" >&2; exit 1; }
 
 # One runner at a time: two would fight over the same workdirs.

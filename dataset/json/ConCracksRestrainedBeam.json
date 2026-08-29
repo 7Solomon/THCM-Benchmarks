@@ -1,0 +1,699 @@
+{
+  "metadata": {
+    "id": "concrack-restrained-beam",
+    "title": "ConCrack's Restrained Beam",
+    "source": {
+      "authors": [
+        "Pesavento, F.",
+        "Knoppik, A.",
+        "Šmilauer, V.",
+        "Briffaut, M.",
+        "Rossi, P."
+      ],
+      "year": 2019,
+      "journal": "RILEM State-of-the-Art Reports 27"
+    },
+    "dimension": 3,
+    "physics_class": "hydro-thermo-mechanical",
+    "validation_target": "Coupled hydro-thermo-mechanical behavior of a restrained beam",
+    "notes": "RISKY: Multi-physics with >2 coupled fields. Data for geometry and BCs missing from provided text; placeholders used. OOFEM variant (2026-07-16): degC convention (D2); drying_shrinkage via mps MPS_humidity with REQUIRED mus (D11, includes MPS drying creep under load); humidity clamp expressed as a gated moisture film (dirichlet start_time is gated); Winkler end restraint -> per-node nodalspring elements. NOT honored on oofem: temperature k_alpha_reduction (constant conductivity), displacement alpha_0/a_E E-maturity (aging comes from the B3 solidification chain instead).",
+    "paper_pdf": "concracksrestrainedbeam.pdf"
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "beam_volume",
+        "type": "cube",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.5,
+            0.8,
+            5.1
+          ]
+        }
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "concrete_domain",
+        "dimension": 3,
+        "entity_ids": [
+          "beam_volume"
+        ]
+      },
+      {
+        "name": "restrained_ends",
+        "dimension": 2,
+        "selection": {
+          "boxes": [
+            [
+              -1e-06,
+              -1e-06,
+              -1e-06,
+              0.501,
+              0.801,
+              1e-06
+            ],
+            [
+              -1e-06,
+              -1e-06,
+              5.099,
+              0.501,
+              0.801,
+              5.101
+            ]
+          ]
+        }
+      },
+      {
+        "name": "support_bottom",
+        "dimension": 2,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            0.501,
+            1e-06,
+            5.101
+          ]
+        }
+      },
+      {
+        "name": "exposed_surfaces",
+        "dimension": 2,
+        "selection": {
+          "boxes": [
+            [
+              -1e-06,
+              -1e-06,
+              -1e-06,
+              0.501,
+              1e-06,
+              5.101
+            ],
+            [
+              -1e-06,
+              0.799,
+              -1e-06,
+              0.501,
+              0.801,
+              5.101
+            ],
+            [
+              -1e-06,
+              -1e-06,
+              -1e-06,
+              1e-06,
+              0.801,
+              5.101
+            ],
+            [
+              0.499,
+              -1e-06,
+              -1e-06,
+              0.501,
+              0.801,
+              5.101
+            ]
+          ]
+        }
+      }
+    ],
+    "points": [
+      {
+        "name": "point_C",
+        "coordinates": [
+          0.25,
+          0.4,
+          1.3
+        ],
+        "_comment": "RG8_CONCRACK: Displacement measurement point C on beam axis. C and D are 2.5m apart symmetric about mid-span (z=2.55m). Source: benchmark description Section 7.3.4.3."
+      },
+      {
+        "name": "point_D",
+        "coordinates": [
+          0.25,
+          0.4,
+          3.8
+        ],
+        "_comment": "RG8_CONCRACK: Displacement measurement point D on beam axis. C and D are 2.5m apart symmetric about mid-span (z=2.55m). Source: benchmark description Section 7.3.4.3."
+      },
+      {
+        "name": "gage_core",
+        "coordinates": [
+          0.25,
+          0.4,
+          2.55
+        ],
+        "_comment": "RG8_CONCRACK: Core measurement point at beam mid-span used for temperature validation and strain decomposition (Fig. 7.10). Peak temperature 53.7 deg C at 30h."
+      }
+    ]
+  },
+  "physics": {
+    "heat_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "temperature",
+        "symbol": "T",
+        "type": "scalar",
+        "components": [
+          "T"
+        ]
+      }
+    },
+    "solid_mechanics": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "displacement",
+        "symbol": "u",
+        "type": "vector",
+        "components": [
+          "ux",
+          "uy",
+          "uz"
+        ]
+      }
+    },
+    "humidity_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "humidity",
+        "symbol": "h",
+        "type": "scalar",
+        "components": [
+          "h"
+        ]
+      }
+    },
+    "thermal_strain": {
+      "type": "coupling",
+      "strategy": "staggered",
+      "source_field": "temperature",
+      "target_field": "displacement"
+    },
+    "drying_shrinkage": {
+      "type": "coupling",
+      "source_field": "humidity",
+      "target_field": "displacement",
+      "_comment": "Hygro-mechanical eigenstrain: eps = k_sh * (h - h_ref) * I"
+    }
+  },
+  "materials": {
+    "concrete_material": {
+      "temperature": {
+        "k": 2.0,
+        "_k_comment": "GENERIC_LITERATURE_VALUE: typical for C45/55 concrete [W/mK]",
+        "k_alpha_reduction": 0.248,
+        "_comment_k_alpha": "Jendele et al., Eq. 10: lambda(alpha) = lambda0 * (1 - 0.248*alpha)",
+        "rho": 2350.0,
+        "_rho_comment": "GENERIC_LITERATURE_VALUE: typical concrete density [kg/m3]",
+        "cp": 1000.0,
+        "_cp_comment": "GENERIC_LITERATURE_VALUE: typical specific heat [J/kgK]"
+      },
+      "displacement": {
+        "model": "damage_rankine",
+        "E": 37000000000.0,
+        "_E_comment": "RG8_CONCRACK: C50/60, 28-day Young's modulus [MPa], Jendele et al. Table 2 / Eurocode 2",
+        "nu": 0.2,
+        "_nu_comment": "LITERATURE_VALUE: standard for concrete",
+        "ft": 1930000.0,
+        "_ft_comment": "RG8_CONCRACK: C50/60, 28-day uniaxial tensile strength [MPa], Jendele et al. Table 2",
+        "Gf": 48.3,
+        "_Gf_comment": "RG8_CONCRACK: C50/60, 28-day fracture energy [J/m2], Jendele et al. Table 2",
+        "alpha_0": 0.1,
+        "a_E": 0.6,
+        "rho": 2350.0,
+        "_rho_comment": "GENERIC_LITERATURE_VALUE: same density as the temperature section [kg/m3] (oofem material base requires d=)"
+      },
+      "humidity": {
+        "model": "bazant_najjar",
+        "capacity": 1.0,
+        "D0": 3e-10,
+        "_D0_comment": "RG8_CONCRACK: reference diffusivity [m2/s] back-calculated from Kunzel A=0.6/mu=210 for C50/60 (Jendele et al. Table 1). Kunzel is a COUPLED heat+moisture model and does NOT belong on a moisture-only humidity field (would silently use its thermal block); the staggered THM here needs a moisture-only model -- see docs D12.",
+        "hc": 0.85,
+        "n": 3,
+        "alpha": 0.05
+      },
+      "degree_of_hydration": {
+        "model": "affinity",
+        "B1": 0.0005,
+        "_B1_comment": "RG8_CONCRACK: Affinity hydration model, fitted to RG8 adiabatic calorimetry [1/h], Jendele et al. Table 1",
+        "B2": 1e-05,
+        "_B2_comment": "RG8_CONCRACK: Affinity hydration model, fitted to RG8 adiabatic calorimetry [-], Jendele et al. Table 1",
+        "alpha_inf": 0.9,
+        "_alpha_inf_comment": "RG8_CONCRACK: Ultimate degree of hydration for w/c=0.46, CEM I, Jendele et al. Table 1",
+        "eta": 7.0,
+        "_eta_comment": "RG8_CONCRACK: Microdiffusion parameter, fitted to RG8 adiabatic calorimetry [-], Jendele et al. Table 1",
+        "Ea": 38300.0,
+        "_Ea_comment": "GENERIC_LITERATURE_VALUE: Typical CEM I activation energy [J/mol]",
+        "R": 8.314,
+        "T_ref": 298.15,
+        "Hu": 498.2,
+        "_Hu_comment": "RG8_CONCRACK: Potential heat of hydration for CEM I 52.5N [J/g_cement]",
+        "c_cement": 320.0,
+        "_c_cement_comment": "RG8_CONCRACK: CALIBRATED cement content [kg/m3]. Nominal mix design is 400 kg/m3, but Jendele et al. reduced to 320 kg/m3 to match measured peak core temperature of 53.7 deg C at 30h. Adjust if using a different Hu."
+      },
+      "thermal_strain": {
+        "T_strain_free_ref": 20.0,
+        "_T_strain_free_ref_comment": "RG8_CONCRACK: Assumed casting temperature [degC, D2 convention]. Not explicitly stated in experiment docs; 20 degC is standard ambient for laboratory conditions.",
+        "alpha_T": 1e-05,
+        "_alpha_T_comment": "INFERRED: from Section 7.3.4.4 (Oslo Wall example) [1/K]"
+      },
+      "b3_creep": {
+        "q1": 2.7e-11,
+        "q2": 1e-10,
+        "q3": 4e-12,
+        "q4": 7e-12,
+        "E28": 37000000000.0,
+        "n": 0.1,
+        "m": 0.5,
+        "r": 1.7,
+        "age_at_start_days": 0.25,
+        "_age_at_start_days_comment": "ASSUMED: material age at t=0 [days] (oofem mps relmatage, D9). Simulation starts at casting, but B3 is singular at age 0 -- 0.25 d ~ initial setting. Affects early-age creep stiffness; CALIBRATE against the early C-D displacement if needed."
+      },
+      "drying_shrinkage": {
+        "k_sh": 0.001,
+        "_k_sh_comment": "CALIBRATE: eps_sh_ult ~= k_sh*(h_amb - 1). At h_amb=0.60 -> -400 ue. Starting value; tune against surf_total_ue reference.",
+        "h_ref": 1.0,
+        "_h_ref_comment": "Fresh concrete cast fully saturated (h=1.0); stress-free humidity reference. Set to 1.0 (= the humidity IC, required by the D11 gate) so eps_sh = k_sh*(h-1) is ALWAYS contraction: with h_ref=0.99 the small sealed-phase overshoot above 0.99 produced wrong-sign (swelling) shrinkage.",
+        "mus": 1e-06,
+        "_mus_comment": "CALIBRATE: mps microprestress flow viscosity muS [1/(Pa*s)], REQUIRED by oofem for humidity-coupled mps (D11). Sets the DRYING-CREEP magnitude under load; the stress-free shrinkage is independent of it (verified 1e-9..1e2). Tune against the C-D displacement reference."
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "temperature",
+      "value": 20.0,
+      "_value_comment": "RG8_CONCRACK: Casting temperature 20 degC (OOFEM backend runs hydration/mps in degC, D2)",
+      "location": "concrete_domain"
+    },
+    {
+      "field": "humidity",
+      "value": 1.0,
+      "_value_comment": "RG8_CONCRACK: Fresh concrete fully saturated at casting (h=1.0). Clamped to saturation so the sealed early phase cannot drift ABOVE its start value into Bazant-Najjar's out-of-range (h>1) warnings; also = drying_shrinkage.h_ref (D11 gate).",
+      "location": "concrete_domain"
+    },
+    {
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "concrete_domain"
+    },
+    {
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "concrete_domain"
+    },
+    {
+      "field": "displacement",
+      "component": "uz",
+      "value": 0.0,
+      "location": "concrete_domain"
+    },
+    {
+      "field": "degree_of_hydration",
+      "value": 0.0,
+      "_value_comment": "Fresh concrete; ODE field always starts at 0",
+      "location": "concrete_domain"
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "robin",
+      "field": "displacement",
+      "component": "uz",
+      "location": "restrained_ends",
+      "alpha": 5000000000.0,
+      "u_ref": 0.0,
+      "_comment": "Winkler spring restraint [N/m³]. k=5e9 → R≈0.25 at E=37GPa, L=5.1m. Matches ATENA ks=0.25 reference curve."
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "support_bottom",
+      "time_function": "constant",
+      "_comment": "RG8_CONCRACK: Vertical support to prevent rigid body motion"
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "exposed_surfaces",
+      "alpha": {
+        "time_table": [
+          [
+            0,
+            0.5
+          ],
+          [
+            172800,
+            6.0
+          ]
+        ],
+        "interp": "step"
+      },
+      "u_ref": 15.0,
+      "_comment": "Insulated EPS formwork h=0.5 W/m2K for t<2 d (172800 s) -- PAPER VALUE restored (was 2, a leftover 'for testing' change); stripped to h=6.0 after. Step table -> gated-load decomposition on oofem. Ambient 15 degC (D2)."
+    },
+    {
+      "type": "robin",
+      "field": "humidity",
+      "location": "exposed_surfaces",
+      "alpha": 5e-08,
+      "u_ref": 0.6,
+      "start_time": 172800,
+      "_comment": "RG8_CONCRACK: ambient h=0.60 after formwork removal (~2 d); sealed before (no load until start_time). Surface moisture film factor 5e-8 m/s (Bazant-type emissivity) replaces the hard Dirichlet clamp -- dirichlet start_time is gated on oofem (re-imposition hangs, catalog); the film is also physically more realistic."
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "restrained_ends",
+      "time_function": "constant",
+      "_comment": "ASSUMED: lateral fixity at the massive reaction heads. Without ANY ux constraint the model has a free rigid-body mode in x -> the direct solver eventually diverges (verified: elastic variant died at ~2800 s, runs 80/80 with this pin). Reaction is ~0 by symmetry."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "concrete_domain": {
+        "active_fields": [
+          "temperature",
+          "displacement",
+          "humidity",
+          "degree_of_hydration"
+        ],
+        "material": "concrete_material"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 2592000.0,
+    "_t_end_comment": "30 DAYS, geraten von dem PLOT",
+    "analysis_type": "transient",
+    "dt_strategy": {
+      "type": "piecewise",
+      "segments": [
+        {
+          "t_end": 43200,
+          "strategy": {
+            "type": "log",
+            "dt_min": 144,
+            "dt_max": 1800,
+            "n_steps": 80
+          }
+        },
+        {
+          "t_end": 259200,
+          "strategy": {
+            "type": "log",
+            "dt_min": 900,
+            "dt_max": 7200,
+            "n_steps": 100
+          }
+        },
+        {
+          "t_end": 2592000,
+          "strategy": {
+            "type": "log",
+            "dt_min": 3600,
+            "dt_max": 43200,
+            "n_steps": 120
+          }
+        }
+      ]
+    }
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "disp_cd_exp",
+        "file": "reference/concrack_rg8_disp_cd_reference.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "disp_exp_mm",
+        "label": "Experiment C-D (Jendele 2012, Fig. 6)"
+      },
+      {
+        "id": "disp_cd_atena",
+        "file": "reference/concrack_rg8_disp_cd_reference.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "disp_sim_ks025_mm",
+        "label": "ATENA ks=0.25 (Jendele 2012, Fig. 6)"
+      },
+      {
+        "id": "strain_core_thermal_ref",
+        "file": "reference/concrack_rg8_strains_reference.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "core_thermal_ue",
+        "label": "Core: Thermal strain (Jendele 2012, Fig. 7)"
+      },
+      {
+        "id": "strain_core_total_ref",
+        "file": "reference/concrack_rg8_strains_reference.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "core_total_ue",
+        "label": "Core: Total strain (Jendele 2012, Fig. 7)"
+      },
+      {
+        "id": "strain_surf_total_ref",
+        "file": "reference/concrack_rg8_strains_reference.csv",
+        "has_header": true,
+        "x_col": "time_days",
+        "y_col": "surf_total_ue",
+        "label": "Surface: Total strain (Jendele 2012, Fig. 7)"
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_days",
+        "type": "formula",
+        "formula": "t * 1.157e-5",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [days]"
+      },
+      {
+        "id": "uz_C",
+        "type": "field",
+        "field": "displacement",
+        "component": "uz",
+        "at": "point_C",
+        "reduce": "value",
+        "evaluate_in": "fem",
+        "display": false
+      },
+      {
+        "id": "uz_D",
+        "type": "field",
+        "field": "displacement",
+        "component": "uz",
+        "at": "point_D",
+        "reduce": "value",
+        "evaluate_in": "fem",
+        "display": false
+      },
+      {
+        "id": "disp_CD_m",
+        "type": "formula",
+        "formula": "uz_D - uz_C",
+        "depends_on": [
+          "uz_C",
+          "uz_D"
+        ],
+        "_comment": "Relative displacement C-D [m] — primary validation target Fig. 7.10",
+        "display": false
+      },
+      {
+        "id": "disp_CD_mm",
+        "type": "formula",
+        "formula": "disp_CD_m * 1000.0",
+        "depends_on": [
+          "disp_CD_m"
+        ],
+        "_comment": "Relative displacement C-D [mm] — for plotting vs. reference",
+        "label": "Displ. C-D [mm]"
+      },
+      {
+        "id": "temp_core_C",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "gage_core",
+        "reduce": "value",
+        "_comment": "Field already in degC (D2). Validate: peak should be 53.7 degC at ~30h (1.25 days)",
+        "label": "Core temp [°C]"
+      },
+      {
+        "id": "humidity_core",
+        "type": "field",
+        "field": "humidity",
+        "component": "h",
+        "at": "gage_core",
+        "reduce": "value",
+        "label": "Core humidity [-]"
+      },
+      {
+        "id": "total_strain_core_ue",
+        "type": "field",
+        "field": "total_strain",
+        "component": "ezz",
+        "at": "gage_core",
+        "reduce": "value",
+        "evaluate_in": "fem",
+        "_comment": "Longitudinal (z-axis) total strain at core [m/m] — multiply by 1e6 for με",
+        "display": false
+      },
+      {
+        "id": "total_strain_core_ue_scaled",
+        "type": "formula",
+        "formula": "total_strain_core_ue * 1e6",
+        "depends_on": [
+          "total_strain_core_ue"
+        ],
+        "label": "Core strain εzz [με]"
+      }
+    ],
+    "plots": [
+      {
+        "name": "displacement_cd",
+        "title": "RG8: Relative Displacement C-D",
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Displ. C-D [mm]"
+        },
+        "grid": true,
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "disp_CD_mm"
+            },
+            "label": "FEM simulation"
+          },
+          {
+            "source": "reference",
+            "ref_id": "disp_cd_exp",
+            "label": "Experiment (Jendele 2012)"
+          },
+          {
+            "source": "reference",
+            "ref_id": "disp_cd_atena",
+            "label": "ATENA ks=0.25"
+          }
+        ]
+      },
+      {
+        "name": "temperature_core",
+        "title": "RG8: Core Temperature",
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Temperature [°C]"
+        },
+        "grid": true,
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "temp_core_C"
+            },
+            "label": "FEM simulation"
+          }
+        ]
+      },
+      {
+        "name": "strain_core_total",
+        "title": "RG8: Total Longitudinal Strain — Core",
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Strain [με]"
+        },
+        "grid": true,
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "total_strain_core_ue_scaled"
+            },
+            "label": "FEM total strain (core)"
+          },
+          {
+            "source": "reference",
+            "ref_id": "strain_core_total_ref",
+            "label": "Reference total (core)"
+          }
+        ]
+      },
+      {
+        "name": "deviation_cd",
+        "title": "RG8: Deviation from Experiment",
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "dev_disp_CD_mm__disp_cd_exp"
+            },
+            "label": "FEM - Experiment [mm]"
+          }
+        ]
+      }
+    ],
+    "aux_fields": [
+      "*"
+    ],
+    "console": {
+      "summary_every_steps": 25,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_days",
+            "y": "disp_CD_mm",
+            "ref_id": "disp_cd_exp"
+          }
+        ]
+      }
+    },
+    "save_checkpoint": true,
+    "export_vtu": true,
+    "save_db": true
+  }
+}

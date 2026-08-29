@@ -1,0 +1,546 @@
+{
+  "metadata": {
+    "id": "briffaut-2010-civaux-wall",
+    "title": "Temperature prediction on Civaux Wall during hydration",
+    "source": {
+      "authors": [
+        "Briffaut, M."
+      ],
+      "year": 2010,
+      "journal": "PhD Dissertation, ENS Cachan (in French)",
+      "doi": "N/A",
+      "cited_in": "Pesavento et al., Chapter 7, Fig. 7.1, RILEM SOA 27, doi:10.1007/978-3-319-76617-1_7"
+    },
+    "dimension": 2,
+    "physics_class": "thermo-chemo",
+    "validation_method": "comparison with 6 embedded temperature sensors + 1 external sensor",
+    "validation_target": "Temperature history at gage points over ~140 h of hydration (Fig. 7.1)",
+    "notes": "Thermal inputs now taken from the CEOS.fr THM benchmark dataset reproduced in Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux': geometry (Sec. IV.A + Fig. IV-11a), h (Annexe C.1), k/cp/mix (Annexe C.2), Ea (Tableau IV-3). STILL UNCALIBRATED: affinity kinetics B1/B2. STILL SIMPLIFIED: the radier is not modelled (adiabatic bottom), so sonde-1/2 level gages run hot -- Briffaut notes the same limitation for sonde 1. Pure thermo-chemo; no mechanics simulated.",
+    "_comment_height_ambiguity": "UNRESOLVED, AFFECTS EVERY GAGE Y-COORDINATE. The real wall is: 0.40 m foundation (radier) + lift 1 = 1.90 m + lift 2 = 0.90 m, lift 2 cast at ~168 h. This model is ONE 1.2 x 2.4 m block cast at t=0. Its 2.4 m height matches NEITHER lift 1 alone (1.90 m) NOR the full wall (2.80 m). Since t_end = 140 h < 168 h, the modelled block can only physically represent LIFT 1, whose height is 1.90 m -> the domain height is most likely wrong and should be 1.90 m. Consequence: gage_core / gage_surface at y = 1.20 sit at mid-height of the 2.4 m block but at 63% of a real 1.90 m lift. They stay in the lift-1 interior either way, so the SONDE ASSIGNMENT is unaffected; only the absolute heights are. NOT changed here -- that is a modelling decision, not a gage decision. If the domain is shortened to 1.90 m, rescale the gage heights (core/surface 1.20 -> ~0.95, gage_low 0.15 -> unchanged, gage_low_mid 0.50 -> unchanged).",
+    "_comment_ambient_bias": "SUSPECTED BC ERROR, not fixed here. reference/civaux_sonde_ext.csv (the measured air temperature) runs 5-15 degC over 0-120 h, mean ~10 degC. All three robin BCs use a constant u_ref = 15 degC, i.e. roughly 5 K too warm. This biases the cooling branch and hits the near-surface gage (T_surface <-> sonde 4) hardest -- exactly the pair being validated. Fix by feeding sonde_ext in as a time_table u_ref before trusting any near-surface deviation metric.",
+    "_comment_sonde5_time_axis": "reference/civaux_sonde5.csv is labelled 'lift 2 core' but its data starts at 20 degC at t=0 and peaks at 20 h, i.e. a fresh-concrete signature on a t=0 axis. Lift 2 is cast at ~168 h, so this curve is either digitized on a LIFT-2-RELATIVE time axis or mis-attributed. Unusable against this model either way -- excluded from all curves and pairs.",
+    "paper_pdf": "briffaut-2010-civaux-wall.pdf"
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "wall",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            1.2,
+            1.9
+          ]
+        },
+        "_comment": "PAPER_VALUE: thickness 1.2 m, height 1.9 m = levee 1 (95+95 cm, Fig. IV-11a). Section IV.A: 'un mur de 20 m de long et de 1,2 m d'epaisseur coule sur un radier'. The radier is NOT modelled here (adiabatic bottom) -- Briffaut meshes it, so expect the near-joint gage to run hot."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "concrete_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "wall"
+        ]
+      },
+      {
+        "name": "surface_left",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            1e-06,
+            1.9009999999999998,
+            1e-06
+          ]
+        },
+        "_comment": "ASSUMED: left face, formwork or exposed. 6-value box, z padded ±1e-6."
+      },
+      {
+        "name": "surface_right",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            1.199,
+            -1e-06,
+            -1e-06,
+            1.201,
+            1.9009999999999998,
+            1e-06
+          ]
+        },
+        "_comment": "ASSUMED: symmetric to surface_left."
+      },
+      {
+        "name": "surface_top",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            1.899,
+            -1e-06,
+            1.201,
+            1.9009999999999998,
+            1e-06
+          ]
+        },
+        "_comment": "ASSUMED: top surface exposed."
+      },
+      {
+        "name": "surface_bottom",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            1.201,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "ASSUMED: bottom on older concrete slab, treated as insulated (no BC = zero flux)."
+      }
+    ],
+    "_comment_convention": "COORDINATE CONVENTION for all points below: x = through-thickness (0 = surface_left formwork face, 1.2 = surface_right formwork face, 0.6 = mid-thickness); y = height ABOVE THE FOUNDATION/WALL JOINT (y=0 IS the joint with the 40 cm radier, which is NOT meshed; y=2.4 = top surface). 'Depth' below always means distance to the NEAREST lateral (formwork) face. Mesh element_size = 0.05 m, so every gage snaps to the nearest node on the 0.05 m grid.",
+    "points": [
+      {
+        "name": "gage_core",
+        "coordinates": [
+          0.6,
+          0.95,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: sonde 3 at (60, 95) cm -- core, mid-height of levee 1. Fig. IV-11a, Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'."
+      },
+      {
+        "name": "gage_surface",
+        "coordinates": [
+          0.1,
+          0.95,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: sonde 4 at (10, 95) cm -- 10 cm from the left face, mid-height. Fig. IV-11a, Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'."
+      },
+      {
+        "name": "gage_low",
+        "coordinates": [
+          0.6,
+          0.2,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: sonde 2 at (60, 20) cm -- 20 cm above the foundation, centreline. Fig. IV-11a, Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'."
+      },
+      {
+        "name": "gage_low_mid",
+        "coordinates": [
+          0.6,
+          1.8,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: sonde 6 at (60, 180) cm -- 10 cm below the top of levee 1, centreline. Fig. IV-11a, Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'."
+      }
+    ],
+    "mesh": {
+      "element_size": 0.05,
+      "_comment": "ASSUMED: 0.05 m → 24 elements across 1.2 m thickness. Sufficient for smooth thermal gradient."
+    }
+  },
+  "physics": {
+    "heat_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "temperature",
+        "symbol": "T",
+        "type": "scalar",
+        "components": [
+          "T"
+        ]
+      }
+    },
+    "hydration": {
+      "type": "ode_source",
+      "dependent_variable": {
+        "name": "degree_of_hydration",
+        "symbol": "alpha",
+        "type": "ode",
+        "components": [
+          "alpha"
+        ],
+        "managed_by": "hydration"
+      }
+    },
+    "solid_mechanics": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "displacement",
+        "symbol": "u",
+        "type": "vector",
+        "components": [
+          "ux",
+          "uy"
+        ]
+      },
+      "_comment": "DIMENSION PIN ONLY: this benchmark is pure thermo-chemo (no mechanics). Declared here per skill's 2D scalar-only trap rule so the physics dimension resolves to 2, matching the 2D mesh. NOT listed in assignment.active_fields — gets no DOFs, no kernel, no material section needed."
+    }
+  },
+  "materials": {
+    "concrete": {
+      "temperature": {
+        "k": 2.8,
+        "rho": 2387.0,
+        "cp": 950.0,
+        "_comment_k": "PAPER_VALUE: 'Conductivite : 2.8 W/(m.K)' -- Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'.",
+        "_comment_rho": "DERIVED: sum of the B11 mix (769+303+769 granulats + 350 ciment + 195 eau + 1.22 adjuvant) = 2387 kg/m3 -- Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'.",
+        "_comment_cp": "PAPER_VALUE: 'Capacite massique : 950 J/(kg.K)' -- Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'."
+      },
+      "degree_of_hydration": {
+        "model": "affinity",
+        "B1": 0.00036,
+        "B2": 0.0005,
+        "alpha_inf": 0.85,
+        "eta": 6.0,
+        "Ea": 36583.8,
+        "R": 8.314,
+        "T_ref": 293.15,
+        "Hu": 470.0,
+        "c_cement": 350.0,
+        "_comment_B1": "MISSING/CALIBRATE: affinity kinetics for the Civaux cement not given in Chapter 7. B1=3.6e-4 s⁻¹ (≈1.3 h⁻¹) is a plausible CEM I starting point — must be calibrated against Fig. 7.1 peak timing (~30-40 h) and magnitude. RISKY.",
+        "_comment_B2": "MISSING/CALIBRATE: see B1.",
+        "_comment_alpha_inf": "ASSUMED: 0.85 typical for w/c ~0.45-0.50 CEM I (Waller 2000); w/c not given.",
+        "_comment_eta": "GENERIC_LITERATURE_VALUE: 6.0 typical CEM I affinity model.",
+        "_comment_Ea": "PAPER_VALUE: Tableau IV-3, 36583.8 J/mol -- Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'.",
+        "_comment_Hu": "GENERIC_LITERATURE_VALUE: 470 J/g, within 400-500 J/g for CEM I.",
+        "_comment_c_cement": "PAPER_VALUE: 'Ciment Airvault CPA 55 350 kg' for Maquette B11 (= the 'voile BO' simulated) -- Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'.",
+        "_comment_sanity": "CROSS-CHECK vs Tableau IV-3 'Chaleur latente d'hydratation = 137000 kJ/m3': Hu*c_cement*alpha_inf = 470e3*350*0.85 = 139825 kJ/m3, i.e. +2.1%. The total heat is therefore right; B1/B2 (affinity KINETICS) remain uncalibrated -- Briffaut fits a 7-coefficient polynomial (a..g, Tableau IV-3), not the Cervera B1/B2/eta form used here."
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "temperature",
+      "value": 20,
+      "location": "concrete_domain",
+      "_comment": "ASSUMED: casting temperature 20°C = 293.15 K. Not stated in Chapter 7. HIGH IMPACT if wrong by >5°C."
+    },
+    {
+      "field": "degree_of_hydration",
+      "value": 0.0,
+      "location": "concrete_domain"
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "surface_left",
+      "alpha": 4.2,
+      "u_ref": 10.0,
+      "_comment": "PAPER_VALUE: formwork (2 cm wood), h=26.25 kJ/(h.m2.K) = 7.29 W/(m2.K). CONSTANT: Annexe C states the formwork was 'maintenu tout au long des releves de temperatures' -- there is NO stripping event. u_ref: sonde_ext measures 4.5-21 degC, time-weighted mean 9.7 -> 10 degC. A measured time_table is gated on the oofem backend (time-varying robin u_ref unverified), so a constant is used. Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "surface_right",
+      "alpha": 4.2,
+      "u_ref": 10.0,
+      "_comment": "PAPER_VALUE: formwork (2 cm wood), h=26.25 kJ/(h.m2.K) = 7.29 W/(m2.K). CONSTANT: Annexe C states the formwork was 'maintenu tout au long des releves de temperatures' -- there is NO stripping event. u_ref: sonde_ext measures 4.5-21 degC, time-weighted mean 9.7 -> 10 degC. A measured time_table is gated on the oofem backend (time-varying robin u_ref unverified), so a constant is used. Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "surface_top",
+      "alpha": 9.72,
+      "u_ref": 10.0,
+      "_comment": "PAPER_VALUE: free upper concrete surface, h=35 kJ/(h.m2.K) = 9.72 W/(m2.K). u_ref: sonde_ext measures 4.5-21 degC, time-weighted mean 9.7 -> 10 degC. A measured time_table is gated on the oofem backend (time-varying robin u_ref unverified), so a constant is used. Briffaut 2010 thesis (tel-00597072), Annexe C 'Donnees simulation mur Civaux'."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "concrete_domain": {
+        "active_fields": [
+          "temperature",
+          "degree_of_hydration"
+        ],
+        "material": "concrete",
+        "_comment": "displacement NOT listed — it exists in physics only as a dimension pin, never gets DOFs."
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 504000.0,
+    "_comment_t_end": "PAPER_VALUE: Fig. 7.1 x-axis goes to ~140 h = 504000 s.",
+    "analysis_type": "transient",
+    "dt_strategy": {
+      "type": "piecewise",
+      "segments": [
+        {
+          "t_end": 7200,
+          "strategy": {
+            "type": "log",
+            "dt_min": 30,
+            "dt_max": 360,
+            "n_steps": 40
+          }
+        },
+        {
+          "t_end": 129600,
+          "strategy": {
+            "type": "log",
+            "dt_min": 360,
+            "dt_max": 3600,
+            "n_steps": 80
+          },
+          "_comment": "Through hydration peak (~30-40 h = 108000-144000 s)."
+        },
+        {
+          "t_end": 504000,
+          "strategy": {
+            "type": "log",
+            "dt_min": 1800,
+            "dt_max": 14400,
+            "n_steps": 60
+          }
+        }
+      ]
+    }
+  },
+  "results": {
+    "_comment_sonde_map": "PROBE ASSIGNMENT (positions are read off the scaled sketch in Briffaut Fig. IV-11a / CEOS Fig. 1-8; the source gives NO coordinate table, so all placements are relative). Validation pairs: sonde 3 <-> gage_core, sonde 4 <-> gage_surface. Diagnostics only (NOT paired): sonde 1 <-> gage_low, sonde 2 <-> gage_low_mid, sonde_ext = ambient air. DELIBERATELY EXCLUDED: sonde 5 (core of LIFT 2 -- lift 2 is cast at ~168 h, which is beyond t_end = 504000 s = 140 h AND is not present in this single-block mesh, so no query can represent it); sondes 6/7 (edge/interface points whose location cannot be pinned from the figure -- no gage claims them).",
+    "reference_curves": [
+      {
+        "id": "sonde3_exp",
+        "file": "reference/civaux_sonde3.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "Sonde 3 — Lift 1, interior/core (mid-thickness)"
+      },
+      {
+        "id": "sonde4_exp",
+        "file": "reference/civaux_sonde4.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "Sonde 4 — Lift 1, near-surface (a few cm inside lateral formwork)"
+      },
+      {
+        "id": "sonde1_exp",
+        "file": "reference/civaux_sonde1.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "Sonde 1 — Lift 1 base, at foundation joint (DIAGNOSTIC ONLY — unreliable)"
+      },
+      {
+        "id": "sonde2_exp",
+        "file": "reference/civaux_sonde2.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "Sonde 2 — Lift 1, low (between joint and core) (DIAGNOSTIC ONLY)"
+      },
+      {
+        "id": "sonde_ext_exp",
+        "file": "reference/civaux_sonde_ext.csv",
+        "has_header": true,
+        "x_col": "time_h",
+        "y_col": "T_degC",
+        "label": "Sonde ext — ambient AIR temperature (NOT a concrete value)",
+        "_comment": "Never pair this with a field query. Plotted only to expose the BC bias: measured air runs ~5-15 degC (mean ~10 degC), while every robin BC in this model uses u_ref = 15 degC. See metadata._comment_ambient_bias."
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_hours",
+        "type": "formula",
+        "formula": "t / 3600.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [hours]"
+      },
+      {
+        "id": "T_core",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "gage_core",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Core temperature [°C]",
+        "_comment_units": "Field solves in degC (IC/u_ref are degC; only degree_of_hydration.T_ref is Kelvin) -- no K->C conversion."
+      },
+      {
+        "id": "T_surface",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "gage_surface",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Near-surface temperature [°C]",
+        "_comment_units": "Field solves in degC (IC/u_ref are degC; only degree_of_hydration.T_ref is Kelvin) -- no K->C conversion.",
+        "_comment_pairing": "Paired with sonde 4. Renamed from 'Surface temperature': the gage is 6 cm INSIDE the face, and no probe sits on the skin."
+      },
+      {
+        "id": "T_low",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "gage_low",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Base temperature, 0.15 m above joint [°C]",
+        "_comment_units": "Field solves in degC (IC/u_ref are degC; only degree_of_hydration.T_ref is Kelvin) -- no K->C conversion.",
+        "_comment_pairing": "DIAGNOSTIC vs sonde 1 -- deliberately NOT in reference_deviation.pairs. The adiabatic bottom omits the cold 40 cm radier, so a large positive bias here is EXPECTED and is the point of the query."
+      },
+      {
+        "id": "T_low_mid",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "gage_low_mid",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Lower-lift temperature, 0.50 m above joint [°C]",
+        "_comment_units": "Field solves in degC (IC/u_ref are degC; only degree_of_hydration.T_ref is Kelvin) -- no K->C conversion.",
+        "_comment_pairing": "DIAGNOSTIC vs sonde 2 -- deliberately NOT in reference_deviation.pairs. Probe height is a guess; same adiabatic-bottom caveat as T_low."
+      }
+    ],
+    "plots": [
+      {
+        "name": "temperature_history",
+        "title": "Civaux Wall - Temperature History (Fig. 7.1)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [hours]"
+        },
+        "y_axis": {
+          "label": "Temperature [°C]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_core"
+            },
+            "label": "FEM — core"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_surface"
+            },
+            "label": "FEM — near-surface"
+          },
+          {
+            "source": "reference",
+            "ref_id": "sonde3_exp",
+            "label": "Sonde 3 — core (Experiment)"
+          },
+          {
+            "source": "reference",
+            "ref_id": "sonde4_exp",
+            "label": "Sonde 4 — near-surface (Experiment)"
+          }
+        ],
+        "_comment": "VALIDATION plot. Curve order mirrors reference_deviation.pairs exactly: T_core<->sonde 3, T_surface<->sonde 4. Do not add sonde 1/2/5/ext here -- they belong in temperature_diagnostic."
+      },
+      {
+        "name": "temperature_diagnostic",
+        "title": "Civaux Wall — Lower-lift diagnostics (foundation heat sink NOT modelled)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [hours]"
+        },
+        "y_axis": {
+          "label": "Temperature [°C]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_low"
+            },
+            "label": "FEM — 0.15 m above joint"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "T_low_mid"
+            },
+            "label": "FEM — 0.50 m above joint"
+          },
+          {
+            "source": "reference",
+            "ref_id": "sonde1_exp",
+            "label": "Sonde 1 — at joint (Experiment)"
+          },
+          {
+            "source": "reference",
+            "ref_id": "sonde2_exp",
+            "label": "Sonde 2 — low in lift 1 (Experiment)"
+          },
+          {
+            "source": "reference",
+            "ref_id": "sonde_ext_exp",
+            "label": "Ambient air (Experiment)"
+          }
+        ],
+        "_comment": "DIAGNOSTIC plot, NOT a validation target. Expect the two FEM curves to sit well ABOVE sondes 1 and 2: the model has no foundation and an adiabatic bottom, so the radier heat sink that damps both probes is absent. The gap is a direct measure of that omission. The ambient curve shows the measured air is ~5-15 degC, not the assumed u_ref = 15 degC."
+      }
+    ],
+    "console": {
+      "summary_every_steps": 20,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "_comment": "ONLY physically defensible pairs belong here. gage_core is the deepest point in the section <-> sonde 3, the hottest/earliest probe and the CEOS reference point for lift 1. gage_surface is 6 cm inside the formwork face at the SAME height <-> sonde 4, whose 6 K lower / 10 h later peak is the near-surface signature. Sonde 1 is NOT usable as a target (it reads the cold radier, which this mesh does not contain) and sonde 5 is lift 2 (never cast within t_end) -- both are excluded on purpose; see results._comment_sonde_map.",
+        "pairs": [
+          {
+            "x": "t_hours",
+            "y": "T_core",
+            "ref_id": "sonde3_exp"
+          },
+          {
+            "x": "t_hours",
+            "y": "T_surface",
+            "ref_id": "sonde4_exp"
+          }
+        ]
+      }
+    },
+    "save_checkpoint": true,
+    "aux_fields": [
+      "heat_flux"
+    ],
+    "export_vtu": true,
+    "save_db": true
+  }
+}

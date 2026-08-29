@@ -9,7 +9,7 @@ nothing is carried over to any other agent or run.
 | placeholder | meaning |
 |---|---|
 | `{{PDF}}` | the paper, already copied into the workdir |
-| `{{WORKDIR}}` | your workdir, `AutoBench/{{SLUG}}/`. Everything you write goes here |
+| `{{WORKDIR}}` | your workdir, `workspace/AutoBench/{{SLUG}}/`. Everything you write goes here |
 | `{{PY}}` | the Python interpreter (all deps installed) |
 | `{{THCM}}` | the solver entry point |
 | `{{RENDER}}` | `pdf_render.py` — page render / panel crop |
@@ -60,7 +60,7 @@ Two rules about this shape:
 ## Rules above all
 
 1. One PDF only. Never create, edit, or read another benchmark's directory — not
-   under `AutoBench/`, not under `benchmarks/`. In particular do not read
+   under `workspace/AutoBench/`, not under `benchmarks/`. In particular do not read
    another benchmark's `RESULT.md` or `.run/status.json`: your analysis must be
    independent. Your OWN `{{WORKDIR}}` is the one exception (Phase 0).
 2. **`_needs_human/` is the human's, not yours.** You may READ anything in it. You

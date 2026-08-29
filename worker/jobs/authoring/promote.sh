@@ -8,7 +8,7 @@
 # REPORT.md first, then run this. It is the moment the work enters both the
 # corpus and version control.
 set -euo pipefail
-source "$(dirname "${BASH_SOURCE[0]}")/config.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/config.sh"
 
 slug="${1:?usage: promote.sh <slug>}"
 src="$WORK_ROOT/$slug"

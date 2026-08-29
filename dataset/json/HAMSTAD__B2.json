@@ -1,0 +1,567 @@
+{
+  "metadata": {
+    "id": "hamstad-benchmark-2-analytical",
+    "title": "HAMSTAD WP2 Benchmark 2: isothermal moisture redistribution in a homogeneous wall (analytical case)",
+    "source": {
+      "authors": [
+        "Hagentoft (ed.)",
+        "HAMSTAD WP2 group (CTH, TNO, KUL, TUD, Technion)"
+      ],
+      "year": 2002,
+      "journal": "HAMSTAD WP2 Final report R-02:8, Chalmers University of Technology (EU GRD1-1999-20007)",
+      "doi": ""
+    },
+    "dimension": 2,
+    "physics_class": "hygric (isothermal moisture transport, analytical validation)",
+    "validation_method": "analytical series solution (this benchmark's published reference case)",
+    "validation_target": "Moisture content profiles w(x) at t = 100, 300, 1000 h (w in kg/m3, x in m, 21 positions)",
+    "notes": "Solved in the paper's OWN linear moisture-content (w) formulation: constant D_w=6.0e-10 m2/s, constant delta_p=1e-15 s -> the governing PDE in w is linear, so the humidity field is used as a pure relabel of w (capacity=1, alpha=1 in bazant_najjar gives constant D0). Isotherm nonlinearity does NOT enter this formulation: w_e=w(0.45)=19.536 and w_i=w(0.65)=30.506 kg/m3 enter only as Robin reference values. Robin coefficients beta_w = beta_p*p_sat/xi are isotherm-slope dependent but Bi~1e7 makes them quasi-Dirichlet (sensitivity <0.01 kg/m3 per 10% beta change). Tangent slopes xi_e=4.113e4 (ext), xi_i=7.433e3 (int) used; secant xi=131 would shift boundaries by ~1 kg/m3 - within the HAMSTAD acceptance band (worst participant error 2.24 kg/m3). Reference CSVs are the computed analytical solution (asymmetric Robin-Robin series), cross-checked against a published independent implementation: w(0,1000h)=19.54, w(0.20,1000h)=30.51 - exact match. RISKY-CHECK: bazant_najjar with capacity=1 must accept the parameter set as linear diffusion; if the backend enforces hc in (0,1) only as a bound, hc=0.5 is inert at alpha=1.",
+    "paper_pdf": "hamstad.pdf"
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "wall",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.2,
+            0.02
+          ]
+        },
+        "_comment": "PAPER_VALUE: 200 mm wall thickness (Sec. 3.2 'Dimensions'). ASSUMED: 0.02 m transverse height - 1D model, no transverse physics; matches element_size so probes sit mid-strip."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "wall_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "wall"
+        ]
+      },
+      {
+        "name": "face_exterior",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            1e-06,
+            0.020001,
+            1e-06
+          ]
+        },
+        "_comment": "x=0, EXTERIOR side (small x per paper convention, Sec. 3.2 output spec)"
+      },
+      {
+        "name": "face_interior",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            0.199999,
+            -1e-06,
+            -1e-06,
+            0.200001,
+            0.020001,
+            1e-06
+          ]
+        },
+        "_comment": "x=0.2, INTERIOR side"
+      },
+      {
+        "name": "probe_x000",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            -1e-06,
+            0.009999,
+            -1e-06,
+            1e-06,
+            0.010001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: output position x=0.00 m (exterior surface)"
+      },
+      {
+        "name": "probe_x010",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.009999,
+            0.009999,
+            -1e-06,
+            0.010001,
+            0.010001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: output position x=0.01 m"
+      },
+      {
+        "name": "probe_x050",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.049999,
+            0.009999,
+            -1e-06,
+            0.050001,
+            0.010001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: output position x=0.05 m"
+      },
+      {
+        "name": "probe_x100",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.099999,
+            0.009999,
+            -1e-06,
+            0.100001,
+            0.010001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: output position x=0.10 m (mid-plane)"
+      },
+      {
+        "name": "probe_x150",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.149999,
+            0.009999,
+            -1e-06,
+            0.150001,
+            0.010001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: output position x=0.15 m"
+      },
+      {
+        "name": "probe_x200",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.199999,
+            0.009999,
+            -1e-06,
+            0.200001,
+            0.010001,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: output position x=0.20 m (interior surface)"
+      }
+    ],
+    "mesh": {
+      "element_size": 0.002,
+      "order": 1,
+      "recombine": true,
+      "_comment": "0.002 m elements -> 100 elements across 0.2 m: probes land exactly on nodes (0.01 m output grid), and the steep boundary layers at early times (penetration sqrt(Dw*t) = 0.5 mm at 100 h) are resolved. Field is linear in h -> quad/triangle irrelevant."
+    }
+  },
+  "physics": {
+    "moisture_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "humidity",
+        "symbol": "h",
+        "type": "scalar",
+        "components": [
+          "h"
+        ],
+        "_comment": "h carries the MOISTURE CONTENT w [kg/m3] directly (relabel). All queries map h -> w by identity."
+      }
+    }
+  },
+  "materials": {
+    "material_A": {
+      "humidity": {
+        "model": "isolin_moisture",
+        "capacity": 1.0,
+        "D0": 6e-10
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "humidity",
+      "value": 84.7687,
+      "location": "wall_domain",
+      "_comment": "PAPER_VALUE: w0 = 84.7687 kg/m3 (= w(0.95) on the isotherm w=116*(1-ln(phi)/0.118)^-0.869, verified to 4 decimals), T=20 C isothermal."
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "robin",
+      "field": "humidity",
+      "location": "face_exterior",
+      "alpha": 0.056824,
+      "u_ref": 19.5356,
+      "_comment": "EXTERIOR (x=0): Robin in w-form -Dw dw/dn = beta_w (w - w_e). xi(0.45) = dw/dphi = 41.162 kg/m3 -> beta_w = beta_p*p_sat/xi = 1e-3*2339/41.162 = 5.6824e-2 m/s. u_ref = w_e = w(0.45) = 19.5356 kg/m3 (PAPER_VALUE via the isotherm). Bi = 1.9e7 -> quasi-Dirichlet; a 10% error in beta moves results by <0.01 kg/m3. beta_p = 1.0e-3 s/m and p_sat(20 C) = 2339 Pa are both PAPER_VALUEs (p.21)."
+    },
+    {
+      "type": "robin",
+      "field": "humidity",
+      "location": "face_interior",
+      "alpha": 0.031473,
+      "u_ref": 30.5064,
+      "_comment": "INTERIOR (x=0.2): same construction. xi(0.65) = 74.317 kg/m3 -> beta_w = 1e-3*2339/74.317 = 3.1473e-2 m/s; u_ref = w_i = w(0.65) = 30.506 kg/m3."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "wall_domain": {
+        "active_fields": [
+          "humidity"
+        ],
+        "material": "material_A"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 3600000.0,
+    "analysis_type": "transient",
+    "_comment_t_end": "PAPER_VALUE: 1000 h simulation time (Sec. 3.2 output spec)",
+    "dt_strategy": {
+      "type": "log",
+      "dt_min": 300.0,
+      "dt_max": 50000.0,
+      "n_steps": 369
+    },
+    "_comment_dt": "log grid 300 s -> 5e4 s sums to 1000.1 h; fine steps resolve the instant RH step at t=0 (boundary layer sqrt(Dw*t) = 0.05 mm at 1 h; 0.5 mm at 100 h)"
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "an_profile_100h",
+        "file": "reference/analytical_profiles.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "w_100h",
+        "label": "Analytical w(x), t=100 h",
+        "_comment": "Robin-Robin series solution of the paper's w-formulation (500 modes), ONE FILE with one column per requested time -- the paper (Output spec, p.21) asks for w(x) at 100, 300 AND 1000 h, so all three are wired.\nVERIFIED against the paper's own Figures 3.2.1-3.2.4 (read at gridline crossings; the figures are raster, so no vector extraction is possible): 100 h x=2/3 cm -> 62.5/75.0 vs 62.8554/75.0545; 1000 h x=3 cm -> 42.0 vs 41.9918; 1000 h x=18/19 cm -> 43.2/37.0 vs 43.1306/36.9083. The interior half matches too, which the old spot-check never covered.\nThe former 'an_timeseries' entry pointed at reference/analytical_timeseries.csv, which DOES NOT EXIST -- it silently produced a reference-free plot. Removed."
+      },
+      {
+        "id": "an_profile_300h",
+        "file": "reference/analytical_profiles.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "w_300h",
+        "label": "Analytical w(x), t=300 h"
+      },
+      {
+        "id": "an_profile_1000h",
+        "file": "reference/analytical_profiles.csv",
+        "has_header": true,
+        "x_col": "x_m",
+        "y_col": "w_1000h",
+        "label": "Analytical w(x), t=1000 h"
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_hours",
+        "type": "formula",
+        "formula": "t / 3600.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [hours]"
+      },
+      {
+        "id": "w_x000",
+        "type": "field",
+        "field": "humidity",
+        "component": "h",
+        "at": "probe_x000",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "w at x=0.00 m [kg/m3]",
+        "_comment": "identity map h->w; expect 19.54 kg/m3 from the first resolved step (quasi-Dirichlet)"
+      },
+      {
+        "id": "w_x010",
+        "type": "field",
+        "field": "humidity",
+        "component": "h",
+        "at": "probe_x010",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "w at x=0.01 m [kg/m3]"
+      },
+      {
+        "id": "w_x050",
+        "type": "field",
+        "field": "humidity",
+        "component": "h",
+        "at": "probe_x050",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "w at x=0.05 m [kg/m3]"
+      },
+      {
+        "id": "w_x100",
+        "type": "field",
+        "field": "humidity",
+        "component": "h",
+        "at": "probe_x100",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "w at x=0.10 m [kg/m3]",
+        "_comment": "primary validation quantity: 84.77 (100 h) -> 84.11 (300 h) -> 69.46 (1000 h) kg/m3"
+      },
+      {
+        "id": "w_x150",
+        "type": "field",
+        "field": "humidity",
+        "component": "h",
+        "at": "probe_x150",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "w at x=0.15 m [kg/m3]"
+      },
+      {
+        "id": "w_x200",
+        "type": "field",
+        "field": "humidity",
+        "component": "h",
+        "at": "probe_x200",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "w at x=0.20 m [kg/m3]",
+        "_comment": "expect 30.51 kg/m3 throughout (quasi-Dirichlet)"
+      },
+      {
+        "id": "w_profile_100h",
+        "type": "line_profile",
+        "field": "humidity",
+        "component": "h",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.01
+        ],
+        "end": [
+          0.2,
+          0.01
+        ],
+        "n_samples": 201,
+        "at_time": 360000.0,
+        "label": "w(x) at t=100 h [kg/m3]",
+        "_comment": "at_time evaluates the profile ONCE, on the step crossing that instant. Without it a line_profile runs every step and a plot can only show the last one -- which is why only 1000 h used to be comparable. 2D coordinates: the backend rejects 3 on a 2D mesh."
+      },
+      {
+        "id": "w_profile_300h",
+        "type": "line_profile",
+        "field": "humidity",
+        "component": "h",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.01
+        ],
+        "end": [
+          0.2,
+          0.01
+        ],
+        "n_samples": 201,
+        "at_time": 1080000.0,
+        "label": "w(x) at t=300 h [kg/m3]"
+      },
+      {
+        "id": "w_profile_1000h",
+        "type": "line_profile",
+        "field": "humidity",
+        "component": "h",
+        "axis": 0,
+        "start": [
+          0.0,
+          0.01
+        ],
+        "end": [
+          0.2,
+          0.01
+        ],
+        "n_samples": 201,
+        "at_time": 3600000.0,
+        "label": "w(x) at t=1000 h [kg/m3]"
+      }
+    ],
+    "plots": [
+      {
+        "name": "moisture_history_midplane",
+        "title": "Moisture content at x=0.10 m",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [hours]"
+        },
+        "y_axis": {
+          "label": "Moisture content [kg/m3]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_hours"
+            },
+            "y": {
+              "key": "w_x100"
+            },
+            "label": "FEM (OOFEM)"
+          }
+        ],
+        "_comment": "No reference curve: the paper's requested output is w(x) profiles, not a time series, and no analytical time series file exists. The profile plots below carry the validation."
+      },
+      {
+        "name": "moisture_profile_100h",
+        "title": "HAMSTAD BM2 - moisture content profile at t=100 h",
+        "grid": true,
+        "x_axis": {
+          "label": "x [m]"
+        },
+        "y_axis": {
+          "label": "Moisture content [kg/m3]"
+        },
+        "curves": [
+          {
+            "source": "query",
+            "query_key": "w_profile_100h",
+            "axis": 0,
+            "label": "FEM (OOFEM)",
+            "style": {
+              "color": "#2a78d6",
+              "linewidth": 2.2,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "an_profile_100h",
+            "label": "Analytical (HAMSTAD BM2)",
+            "style": {
+              "color": "#eb6834",
+              "linestyle": "none",
+              "linewidth": 0,
+              "marker": "o",
+              "markersize": 6,
+              "alpha": 0.85,
+              "zorder": 25
+            }
+          }
+        ],
+        "_comment": "A line_profile is a SPATIAL result and must be read with source:'query' + query_key. It used to be declared source:'simulation' with x=t_hours, y=w_profile, which silently rendered NO FEM curve at all -- the plot showed only the analytical line.\nThe analytical solution is drawn as MARKERS, not a line: the agreement is so close that a dashed reference line sat entirely underneath the FEM curve and was invisible. 21 points is exactly the paper's requested output grid."
+      },
+      {
+        "name": "moisture_profile_300h",
+        "title": "HAMSTAD BM2 - moisture content profile at t=300 h",
+        "grid": true,
+        "x_axis": {
+          "label": "x [m]"
+        },
+        "y_axis": {
+          "label": "Moisture content [kg/m3]"
+        },
+        "curves": [
+          {
+            "source": "query",
+            "query_key": "w_profile_300h",
+            "axis": 0,
+            "label": "FEM (OOFEM)",
+            "style": {
+              "color": "#2a78d6",
+              "linewidth": 2.2,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "an_profile_300h",
+            "label": "Analytical (HAMSTAD BM2)",
+            "style": {
+              "color": "#1baf7a",
+              "linestyle": "none",
+              "linewidth": 0,
+              "marker": "o",
+              "markersize": 6,
+              "alpha": 0.85,
+              "zorder": 25
+            }
+          }
+        ],
+        "_comment": "\nThe analytical solution is drawn as MARKERS, not a line: the agreement is so close that a dashed reference line sat entirely underneath the FEM curve and was invisible. 21 points is exactly the paper's requested output grid."
+      },
+      {
+        "name": "moisture_profile_1000h",
+        "title": "HAMSTAD BM2 - moisture content profile at t=1000 h",
+        "grid": true,
+        "x_axis": {
+          "label": "x [m]"
+        },
+        "y_axis": {
+          "label": "Moisture content [kg/m3]"
+        },
+        "curves": [
+          {
+            "source": "query",
+            "query_key": "w_profile_1000h",
+            "axis": 0,
+            "label": "FEM (OOFEM)",
+            "style": {
+              "color": "#2a78d6",
+              "linewidth": 2.2,
+              "zorder": 10
+            }
+          },
+          {
+            "source": "reference",
+            "ref_id": "an_profile_1000h",
+            "label": "Analytical (HAMSTAD BM2)",
+            "style": {
+              "color": "#e34948",
+              "linestyle": "none",
+              "linewidth": 0,
+              "marker": "o",
+              "markersize": 6,
+              "alpha": 0.85,
+              "zorder": 25
+            }
+          }
+        ],
+        "_comment": "\nThe analytical solution is drawn as MARKERS, not a line: the agreement is so close that a dashed reference line sat entirely underneath the FEM curve and was invisible. 21 points is exactly the paper's requested output grid."
+      }
+    ],
+    "console": {
+      "summary_every_steps": 20,
+      "reference_deviation": {
+        "enabled": false,
+        "_comment": "Disabled: reference_deviation pairs a TIME SERIES against a reference, and this benchmark's only reference is w(x) profiles. It used to name 'an_timeseries', whose file does not exist."
+      }
+    },
+    "save_checkpoint": true,
+    "aux_fields": [
+      "*"
+    ],
+    "export_vtu": true,
+    "save_db": true
+  }
+}

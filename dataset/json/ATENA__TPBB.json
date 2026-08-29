@@ -1,0 +1,344 @@
+{
+  "metadata": {
+    "id": "tpbb-atena-three-point-bending",
+    "title": "Three-Point Bending Beam — Tensile Strength Determination",
+    "source": {
+      "authors": [
+        "Červenka, V.",
+        "Červenka, J."
+      ],
+      "year": 2014,
+      "journal": "ATENA Program Documentation — Tutorial",
+      "doi": "N/A"
+    },
+    "dimension": 2,
+    "physics_class": "mechanical",
+    "validation_method": "analytical_comparison",
+    "validation_target": "Peak load and flexural strength vs CEB-FIP MC90 Eq. 1.1",
+    "notes": "Plain concrete unreinforced beam 0.6m span x 0.1m height. Displacement-controlled quasi-static fracture. Two variants: rotating_crack and fixed_crack. Peak load rotating=15.18kN, fixed=14.95kN. CEB-FIP estimate 15.84kN.",
+    "paper_pdf": "atena-tpbb.pdf"
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "beam",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.6,
+            0.1
+          ]
+        }
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "concrete_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "beam"
+        ]
+      },
+      {
+        "name": "left_support",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            1e-06,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "Pin support at x=0, y=0"
+      },
+      {
+        "name": "right_support",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.599,
+            -1e-06,
+            -1e-06,
+            0.601,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "Roller support at x=0.6m, y=0"
+      },
+      {
+        "name": "load_point",
+        "dimension": 0,
+        "selection": {
+          "box": [
+            0.299,
+            0.099,
+            -1e-06,
+            0.301,
+            0.101,
+            1e-06
+          ]
+        },
+        "_comment": "Mid-span top edge load application point"
+      }
+    ],
+    "points": [
+      {
+        "name": "midspan_bottom",
+        "coordinates": [
+          0.3,
+          0.0,
+          0.0
+        ],
+        "_comment": "Bottom fiber at mid-span — monitors crack opening"
+      },
+      {
+        "name": "load_point_gage",
+        "coordinates": [
+          0.3,
+          0.1,
+          0.0
+        ],
+        "_comment": "Top fiber at mid-span — monitors applied displacement"
+      }
+    ],
+    "mesh": {
+      "element_size": 0.02
+    }
+  },
+  "physics": {
+    "solid_mechanics": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "displacement",
+        "symbol": "u",
+        "type": "vector",
+        "components": [
+          "ux",
+          "uy"
+        ]
+      },
+      "governing_equations": [
+        "div(sigma) = 0"
+      ]
+    }
+  },
+  "materials": {
+    "concrete": {
+      "displacement": {
+        "model": "damage_rankine",
+        "E": 34030000000.0,
+        "_E_comment": "PAPER_VALUE: Table 1.1-1 [Pa]",
+        "nu": 0.2,
+        "_nu_comment": "PAPER_VALUE: Table 1.1-1",
+        "ft": 2807000.0,
+        "_ft_comment": "PAPER_VALUE: Table 1.1-1 [Pa]",
+        "Gf": 70.18,
+        "_Gf_comment": "PAPER_VALUE: Table 1.1-1 [J/m2]",
+        "rho": 2400,
+        "beta_shear": 0.2,
+        "_beta_shear_comment": "Required for fixed_crack model; ignored by rotating_crack. Default 0.2.",
+        "plane_stress": true,
+        "thickness": 0.3
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "concrete_domain"
+    },
+    {
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "concrete_domain"
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "left_support",
+      "time_function": "constant",
+      "_comment": "Pin: restrain horizontal at left support"
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "left_support",
+      "time_function": "constant",
+      "_comment": "Pin: restrain vertical at left support"
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "right_support",
+      "time_function": "constant",
+      "_comment": "Roller: restrain vertical only at right support"
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "uy",
+      "value": -0.0004,
+      "location": "load_point",
+      "time_function": "linear",
+      "_comment": "Displacement-controlled loading: 0.4mm downward at mid-span top. Paper uses 0.01mm increments, refined to 0.0025mm near peak. t_end maps to total applied displacement."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "concrete_domain": {
+        "active_fields": [
+          "displacement"
+        ],
+        "material": "concrete"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 1.0,
+    "_t_end_comment": "Pseudo-time 0→1 maps displacement 0→-0.4mm at load_point via linear time_function",
+    "analysis_type": "transient",
+    "dt_strategy": {
+      "type": "piecewise",
+      "segments": [
+        {
+          "t_end": 0.25,
+          "dt": 0.025,
+          "_comment": "Coarse pre-peak steps (displacement increments ~0.01mm)"
+        },
+        {
+          "t_end": 0.45,
+          "dt": 0.00625,
+          "_comment": "Fine steps near peak (displacement increments ~0.0025mm)"
+        },
+        {
+          "t_end": 1.0,
+          "dt": 0.025,
+          "_comment": "Post-peak softening regime"
+        }
+      ]
+    }
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "tpbb_rotating",
+        "file": "reference/tpbb_load_deflection.csv",
+        "has_header": true,
+        "x_col": "deflection_mm",
+        "y_col": "load_rotating_kN",
+        "label": "ATENA rotating crack (Fig 1-2)"
+      },
+      {
+        "id": "tpbb_fixed",
+        "file": "reference/tpbb_load_deflection.csv",
+        "has_header": true,
+        "x_col": "deflection_mm",
+        "y_col": "load_fixed_kN",
+        "label": "ATENA fixed crack (Fig 1-2)"
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time"
+      },
+      {
+        "id": "uy_loadpoint",
+        "type": "field",
+        "field": "displacement",
+        "component": "uy",
+        "at": "load_point_gage",
+        "reduce": "value",
+        "evaluate_in": "fem"
+      },
+      {
+        "id": "deflection_mm",
+        "type": "formula",
+        "formula": "uy_loadpoint * -1000.0",
+        "depends_on": [
+          "uy_loadpoint"
+        ]
+      },
+      {
+        "id": "reaction_load",
+        "type": "reaction",
+        "component": "uy",
+        "at": "load_point_gage",
+        "reduce": "sum",
+        "evaluate_in": "fem"
+      },
+      {
+        "id": "load_kN",
+        "type": "formula",
+        "formula": "reaction_load * -1e-3",
+        "depends_on": [
+          "reaction_load"
+        ],
+        "_comment": "Convert N→kN, flip sign (downward reaction is negative). Target peak: ~15.18 kN (rotating) or ~14.95 kN (fixed)"
+      }
+    ],
+    "plots": [
+      {
+        "name": "tpbb_load_deflection",
+        "title": "TPBB: Load vs Deflection",
+        "x_axis": {
+          "label": "Deflection [mm]"
+        },
+        "y_axis": {
+          "label": "Load [kN]"
+        },
+        "grid": true,
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "deflection_mm"
+            },
+            "y": {
+              "key": "load_kN"
+            },
+            "label": "FEM (rotating crack)"
+          },
+          {
+            "source": "reference",
+            "ref_id": "tpbb_rotating",
+            "label": "ATENA rotating (Fig 1-2)"
+          },
+          {
+            "source": "reference",
+            "ref_id": "tpbb_fixed",
+            "label": "ATENA fixed (Fig 1-2)"
+          }
+        ]
+      }
+    ],
+    "save_checkpoint": true,
+    "aux_fields": [
+      "damage",
+      "total_strain"
+    ],
+    "export_vtu": true,
+    "save_db": true
+  }
+}

@@ -1,0 +1,504 @@
+{
+  "_schema_comment": "Idealized 1-D moisture-diffusion drying benchmark reconstructed from Xi, Bazant & Jennings (1994), Adv. Cem. Bas. Mat. 1:248-266 (Part 2, Figs. 15-16, Parrott 1988 drying test). Per CREATE.md: NOT a drop-in paper benchmark; model form is re-fit and several HIGH-impact values are assumed. RISKY - not validated until flagged items are confirmed.",
+  "metadata": {
+    "id": "xi-bazant-jennings-1994-parrott-drying",
+    "title": "Concrete drying - relative humidity history at several depths (Parrott 15 cm slab, w/c=0.58, Type I)",
+    "source": {
+      "authors": [
+        "Yunping Xi",
+        "Zdenek P. Bazant",
+        "Hamlin M. Jennings"
+      ],
+      "year": 1994,
+      "journal": "Advanced Cement Based Materials",
+      "volume": "1",
+      "pages": "248-266"
+    },
+    "dimension": 2,
+    "physics_class": "moisture-diffusion",
+    "validation_method": "reproduce Parrott (1988) drying: computed RH(t) at depths vs measured curves (paper Fig. 16, Part 2)",
+    "validation_target": "RH(t) at 1.56 cm and 3.36 cm depths over 200 days",
+    "notes": "RISKY: model-form caveats remain - (1) the S-curve is a fit to the paper's exponential D_h (max rel residual ~12%), (2) the surface film coefficient and initial RH are assumed, and (3) the paper's nonlinear moisture capacity is replaced by a constant (does NOT affect the RH solution, only water-content loss). D0=1.4e-11 m2/s is CALIBRATED against the digitized Parrott data (RMSE 0.026 RH). Reference curves are digitized from Fig. 16 (see reference/*.csv).",
+    "assumptions_report": "See CREATE.md-required Assumptions Report in notes and _comment tags. HIGH-impact assumed/unknown: surface film coefficient (ASSUMED), initial RH (ASSUMED), D_h magnitude (CALIBRATED/MISSING), S-curve fit (CALIBRATED).",
+    "paper_pdf": "xi-bazant-jennings-1994-moisture-diffusion.pdf"
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "slab",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.15,
+            0.1
+          ]
+        },
+        "_comment": "PAPER_VALUE: Parrott drying specimen is a 15 cm (0.15 m) slab (Part 2, Fig. 16). In-plane height 0.10 m arbitrary; lateral faces x=0 and x=0.15 are the drying surfaces, top/bottom insulated so the field is effectively 1-D."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "concrete_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "slab"
+        ]
+      },
+      {
+        "name": "surface_left",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            1e-06,
+            0.101,
+            1e-06
+          ]
+        }
+      },
+      {
+        "name": "surface_right",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            0.149,
+            -1e-06,
+            -1e-06,
+            0.151,
+            0.101,
+            1e-06
+          ]
+        }
+      }
+    ],
+    "points": [
+      {
+        "name": "p_d175",
+        "coordinates": [
+          0.00175,
+          0.05,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: Parrott sensor depth 0.175 cm (Fig. 16)"
+      },
+      {
+        "name": "p_d156",
+        "coordinates": [
+          0.0156,
+          0.05,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: Parrott sensor depth 1.56 cm (Fig. 16) - primary validation target"
+      },
+      {
+        "name": "p_d336",
+        "coordinates": [
+          0.0336,
+          0.05,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: Parrott sensor depth 3.36 cm (Fig. 16) - primary validation target"
+      },
+      {
+        "name": "p_d566",
+        "coordinates": [
+          0.0566,
+          0.05,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: Parrott sensor depth 5.66 cm (Fig. 16)"
+      },
+      {
+        "name": "p_d1250",
+        "coordinates": [
+          0.125,
+          0.05,
+          0.0
+        ],
+        "_comment": "PAPER_VALUE: Parrott sensor depth 12.5 cm (Fig. 16)"
+      }
+    ],
+    "mesh": {
+      "element_size": 0.004,
+      "order": 1,
+      "recombine": false,
+      "refinement": [
+        {
+          "around": "surface_left",
+          "element_size": 0.001,
+          "transition": 0.03
+        },
+        {
+          "around": "surface_right",
+          "element_size": 0.001,
+          "transition": 0.03
+        }
+      ],
+      "_comment": "recombine=false: recombine+refinement is a KNOWN ISSUE (dropped triangles -> singular matrix, 'N zero pivots', solution ~1e17). Coarse surface element 1 mm (was 0.5 mm) to cut node count. Field is quasi-1D so a modest mesh suffices."
+    }
+  },
+  "physics": {
+    "moisture_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "humidity",
+        "symbol": "H",
+        "type": "scalar",
+        "components": [
+          "H"
+        ]
+      }
+    }
+  },
+  "materials": {
+    "concrete": {
+      "humidity": {
+        "model": "bazant_najjar",
+        "D0": 1.4e-11,
+        "alpha": 0.5266,
+        "hc": 0.328,
+        "n": 4.71,
+        "capacity": 80.0,
+        "_comment": "OOFEM BazantNajjarMoisture: C(h)=C1*[alpha+(1-alpha)/(1+((1-h)/(1-hc))^n)], governing eq dh/dt=div(C grad h). So D0 (c1) IS the effective diffusivity at saturation in m2/s. capacity does NOT divide C and does not affect the humidity solution - it is only used to convert RH change into water-content loss.",
+        "_comment_fit": "CALIBRATED: least-squares fit of the paper's D_h(H)=alpha_h+beta_h[1-exp(-gamma_h*10^(H-1))] at w/c=0.58 (Part 2 Eq. 4,7-9) to the S-curve shape. alpha_h=0.0436, beta_h=0.7705, gamma_h=6.9168. Fit: alpha=0.5266 (=D(0)/D(1)), hc=0.328, n=4.71. Max absolute residual 0.063, max relative residual ~12% over H in [0,1]. Shape ratios are unit-independent.",
+        "_comment_D0": "CALIBRATED: D0 (c1) = 1.4e-11 m2/s = 1.21 mm2/day, tuned to reproduce the digitized Parrott drying data (RMSE 0.026 RH over all depths/times). This is consistent with the paper's own D_h magnitude: at w/c=0.58, D_h(1)=alpha_h+beta_h ~ 0.81 (Fig. 8 axis in mm2/day), and the best fit lands slightly higher at ~1.2 mm2/day because of the assumed film coefficient / initial RH / S-curve shape. PREVIOUS value 30 mm2/day was ~25x too fast and gave no drying - replaced.",
+        "_comment_alpha": "CALIBRATED from paper: alpha = D(0)/D(1) = 0.4283/0.8133 = 0.5266 (w/c=0.58).",
+        "_comment_capacity": "INFERRED: paper moisture capacity dW/dH is nonlinear and not representable in bazant_najjar. Representative value ~0.14 g/g cement paste (mid-drying-range) x paste mass ~570 kg/m3 = ~80 kg/m3. Does NOT affect the RH solution (only water-content loss); RH validation is unaffected by this value."
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "humidity",
+      "value": 0.98,
+      "location": "concrete_domain",
+      "_comment": "ASSUMED: initial pore RH. Paper states hydration ceases near H~0.8 and inner pores stay near curing-room RH; a fresh saturated specimen is taken as 0.98. HIGH impact on early-time curves."
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "robin",
+      "field": "humidity",
+      "location": "surface_left",
+      "alpha": 5e-08,
+      "u_ref": 0.5,
+      "_comment": "ASSUMED: finite surface moisture transfer (Robin, not a Dirichlet shock). u_ref=0.50 from paper (Parrott drying at RH~50%). alpha=5e-8 m/s is a literature concrete surface moisture-transfer coefficient - HIGH impact, review."
+    },
+    {
+      "type": "robin",
+      "field": "humidity",
+      "location": "surface_right",
+      "alpha": 5e-08,
+      "u_ref": 0.5,
+      "_comment": "ASSUMED: symmetric drying on the opposite face, same film coefficient."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "concrete_domain": {
+        "active_fields": [
+          "humidity"
+        ],
+        "material": "concrete"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 17280000.0,
+    "analysis_type": "transient",
+    "linear_solver": "dss",
+    "dt_strategy": {
+      "type": "piecewise",
+      "segments": [
+        {
+          "t_end": 86400,
+          "strategy": {
+            "type": "log",
+            "dt_min": 10,
+            "dt_max": 1800,
+            "n_steps": 60
+          }
+        },
+        {
+          "t_end": 604800,
+          "strategy": {
+            "type": "log",
+            "dt_min": 1800,
+            "dt_max": 10800,
+            "n_steps": 40
+          }
+        },
+        {
+          "t_end": 17280000,
+          "strategy": {
+            "type": "log",
+            "dt_min": 10800,
+            "dt_max": 172800,
+            "n_steps": 80
+          }
+        }
+      ],
+      "_comment": "t_end = 200 days x 86400 s/day. Log-spaced dt: fine near t=0 where drying starts fastest, coarse later."
+    }
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "parrott_d156",
+        "file": "reference/d156.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "RH",
+        "label": "Depth 1.56 cm (Fig. 16)"
+      },
+      {
+        "id": "parrott_d336",
+        "file": "reference/d336.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "RH",
+        "label": "Depth 3.36 cm (Fig. 16)"
+      },
+      {
+        "id": "parrott_d175",
+        "file": "reference/d175.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "RH",
+        "label": "Depth 0.175 cm (Fig. 16)"
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_days",
+        "type": "formula",
+        "formula": "t / 86400.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [days]"
+      },
+      {
+        "id": "H_d175",
+        "type": "field",
+        "field": "humidity",
+        "component": "H",
+        "at": "p_d175",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "RH @ 0.175 cm"
+      },
+      {
+        "id": "H_d156",
+        "type": "field",
+        "field": "humidity",
+        "component": "H",
+        "at": "p_d156",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "RH @ 1.56 cm"
+      },
+      {
+        "id": "H_d336",
+        "type": "field",
+        "field": "humidity",
+        "component": "H",
+        "at": "p_d336",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "RH @ 3.36 cm"
+      },
+      {
+        "id": "H_d566",
+        "type": "field",
+        "field": "humidity",
+        "component": "H",
+        "at": "p_d566",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "RH @ 5.66 cm"
+      },
+      {
+        "id": "H_d1250",
+        "type": "field",
+        "field": "humidity",
+        "component": "H",
+        "at": "p_d1250",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "RH @ 12.5 cm"
+      }
+    ],
+    "plots": [
+      {
+        "name": "RH_depth_156mm",
+        "title": "RH history at 1.56 cm - Parrott drying (w/c=0.58)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Relative humidity [-]"
+        },
+        "xlim": [
+          0,
+          200
+        ],
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "H_d156"
+            },
+            "label": "FEM"
+          },
+          {
+            "source": "reference",
+            "ref_id": "parrott_d156",
+            "label": "Parrott 1988"
+          }
+        ]
+      },
+      {
+        "name": "RH_depth_336mm",
+        "title": "RH history at 3.36 cm - Parrott drying (w/c=0.58)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Relative humidity [-]"
+        },
+        "xlim": [
+          0,
+          200
+        ],
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "H_d336"
+            },
+            "label": "FEM"
+          },
+          {
+            "source": "reference",
+            "ref_id": "parrott_d336",
+            "label": "Parrott 1988"
+          }
+        ]
+      },
+      {
+        "name": "RH_all_depths",
+        "title": "RH history at all sensor depths (FEM)",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Relative humidity [-]"
+        },
+        "xlim": [
+          0,
+          200
+        ],
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "H_d175"
+            },
+            "label": "0.175 cm"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "H_d156"
+            },
+            "label": "1.56 cm"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "H_d336"
+            },
+            "label": "3.36 cm"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "H_d566"
+            },
+            "label": "5.66 cm"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "H_d1250"
+            },
+            "label": "12.5 cm"
+          }
+        ]
+      }
+    ],
+    "console": {
+      "summary_every_steps": 20,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_days",
+            "y": "H_d156",
+            "ref_id": "parrott_d156"
+          },
+          {
+            "x": "t_days",
+            "y": "H_d336",
+            "ref_id": "parrott_d336"
+          }
+        ]
+      }
+    },
+    "save_checkpoint": true,
+    "aux_fields": [
+      "*"
+    ],
+    "export_vtu": true,
+    "save_db": true
+  }
+}

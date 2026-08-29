@@ -1,0 +1,545 @@
+{
+  "metadata": {
+    "id": "klemczak-knoppik-wrobel-2011-rc-wall",
+    "title": "Early-age hydration heat in an externally restrained RC wall cast on a mature foundation (Klemczak & Knoppik-Wrobel 2011, Sec. 2.2)",
+    "source": {
+      "authors": [
+        "Barbara Klemczak",
+        "Agnieszka Knoppik-Wrobel"
+      ],
+      "year": 2011,
+      "journal": "Architecture Civil Engineering Environment (ACEE), Vol. 4, No. 2/2011, p. 35-48",
+      "doi": "n/a - no DOI printed on the paper"
+    },
+    "dimension": 2,
+    "physics_class": "thermo-chemical (linear heat conduction + affinity hydration heat source)",
+    "validation_method": "Comparison against curves digitised from the paper's own FE results (Fig. 11a); no experimental data is reported.",
+    "validation_target": "Temperature history at the wall interior (mid-thickness) and at the wall surface, mid-height, over 20 days - Fig. 11a.",
+    "notes": "RISKY: the paper reports NO hydration kinetics (no calorimetry, no affinity fit, no Hu, no Ea) and no thermal properties of the concrete. B1, B2, eta, alpha_inf, Ea, Hu, k, rho and cp are all literature values for CEM I 32.5R concrete, tagged in the _comment keys, and MUST be calibrated against the digitised Fig. 11a before this file is presented as a validated benchmark. Peak magnitude (49.6 degC) and peak timing (~1.2 d) are the calibration targets. || Scope: only the THERMAL part of the paper is reproduced. Fig. 11b (stresses) was computed with a viscoelasto-viscoplastic model (refs [3,4]) and the paper gives no creep, shrinkage, strength or elastic data, so displacement, thermal_strain and b3_creep are deliberately omitted entirely rather than run elastically. An elastic thermal-stress run would over-predict the restrained tensile stress substantially and would not be a validation. || Model: 2D transverse cross-section (thickness x height) at midspan of the 20 m long wall, half-width, using the symmetry plane at x=0. Longitudinal heat flow along the 20 m length is neglected - defensible at midspan and consistent with the paper's own Fig. 10, which plots temperature across the wall thickness. || Source inconsistency: the text states an initial fresh-concrete temperature of 25 degC and an ambient of 25 degC, but the first plotted point of both curves in Fig. 11a sits at ~15 degC. The stated 25 degC is used here (the 25 degC asymptote of Fig. 11a confirms the ambient). If the simulated curve is uniformly ~10 K high in the first hours, this IC is the first suspect. || The paper's 'wooden formwork of 1.8 mm plywood' is taken literally (h = 7.3 W/m2K); a quasi-steady reading of Fig. 11a at the peak instead implies h ~ 4 W/m2K, which is what 18 mm plywood would give. See the _comment on the wall_face Robin - this is the second calibration knob. || The paper's model reduces conductivity with the degree of hydration; this backend keeps k constant (k_alpha_reduction is not applied), so a slightly higher simulated peak is expected. || The other numerical example of the paper - the 10x10x3 m massive foundation slab of Sec. 2.1, Fig. 4 - was NOT authored: the paper states neither the ambient nor the casting temperature for it, so its thermal boundary conditions cannot be pinned down at all.",
+    "paper_pdf": "klemczak-knoppik-wrobel-early-age-cracks.pdf"
+  },
+  "geometry": {
+    "_comment": "Units: metres. Half of the transverse cross-section; x = 0 is the vertical symmetry plane through the wall thickness, y = 0 is the top of the foundation (the construction joint), y = 4.0 is the top of the wall.",
+    "entities": [
+      {
+        "id": "wall",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "size": [
+            0.35,
+            4.0
+          ]
+        },
+        "_comment": "PAPER_VALUE (Sec. 2.2): wall 4.0 m high, 0.70 m thick -> half-thickness 0.35 m modelled."
+      },
+      {
+        "id": "foundation",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            -0.7,
+            0.0
+          ],
+          "size": [
+            2.0,
+            0.7
+          ]
+        },
+        "_comment": "PAPER_VALUE (Sec. 2.2): continuous foundation 4.0 m wide, 0.70 m deep -> half-width 2.0 m modelled."
+      }
+    ],
+    "operations": [
+      {
+        "type": "fragment",
+        "targets": [
+          "wall"
+        ],
+        "tools": [
+          "foundation"
+        ],
+        "remove_tools": false,
+        "_comment": "Imprints the shared construction-joint edge (y=0, 0<=x<=0.35) so the wall and the foundation mesh CONFORMALLY. Without it the two rectangles mesh independently and the interface nodes are duplicated, i.e. the wall would be thermally disconnected from its foundation. After the boolean the original entity tags are invalid, so EVERY physical group below is selected by box."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "wall_domain",
+        "dimension": 2,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            0.351,
+            4.001,
+            1e-06
+          ]
+        },
+        "_comment": "Young, hydrating concrete."
+      },
+      {
+        "name": "foundation_domain",
+        "dimension": 2,
+        "selection": {
+          "box": [
+            -1e-06,
+            -0.701,
+            -1e-06,
+            2.001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "Mature 'old set' concrete - meshed rather than replaced by a BC, as the skill prescribes: an adiabatic wall base traps heat and inflates the peak, and the cooled foundation is exactly what restrains the wall in the paper."
+      },
+      {
+        "name": "wall_face",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            0.349,
+            -1e-06,
+            -1e-06,
+            0.351,
+            4.001,
+            1e-06
+          ]
+        },
+        "_comment": "Vertical formed face of the wall, x = 0.35 m, y = 0..4 m."
+      },
+      {
+        "name": "wall_top",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            3.999,
+            -1e-06,
+            0.351,
+            4.001,
+            1e-06
+          ]
+        },
+        "_comment": "Free (unprotected) top surface of the wall - PAPER_VALUE: 'no protection of top surface'."
+      },
+      {
+        "name": "foundation_top",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            0.349,
+            -1e-06,
+            -1e-06,
+            2.001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "Exposed top of the foundation, x = 0.35..2.0 m. Deliberately excludes the construction joint (x = 0..0.35), which is interior to the mesh."
+      },
+      {
+        "name": "foundation_side",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            1.999,
+            -0.701,
+            -1e-06,
+            2.001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "Outer vertical face of the foundation. NOTE: there is intentionally NO group on x = 0 (symmetry plane) and NO group on y = -0.7 (foundation underside, cast on the subgrade) - no BC = zero flux, which is what both need."
+      }
+    ],
+    "points": [
+      {
+        "name": "probe_interior",
+        "coordinates": [
+          0.0,
+          2.0,
+          0.0
+        ],
+        "_comment": "ASSUMED location for the 'interior' curve of Fig. 11a: mid-thickness (= symmetry plane), mid-height of the wall. The paper does not give probe coordinates."
+      },
+      {
+        "name": "probe_surface",
+        "coordinates": [
+          0.35,
+          2.0,
+          0.0
+        ],
+        "_comment": "ASSUMED location for the 'surface' curve of Fig. 11a: formed face, mid-height. If the paper's 'surface' is a near-surface node rather than the face itself, the simulated surface curve will sit slightly low. Points are NOT meshed - they snap to the nearest node, so check the run log for 'Point ... is N away from closest node'."
+      }
+    ],
+    "mesh": {
+      "element_size": 0.04,
+      "_comment": "8-9 elements across the modelled 0.35 m half-thickness, which is where the whole validation signal (interior-vs-surface gradient, ~5 K) lives. ~4000 triangles / ~2100 nodes - small enough that the default skyline solver is fine."
+    }
+  },
+  "physics": {
+    "heat_transport": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "temperature",
+        "symbol": "T",
+        "type": "scalar",
+        "components": [
+          "T"
+        ]
+      }
+    },
+    "hydration": {
+      "type": "ode_source",
+      "dependent_variable": {
+        "name": "degree_of_hydration",
+        "symbol": "alpha",
+        "type": "ode",
+        "components": [
+          "alpha"
+        ],
+        "managed_by": "hydration"
+      }
+    }
+  },
+  "materials": {
+    "young_concrete": {
+      "_comment": "PAPER_VALUE (Sec. 2.2): CEM I 32.5R, 450 kg/m3. The paper gives NO thermal properties and NO hydration kinetics - everything below is literature for that cement class.",
+      "temperature": {
+        "k": 2.6,
+        "rho": 2400.0,
+        "cp": 1000.0,
+        "_comment_k": "GENERIC_LITERATURE_VALUE: ordinary structural concrete, 2.0-3.0 W/(m.K). NOTE: the paper's own model reduces lambda with the degree of hydration; k_alpha_reduction is silently ignored by this backend, so k is constant and the simulated peak is expected slightly high.",
+        "_comment_rho": "GENERIC_LITERATURE_VALUE: normal-weight concrete.",
+        "_comment_cp": "GENERIC_LITERATURE_VALUE: 900-1100 J/(kg.K) for young concrete."
+      },
+      "degree_of_hydration": {
+        "model": "affinity",
+        "B1": 0.00018,
+        "B2": 5e-05,
+        "alpha_inf": 0.85,
+        "eta": 6.5,
+        "Ea": 38300.0,
+        "R": 8.314,
+        "T_ref": 298.15,
+        "Hu": 420.0,
+        "c_cement": 450.0,
+        "_comment_kinetics": "MISSING / CALIBRATE: the paper reports no calorimetry and no affinity fit. B1, B2, eta and alpha_inf are generic CEM I 32.5 values (literature ranges: B1 1e-4..5e-4 1/s, B2 1e-5..1e-4, eta 5..8, alpha_inf 0.75..0.90). Calibrate B1 (peak TIMING, ~1.2 d in Fig. 11a) and Hu/alpha_inf (peak MAGNITUDE, 49.6 degC) against reference/fig11a_interior.csv. Until then this is NOT a validated benchmark.",
+        "_comment_B1": "1/s. A value quoted in 1/h must be divided by 3600 - 1.8e-4 1/s = 0.648 1/h.",
+        "_comment_Ea": "GENERIC_LITERATURE_VALUE: 38.3 kJ/mol, mid-range for CEM I (35-45).",
+        "_comment_Hu": "GENERIC_LITERATURE_VALUE: 420 J/g potential heat, low end of the CEM I band (400-500) because 32.5R is a low-early-strength cement.",
+        "_comment_c_cement": "PAPER_VALUE: 450 kg/m3 (Sec. 2.2).",
+        "_comment_T_ref": "KELVIN - the only Kelvin temperature in this file (25 degC + 273.15). Every other temperature here is degC.",
+        "_comment_sanity_check_2": "Adiabatic rise dT_ad = Hu*c_cement*alpha_inf/(rho*cp) = 420e3*450*0.85/(2400*1000) = 66.9 K. Measured rise in Fig. 11a = 49.6 - 25 = 24.6 K. dT_ad EXCEEDS the observed rise by 42 K, as it must: the 0.7 m wall is far from adiabatic and the formwork/air boundary carries that difference away."
+      }
+    },
+    "mature_concrete": {
+      "_comment": "The 'old set' foundation. Same thermal properties, but NO heat generation.",
+      "temperature": {
+        "k": 2.6,
+        "rho": 2400.0,
+        "cp": 1000.0,
+        "_comment": "GENERIC_LITERATURE_VALUE, same concrete class as the wall - the paper gives the foundation no separate mix."
+      },
+      "degree_of_hydration": {
+        "model": "affinity",
+        "B1": 0.00018,
+        "B2": 5e-05,
+        "alpha_inf": 0.85,
+        "eta": 6.5,
+        "Ea": 38300.0,
+        "R": 8.314,
+        "T_ref": 298.15,
+        "Hu": 420.0,
+        "c_cement": 0.0,
+        "_comment": "c_cement = 0 makes the source term Hu*c_cement*d(alpha)/dt vanish: the mature foundation conducts and stores heat but generates none. The section exists only because all domains must activate the SAME set of active_fields, and degree_of_hydration is active in the wall. If the builder ever rejects c_cement = 0, set Hu = 0.0 instead - same result."
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "temperature",
+      "value": 25.0,
+      "location": "all",
+      "_comment": "PAPER_VALUE (Sec. 2.2): initial temperature of the fresh mixture 25 degC, no initial cooling; the mature foundation sits at the 25 degC ambient. DEGREES CELSIUS. ICs must be uniform per field on this backend, so wall and foundation necessarily share it - here that is also physically right. See metadata.notes for the ~15 degC first point plotted in Fig. 11a."
+    },
+    {
+      "field": "degree_of_hydration",
+      "value": 0.0,
+      "location": "all",
+      "_comment": "Fresh concrete at casting."
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "wall_face",
+      "alpha": 7.3,
+      "u_ref": 25.0,
+      "_comment": "INFERRED from PAPER_VALUE 'wooden formwork of 1.8 mm plywood': h = 1/(1/8 + 0.0018/0.15) = 1/(0.125+0.012) = 7.3 W/(m2.K), i.e. essentially the outdoor air film. CONSTANT for the whole run: the paper lists formwork among the conditions of this run and describes no stripping event for Fig. 11, and the skill forbids inventing one. CALIBRATION KNOB: a quasi-steady reading of Fig. 11a at the peak (interior-surface gap 4.9 K -> q = 2k*dT/L^2 = 208 W/m3; surface excess 19.4 K -> h = q*L/dT_s) instead implies h ~ 3.9 W/(m2.K), which is what an 18 mm plywood (a plausible typo for '1.8 mm') would give. If the simulated peak comes out low and the tail too fast, try 4.1. To model the 3-day stripping variant of Fig. 15 instead, replace alpha with {\"time_table\": [[0, 7.3], [259200, 15.0]], \"interp\": \"step\"} - step interpolation is mandatory for a Robin alpha.",
+      "_comment_u_ref": "PAPER_VALUE: concreting in summer, ambient temperature 25 degC. Constant because the paper supplies no measured ambient history; Fig. 11a's 25 degC asymptote confirms it."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "wall_top",
+      "alpha": 9.7,
+      "u_ref": 25.0,
+      "_comment": "PAPER_VALUE: 'no protection of top surface'. GENERIC_LITERATURE_VALUE for h: free upper concrete surface, 9-10 W/(m2.K) (= 35 kJ/(h.m2.K) / 3.6). Low impact - the probes are at mid-height."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "foundation_top",
+      "alpha": 9.7,
+      "u_ref": 25.0,
+      "_comment": "ASSUMED: exposed horizontal concrete surface of the mature foundation, same film coefficient as the wall top. The paper does not describe it."
+    },
+    {
+      "type": "robin",
+      "field": "temperature",
+      "location": "foundation_side",
+      "alpha": 9.7,
+      "u_ref": 25.0,
+      "_comment": "ASSUMED: foundation flank exposed to air (not backfilled - the paper does not say). LOW impact: 2 m from the wall, and the foundation generates no heat."
+    }
+  ],
+  "assignment": {
+    "domains": {
+      "wall_domain": {
+        "active_fields": [
+          "temperature",
+          "degree_of_hydration"
+        ],
+        "material": "young_concrete"
+      },
+      "foundation_domain": {
+        "active_fields": [
+          "temperature",
+          "degree_of_hydration"
+        ],
+        "material": "mature_concrete",
+        "_comment": "Identical active_fields to wall_domain - differing sets are rejected. Heat generation is switched off through c_cement = 0 in the material instead."
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 1728000.0,
+    "analysis_type": "transient",
+    "_comment": "20 days = 1 728 000 s, the full span of Fig. 11a.",
+    "dt_strategy": {
+      "type": "piecewise",
+      "segments": [
+        {
+          "t_end": 14400.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 60.0,
+            "dt_max": 900.0,
+            "n_steps": 45
+          },
+          "_comment": "First 4 h: the dormant period ends and the affinity source switches on steeply."
+        },
+        {
+          "t_end": 172800.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 900.0,
+            "dt_max": 3600.0,
+            "n_steps": 80
+          },
+          "_comment": "4 h - 2 d: brackets the self-heating peak at ~1.2 d (Fig. 11a). This is the segment the validation lives in - do not coarsen it."
+        },
+        {
+          "t_end": 1728000.0,
+          "strategy": {
+            "type": "log",
+            "dt_min": 3600.0,
+            "dt_max": 28800.0,
+            "n_steps": 130
+          },
+          "_comment": "2 - 20 d: the cooling tail down to ambient. Last segment stated explicitly."
+        }
+      ]
+    }
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "fig11a_interior",
+        "file": "reference/fig11a_interior.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "Interior (Klemczak & Knoppik-Wrobel, Fig. 11a)",
+        "_comment": "Digitised from Fig. 11a of the PDF by colour extraction of the green series (page 8, 130 dpi; axes calibrated on the printed tick marks, 16.85 px/day and 3.53 px/K, so the reading error is ~0.3 K / ~0.03 d). No axis or sign flips. The green series is overdrawn by the red one after t = 12.7 d, where both curves have already settled at the 25 degC ambient - the digitisation therefore stops there. THIS IS THE PAPER'S OWN FE RESULT, not an experiment: the paper reports no measurements for this wall, so agreement here is model-vs-model reproduction, not experimental validation."
+      },
+      {
+        "id": "fig11a_surface",
+        "file": "reference/fig11a_surface.csv",
+        "has_header": true,
+        "x_col": "time_d",
+        "y_col": "T_degC",
+        "label": "Surface (Klemczak & Knoppik-Wrobel, Fig. 11a)",
+        "_comment": "Digitised from the red series of Fig. 11a, same calibration. The columns holding the vertical rise at t=0 were dropped (they average the riser, not the curve), so the series starts at t = 0.33 d."
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_days",
+        "type": "formula",
+        "formula": "t / 86400.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [days]"
+      },
+      {
+        "id": "T_interior",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "probe_interior",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Wall interior temperature [degC]",
+        "_comment": "The field is ALREADY degC - no 273.15 conversion anywhere."
+      },
+      {
+        "id": "T_surface",
+        "type": "field",
+        "field": "temperature",
+        "component": "T",
+        "at": "probe_surface",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Wall surface temperature [degC]"
+      },
+      {
+        "id": "dT_section",
+        "type": "difference",
+        "field": "temperature",
+        "at_a": "probe_interior",
+        "at_b": "probe_surface",
+        "reduce": "avg",
+        "label": "Interior - surface temperature difference [K]",
+        "_comment": "Secondary output: the paper's Sec. 3 quotes a 15-20 K limit on the through-section difference and notes it is NOT a safe criterion for externally restrained walls. Digitised Fig. 11a peaks at ~4.9 K, i.e. this wall would pass the limit and still crack - which is the paper's point."
+      }
+    ],
+    "plots": [
+      {
+        "name": "wall_temperature_history",
+        "title": "RC wall, midspan cross-section: interior and surface temperature",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "Temperature [degC]"
+        },
+        "xlim": [
+          0.0,
+          20.0
+        ],
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_interior"
+            },
+            "label": "FEM interior"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "T_surface"
+            },
+            "label": "FEM surface"
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig11a_interior",
+            "label": "Paper, interior (Fig. 11a)"
+          },
+          {
+            "source": "reference",
+            "ref_id": "fig11a_surface",
+            "label": "Paper, surface (Fig. 11a)"
+          }
+        ]
+      },
+      {
+        "name": "wall_section_gradient",
+        "title": "Through-thickness temperature difference",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [days]"
+        },
+        "y_axis": {
+          "label": "T_interior - T_surface [K]"
+        },
+        "xlim": [
+          0.0,
+          20.0
+        ],
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_days"
+            },
+            "y": {
+              "key": "dT_section"
+            },
+            "label": "FEM"
+          }
+        ]
+      }
+    ],
+    "console": {
+      "summary_every_steps": 20,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_days",
+            "y": "T_interior",
+            "ref_id": "fig11a_interior"
+          },
+          {
+            "x": "t_days",
+            "y": "T_surface",
+            "ref_id": "fig11a_surface"
+          }
+        ]
+      }
+    },
+    "aux_fields": [
+      "*"
+    ],
+    "save_checkpoint": true,
+    "export_vtu": true,
+    "save_db": true
+  }
+}

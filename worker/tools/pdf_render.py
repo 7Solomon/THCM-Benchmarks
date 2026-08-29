@@ -9,6 +9,7 @@ a page image to look at, and a tight crop of one panel to upload.
 
     pdf_render.py prepare IN.pdf OUT.pdf
     pdf_render.py pages  PAPER.pdf
+    pdf_render.py text   PAPER.pdf [-o OUT.txt]
     pdf_render.py render PAPER.pdf 7 outdir/ [--dpi 200] [--max-side 1600]
     pdf_render.py crop   outdir/page7.png 0.08 0.10 0.52 0.48 outdir/fig7a.png
 
@@ -92,6 +93,42 @@ def cmd_pages(a):
             print(f"{i:>5} {n_draw:>9} {n_img:>7}  {kind}")
 
 
+def cmd_text(a):
+    """Extract the paper's text, one page at a time, with page markers.
+
+    For feeding a paper to a model that has no PDF input. The markers matter: a
+    value table built from this has to be able to say WHICH page a number came
+    from, and without them every page boundary is invisible.
+
+    Figures do not survive this — that is the point of the render/crop route, and
+    a caller that needs a curve still goes through it.
+    """
+    doc = pymupdf.open(a.pdf)
+    if doc.needs_pass:
+        sys.exit(f"PDF needs a password, cannot be processed: {a.pdf}")
+    parts, empty = [], 0
+    for i, page in enumerate(doc, start=1):
+        body = page.get_text().strip()
+        if not body:
+            empty += 1
+        parts.append(f"[page {i}]\n{body}")
+    out = "\n\n".join(parts) + "\n"
+    if a.out:
+        os.makedirs(os.path.dirname(os.path.abspath(a.out)), exist_ok=True)
+        with open(a.out, "w", encoding="utf-8") as fh:
+            fh.write(out)
+        print(f"wrote {a.out}  ({len(doc)} pages, {len(out)} chars, "
+              f"~{len(out) // 4} tokens)")
+    else:
+        sys.stdout.write(out)
+    if empty:
+        # A scanned paper extracts to nothing and would otherwise be handed to a
+        # model as an empty prompt, which reads as a model failure rather than an
+        # input one.
+        print(f"warn: {empty} of {len(doc)} pages have no extractable text "
+              f"(scanned image?)", file=sys.stderr)
+
+
 def cmd_render(a):
     """Write a PNG of one page. You MUST open and look at it: panel layout,
     axis ranges, tick labels and legend entries are read with your eyes."""
@@ -150,6 +187,11 @@ def main():
     p = sub.add_parser("pages", help="inventory of figure-bearing pages")
     p.add_argument("pdf")
     p.set_defaults(fn=cmd_pages)
+
+    p = sub.add_parser("text", help="extract page text (for a model with no PDF input)")
+    p.add_argument("pdf")
+    p.add_argument("-o", "--out", default=None, help="write here instead of stdout")
+    p.set_defaults(fn=cmd_text)
 
     p = sub.add_parser("render", help="render one page to PNG")
     p.add_argument("pdf")

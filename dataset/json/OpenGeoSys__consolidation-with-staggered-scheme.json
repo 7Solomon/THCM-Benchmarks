@@ -1,0 +1,684 @@
+{
+  "metadata": {
+    "id": "ogs-consolidation-benchmark",
+    "title": "1-D Biot consolidation of a laterally confined, singly drained column (OGS staggered-scheme consolidation benchmark)",
+    "source": {
+      "authors": [
+        "Wenqing Wang (OpenGeoSys benchmark)",
+        "Murad, M. A.",
+        "Loula, A. F. D.",
+        "Korsawe, J.",
+        "Starke, G.",
+        "Wang, W.",
+        "Kolditz, O."
+      ],
+      "year": 2025,
+      "journal": "OpenGeoSys 6.5.7 documentation, Benchmarks / Hydro-Mechanics; analytical solution after Murad & Loula (1992) and Korsawe et al. (2006)",
+      "doi": "10.1016/0045-7825(92)90193-N"
+    },
+    "dimension": 2,
+    "physics_class": "hydro-mechanical (Biot poroelasticity, linear)",
+    "validation_method": "closed-form series solution (Terzaghi/Biot 1-D consolidation), plus the published OGS staggered/monolithic results at t = 10 s",
+    "validation_target": "Pore-pressure history at x_D = 0.1 / 0.2 / 0.5 / 0.8, top settlement history, and the pore-pressure depth profile at t = 10 s",
+    "notes": "Source of every value: https://www.opengeosys.org/6.5.7/docs/benchmarks/hydro-mechanics/consolidationbenchmark/ and the project file Tests/Data/HydroMechanics/StaggeredScheme/ConsolidationBenchmark/consolidation_benchmark.prj (E, nu, k, eta, sigma_0, biot=1, porosity=0, t_end=10 s, dt=0.5 s). Domain extent read from the accompanying mesh hm_tri_q.vtu: x in [0, 0.1], y in [-1, 0], i.e. H = 1 m deep, 0.1 m wide. In the paper's notation the depth coordinate is called x and runs from the drained top (x=0) to the sealed base (x=H); here it is -y. DISCRETISATION DIFFERENCES vs OGS, both forced by this backend: (1) OGS uses quadratic (order 2) displacement with linear pressure -- an inf-sup stable Taylor-Hood pair -- whereas upquad11 is EQUAL-ORDER linear u/p, which does not satisfy inf-sup; with dt = 0.5 s the drained boundary layer is only ~2 elements deep, so CHECK THE PRESSURE PROFILE NEAR y = 0 FOR CHECKERBOARDING before accepting the result, and refine dt/mesh if it appears. (2) OGS meshes quadratic triangles; this backend needs quads for u-p, so the mesh is recombined -- verify the console reports a pure quad mesh (see the recombine trap). (3) OGS solves the coupled system with a staggered fixed-stress split, this backend monolithically; both target the same converged solution, so this is not a modelling difference. Zero liquid storage (porosity 0, incompressible fluid) is entered as storage = 0 exactly, matching the analytical assumption. Gravity/body force is omitted in the benchmark and is not in this backend's mass balance either, so the two agree by construction.",
+    "paper_pdf": null
+  },
+  "geometry": {
+    "entities": [
+      {
+        "id": "column",
+        "type": "rectangle",
+        "parameters": {
+          "origin": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "size": [
+            0.1,
+            1.0
+          ]
+        },
+        "_comment": "PAPER_VALUE: bounding box of hm_tri_q.vtu, x in [0,0.1] m, y in [-1,0] m. Column height H = 1 m; the width is immaterial (the solution is 1-D) but is kept identical to the benchmark mesh."
+      }
+    ],
+    "physical_groups": [
+      {
+        "name": "column_domain",
+        "dimension": 2,
+        "entity_ids": [
+          "column"
+        ],
+        "_comment": "no boolean operations are used, so entity_ids is valid here"
+      },
+      {
+        "name": "top",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1e-06,
+            -1e-06,
+            0.100001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: y = 0, the loaded and free-draining face (geometry_top.vtu)"
+      },
+      {
+        "name": "bottom",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1.000001,
+            -1e-06,
+            0.100001,
+            -0.999999,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: y = -H, rigid and impermeable base (geometry_bottom.vtu). It carries a uy Dirichlet but deliberately NO pore-pressure BC -- no BC = zero flux = the impervious condition dp/dn = 0."
+      },
+      {
+        "name": "left",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            -1e-06,
+            -1.000001,
+            -1e-06,
+            1e-06,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: x = 0, rigid impermeable wall (geometry_left.vtu); ux = 0 only, uy free"
+      },
+      {
+        "name": "right",
+        "dimension": 1,
+        "selection": {
+          "box": [
+            0.099999,
+            -1.000001,
+            -1e-06,
+            0.100001,
+            1e-06,
+            1e-06
+          ]
+        },
+        "_comment": "PAPER_VALUE: x = 0.1, rigid impermeable wall (geometry_right.vtu); ux = 0 only, uy free"
+      }
+    ],
+    "points": [
+      {
+        "name": "probe_xD0p1",
+        "coordinates": [
+          0.04,
+          -0.1,
+          0.0
+        ],
+        "_comment": "x_D = depth/H = 0.1; x = 0.04 and y = -0.1 are multiples of element_size so they should land on nodes -- CHECK THE RUN LOG for 'Point ... away from closest node' warnings"
+      },
+      {
+        "name": "probe_xD0p2",
+        "coordinates": [
+          0.04,
+          -0.2,
+          0.0
+        ]
+      },
+      {
+        "name": "probe_xD0p5",
+        "coordinates": [
+          0.04,
+          -0.5,
+          0.0
+        ]
+      },
+      {
+        "name": "probe_xD0p8",
+        "coordinates": [
+          0.04,
+          -0.8,
+          0.0
+        ]
+      },
+      {
+        "name": "probe_top",
+        "coordinates": [
+          0.04,
+          0.0,
+          0.0
+        ],
+        "_comment": "settlement probe on the loaded surface"
+      }
+    ],
+    "mesh": {
+      "element_size": 0.02,
+      "order": 1,
+      "recombine": true,
+      "_comment_recombine": "REQUIRED: upquad11 is the only u-p element on this backend, so the mesh must be quads. No 'refinement' entry is used on purpose -- grading plus recombination can leave stray triangles, whose nodes are then dropped and the matrix goes singular.",
+      "_comment_size": "ASSUMED (matched to the benchmark): OGS uses 412 triangles over the 0.1 m^2 face, i.e. h ~ 0.022 m. 0.02 m gives 5 x 50 = 250 quads. Resolution check: the drained boundary layer after the first step is sqrt(c*dt) = sqrt(3.333e-3*0.5) = 0.041 m ~ 2 elements, and at t_end sqrt(c*10) = 0.183 m ~ 9 elements."
+    }
+  },
+  "physics": {
+    "solid": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "displacement",
+        "symbol": "u",
+        "type": "vector",
+        "components": [
+          "ux",
+          "uy"
+        ]
+      }
+    },
+    "fluid": {
+      "type": "field",
+      "dependent_variable": {
+        "name": "pore_pressure",
+        "symbol": "p",
+        "type": "scalar",
+        "components": [
+          "p"
+        ]
+      }
+    },
+    "hydro_mechanical": {
+      "type": "coupling",
+      "_comment": "MONOLITHIC: displacement and pore_pressure are solved together in one tangent, so no source_field/target_field. OGS runs the same problem with a staggered fixed-stress split; the converged solution is the same."
+    }
+  },
+  "materials": {
+    "porous_column": {
+      "displacement": {
+        "model": "linear_elastic",
+        "E": 30000.0,
+        "nu": 0.2,
+        "rho": 1000.0,
+        "_comment_E": "PAPER_VALUE: Young's modulus 3e4 Pa (parameter table / <parameter> E in the prj)",
+        "_comment_nu": "PAPER_VALUE: Poisson's ratio 0.2",
+        "_comment_rho": "PAPER_VALUE-by-permission: the benchmark omits the body force and states the densities may be arbitrary non-zero values (prj: solid density 0, fluid density 1000). Density enters nothing in this quasi-static, gravity-free run.",
+        "_comment_plane_state": "Plane strain (the default) is REQUIRED here and is also the physically correct state: eps_zz = 0 makes the confined modulus lambda+2G = 33333.33 Pa, which is exactly what the analytical solution uses. plane_stress/thickness are rejected on a hydro_mechanical material anyway; out-of-plane depth is fixed at 1 m."
+      },
+      "pore_pressure": {
+        "model": "biot",
+        "biot_alpha": 1.0,
+        "intrinsic_permeability": 1e-10,
+        "fluid_viscosity": 0.001,
+        "storage": 0.0,
+        "_comment_biot_alpha": "PAPER_VALUE: <biot_coefficient> 1.0",
+        "_comment_perm": "PAPER_VALUE: permeability 1e-10 m^2 and viscosity 1e-3 Pa.s. Given by the named route so the pipeline forms the mobility itself: k/mu = 1e-7 m^2/(Pa.s). Do NOT paste 1e-10 into 'mobility'.",
+        "_comment_storage": "PAPER_VALUE: the benchmark assumes ZERO liquid storage (porosity 0, incompressible fluid), so 1/Q = 0 exactly. The porosity+fluid_bulk_modulus route cannot express this (porosity must be > 0), hence the direct storage route. Pressure change is then driven purely by the strain rate, as the page states.",
+        "_comment_sanity": "Consolidation coefficient c = (lambda+2G)*k/eta = 33333.33 * 1e-7 = 3.3333e-3 m^2/s, so t_D = c*t/H^2 = 3.3333e-3*t and t_end = 10 s is only t_D = 0.033 -- an EARLY-time problem: at t_end the base is still essentially undrained (p = 998 Pa at x_D = 0.8) and only the top ~0.18 m has drained."
+      }
+    }
+  },
+  "initial_conditions": [
+    {
+      "field": "pore_pressure",
+      "value": 0.0,
+      "location": "column_domain",
+      "_comment": "PAPER_VALUE: sigma = p = 0 at t = 0 (pressure_ic in the prj). The run is driven from this consistent zero state by the surface load, which is the admissible way to start a poroelastic problem."
+    },
+    {
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "column_domain"
+    },
+    {
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "column_domain"
+    }
+  ],
+  "boundary_conditions": [
+    {
+      "type": "neumann",
+      "field": "displacement",
+      "component": "uy",
+      "value": -1000.0,
+      "location": "top",
+      "_comment": "PAPER_VALUE: sigma_0 = -1000 Pa applied on the top face (prj: Neumann, component 1, load = -1e3). A traction DENSITY in Pa, integrated over the face -- mesh-independent, and NOT to be hand-integrated into a point_load. No time_function: the benchmark loads instantaneously at t = 0 and holds, which is what the default step behaviour gives."
+    },
+    {
+      "type": "dirichlet",
+      "field": "pore_pressure",
+      "value": 0.0,
+      "location": "top",
+      "_comment": "PAPER_VALUE: p = 0 on the drained face. A Dirichlet is right here (unlike a drying surface): 'free to drain' at atmospheric pressure means the excess pore pressure IS zero there by definition."
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "uy",
+      "value": 0.0,
+      "location": "bottom",
+      "_comment": "PAPER_VALUE: u = 0 on the rigid base. Only the NORMAL component is fixed, as on a symmetry/roller plane -- fixing ux too would over-constrain."
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "left",
+      "_comment": "PAPER_VALUE: rigid lateral wall; normal component only, so the column is laterally confined (uniaxial strain) as the analytical solution assumes."
+    },
+    {
+      "type": "dirichlet",
+      "field": "displacement",
+      "component": "ux",
+      "value": 0.0,
+      "location": "right"
+    }
+  ],
+  "_comment_boundary_conditions": "DELIBERATELY ABSENT: no pore_pressure BC on 'bottom', 'left' or 'right'. The walls are impermeable, and on this backend no BC = zero flux, which is exactly dp/dn = 0. Never write a zero-value Neumann for this.",
+  "assignment": {
+    "domains": {
+      "column_domain": {
+        "active_fields": [
+          "displacement",
+          "pore_pressure"
+        ],
+        "material": "porous_column"
+      }
+    }
+  },
+  "time_stepping": {
+    "t_start": 0.0,
+    "t_end": 10.0,
+    "analysis_type": "transient",
+    "dt_strategy": {
+      "type": "uniform",
+      "n_steps": 20
+    },
+    "linear_solver": "skyline",
+    "_comment": "PAPER_VALUE: t_end = 10 s with 20 fixed steps of dt = 0.5 s (prj FixedTimeStepping; the page notes dt = 0.5 s already tracks the analytical curves). Kept uniform to reproduce the published comparison rather than log-refining the early transient. If the pressure field checkerboards near the drained face, halve dt AND the element size together -- for equal-order u/p the undrained limit is approached by SMALL dt on a COARSE mesh, so refining dt alone makes it worse."
+  },
+  "results": {
+    "reference_curves": [
+      {
+        "id": "ana_p_xD0p1",
+        "file": "reference/analytical_histories.csv",
+        "has_header": true,
+        "x_col": "t_s",
+        "y_col": "p_Pa_xD0p1",
+        "label": "Analytical, x_D = 0.1"
+      },
+      {
+        "id": "ana_p_xD0p2",
+        "file": "reference/analytical_histories.csv",
+        "has_header": true,
+        "x_col": "t_s",
+        "y_col": "p_Pa_xD0p2",
+        "label": "Analytical, x_D = 0.2"
+      },
+      {
+        "id": "ana_p_xD0p5",
+        "file": "reference/analytical_histories.csv",
+        "has_header": true,
+        "x_col": "t_s",
+        "y_col": "p_Pa_xD0p5",
+        "label": "Analytical, x_D = 0.5"
+      },
+      {
+        "id": "ana_p_xD0p8",
+        "file": "reference/analytical_histories.csv",
+        "has_header": true,
+        "x_col": "t_s",
+        "y_col": "p_Pa_xD0p8",
+        "label": "Analytical, x_D = 0.8"
+      },
+      {
+        "id": "ana_uy_top",
+        "file": "reference/analytical_histories.csv",
+        "has_header": true,
+        "x_col": "t_s",
+        "y_col": "uy_top_m",
+        "label": "Analytical settlement"
+      },
+      {
+        "id": "ana_p_profile",
+        "file": "reference/analytical_profiles_t10s.csv",
+        "has_header": true,
+        "x_col": "y_m",
+        "y_col": "p_Pa",
+        "label": "Analytical, t = 10 s"
+      },
+      {
+        "id": "ana_uy_profile",
+        "file": "reference/analytical_profiles_t10s.csv",
+        "has_header": true,
+        "x_col": "y_m",
+        "y_col": "uy_m",
+        "label": "Analytical, t = 10 s"
+      }
+    ],
+    "queries": [
+      {
+        "id": "t",
+        "type": "time",
+        "display": false
+      },
+      {
+        "id": "t_s",
+        "type": "formula",
+        "formula": "t * 1.0",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Time [s]"
+      },
+      {
+        "id": "t_D",
+        "type": "formula",
+        "formula": "t * 3.3333333333e-3",
+        "depends_on": [
+          "t"
+        ],
+        "label": "Dimensionless time t_D = c t / H^2"
+      },
+      {
+        "id": "p_xD0p1",
+        "type": "field",
+        "field": "pore_pressure",
+        "component": "p",
+        "at": "probe_xD0p1",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "p at x_D = 0.1 [Pa]"
+      },
+      {
+        "id": "p_xD0p2",
+        "type": "field",
+        "field": "pore_pressure",
+        "component": "p",
+        "at": "probe_xD0p2",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "p at x_D = 0.2 [Pa]"
+      },
+      {
+        "id": "p_xD0p5",
+        "type": "field",
+        "field": "pore_pressure",
+        "component": "p",
+        "at": "probe_xD0p5",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "p at x_D = 0.5 [Pa]"
+      },
+      {
+        "id": "p_xD0p8",
+        "type": "field",
+        "field": "pore_pressure",
+        "component": "p",
+        "at": "probe_xD0p8",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "p at x_D = 0.8 [Pa]"
+      },
+      {
+        "id": "uy_top",
+        "type": "field",
+        "field": "displacement",
+        "component": "uy",
+        "at": "probe_top",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "Top settlement [m]"
+      },
+      {
+        "id": "uD_top",
+        "type": "formula",
+        "formula": "-uy_top * 33333.3333333 / 1000.0",
+        "depends_on": [
+          "uy_top"
+        ],
+        "label": "Dimensionless settlement u_D = u (lambda+2G)/(p0 H)",
+        "_comment": "u_D -> 1 as t_D -> inf; at t_D = 0.0333 the analytical value is 0.2060 (uy = -6.180e-3 m)."
+      },
+      {
+        "id": "pD_xD0p5",
+        "type": "formula",
+        "formula": "p_xD0p5 / 1000.0",
+        "depends_on": [
+          "p_xD0p5"
+        ],
+        "label": "p_D at x_D = 0.5"
+      },
+      {
+        "id": "p_profile_t10",
+        "type": "line_profile",
+        "field": "pore_pressure",
+        "axis": 1,
+        "start": [
+          0.04,
+          -1.0
+        ],
+        "end": [
+          0.04,
+          0.0
+        ],
+        "n_samples": 101,
+        "at_time": 10.0,
+        "label": "Pore pressure over depth at t = 10 s",
+        "_comment_endpoints": "line_profile endpoints take EXACTLY the mesh dimension (2 here), NOT the 3-value geometry convention: they sample the field directly instead of snapping to a node, so a padded z is rejected. A 3rd value raised every step and ALSO produced a bogus 'never fired: at_time is outside the simulated window' warning, because a raising query leaves its id absent and the at_time warner does not verify its own claim."
+      },
+      {
+        "id": "uy_profile_t10",
+        "type": "line_profile",
+        "field": "displacement",
+        "axis": 1,
+        "start": [
+          0.04,
+          -1.0
+        ],
+        "end": [
+          0.04,
+          0.0
+        ],
+        "n_samples": 101,
+        "at_time": 10.0,
+        "component": "uy",
+        "label": "Vertical displacement over depth at t = 10 s",
+        "_comment_endpoints": "line_profile endpoints take EXACTLY the mesh dimension (2 here), NOT the 3-value geometry convention: they sample the field directly instead of snapping to a node, so a padded z is rejected. A 3rd value raised every step and ALSO produced a bogus 'never fired: at_time is outside the simulated window' warning, because a raising query leaves its id absent and the at_time warner does not verify its own claim."
+      },
+      {
+        "id": "sigma_yy_xD0p5",
+        "type": "field",
+        "field": "stress",
+        "component": "syy",
+        "at": "probe_xD0p5",
+        "reduce": "avg",
+        "evaluate_in": "fem",
+        "label": "sigma_yy at x_D = 0.5 [Pa]",
+        "_comment": "DIAGNOSTIC, not a validation curve: whether the Biot material reports the EFFECTIVE or the TOTAL stress is not documented here. Check it against the two knowns before using it -- total sigma_yy = -1000 Pa at all times and all depths, whereas the effective stress starts at 0 and relaxes to -1000 Pa. The analytical effective stress is in reference/analytical_profiles_t10s.csv (sigma_eff_yy_Pa = -1000 + p)."
+      }
+    ],
+    "plots": [
+      {
+        "name": "pressure_history",
+        "title": "Pore-pressure history at four depths",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [s]"
+        },
+        "y_axis": {
+          "label": "Pore pressure [Pa]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_s"
+            },
+            "y": {
+              "key": "p_xD0p1"
+            },
+            "label": "FEM, x_D = 0.1"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_s"
+            },
+            "y": {
+              "key": "p_xD0p2"
+            },
+            "label": "FEM, x_D = 0.2"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_s"
+            },
+            "y": {
+              "key": "p_xD0p5"
+            },
+            "label": "FEM, x_D = 0.5"
+          },
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_s"
+            },
+            "y": {
+              "key": "p_xD0p8"
+            },
+            "label": "FEM, x_D = 0.8"
+          },
+          {
+            "source": "reference",
+            "ref_id": "ana_p_xD0p1"
+          },
+          {
+            "source": "reference",
+            "ref_id": "ana_p_xD0p2"
+          },
+          {
+            "source": "reference",
+            "ref_id": "ana_p_xD0p5"
+          },
+          {
+            "source": "reference",
+            "ref_id": "ana_p_xD0p8"
+          }
+        ]
+      },
+      {
+        "name": "settlement_history",
+        "title": "Settlement of the loaded surface",
+        "grid": true,
+        "x_axis": {
+          "label": "Time [s]"
+        },
+        "y_axis": {
+          "label": "u_y at y = 0 [m]"
+        },
+        "curves": [
+          {
+            "source": "simulation",
+            "x": {
+              "key": "t_s"
+            },
+            "y": {
+              "key": "uy_top"
+            },
+            "label": "FEM"
+          },
+          {
+            "source": "reference",
+            "ref_id": "ana_uy_top"
+          }
+        ]
+      },
+      {
+        "name": "pressure_profile_t10s",
+        "title": "Pore-pressure profile over depth at t = 10 s",
+        "grid": true,
+        "x_axis": {
+          "label": "y [m]  (0 = drained surface, -1 = sealed base)"
+        },
+        "y_axis": {
+          "label": "Pore pressure [Pa]"
+        },
+        "curves": [
+          {
+            "source": "query",
+            "query_key": "p_profile_t10",
+            "label": "FEM, t = 10 s",
+            "axis": 1,
+            "_comment": "axis is needed HERE as well as on the query: the query's own 'axis' only picks the placement axis for a SCALAR endpoint and is inert when start/end are points, and it is never carried into SpatialQueryResult. The plotter reads curve_cfg['axis'] (plotter/curves.py) and defaults to 0 - which plots the constant x of a vertical profile line and draws the FEM curve as a single vertical stripe."
+          },
+          {
+            "source": "reference",
+            "ref_id": "ana_p_profile"
+          }
+        ],
+        "_comment": "The whole comparison lives in the top ~0.2 m; if the curves are unreadable, set xlim [-0.3, 0.0]."
+      },
+      {
+        "name": "displacement_profile_t10s",
+        "title": "Vertical displacement over depth at t = 10 s",
+        "grid": true,
+        "x_axis": {
+          "label": "y [m]"
+        },
+        "y_axis": {
+          "label": "u_y [m]"
+        },
+        "curves": [
+          {
+            "source": "query",
+            "query_key": "uy_profile_t10",
+            "label": "FEM, t = 10 s",
+            "axis": 1,
+            "_comment": "axis is needed HERE as well as on the query: the query's own 'axis' only picks the placement axis for a SCALAR endpoint and is inert when start/end are points, and it is never carried into SpatialQueryResult. The plotter reads curve_cfg['axis'] (plotter/curves.py) and defaults to 0 - which plots the constant x of a vertical profile line and draws the FEM curve as a single vertical stripe."
+          },
+          {
+            "source": "reference",
+            "ref_id": "ana_uy_profile"
+          }
+        ]
+      }
+    ],
+    "console": {
+      "summary_every_steps": 2,
+      "reference_deviation": {
+        "enabled": true,
+        "show_in_progress_bar": true,
+        "pairs": [
+          {
+            "x": "t_s",
+            "y": "p_xD0p1",
+            "ref_id": "ana_p_xD0p1"
+          },
+          {
+            "x": "t_s",
+            "y": "p_xD0p5",
+            "ref_id": "ana_p_xD0p5"
+          },
+          {
+            "x": "t_s",
+            "y": "uy_top",
+            "ref_id": "ana_uy_top"
+          }
+        ]
+      }
+    },
+    "aux_fields": [
+      "*"
+    ],
+    "save_checkpoint": true,
+    "export_vtu": true,
+    "save_db": true,
+    "_comment_reference_curves": "NOT digitised from a figure -- evaluated from the closed-form series printed on the benchmark page (see reference/make_reference.py, 4000 terms). Sign/axis conventions: the paper's depth coordinate x_D = -y/H, so these files are written against the MESH coordinate y in [-1, 0] m; pressure in Pa, compression positive (both the paper and this backend); uy negative = settlement. The page prints the u_D series coefficient as 2/M, which fails the t=0 check (u must vanish everywhere in the undrained zero-storage limit); 2/M^2 is used instead."
+  }
+}

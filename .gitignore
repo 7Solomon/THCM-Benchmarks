@@ -3,12 +3,23 @@ viewer/index.json
 *__pycache__
 
 
-/AutoBench/
+/workspace/AutoBench/
 
 
 package-lock.json
 package.json
 node_modules
-# Secrets: the real key never leaves the machine. harness/.env.example is committed.
+# Secrets: the real key never leaves the machine. The .env.example beside it is
+# committed. The bare pattern covers worker/dispatch/dsh-harness/.env.
 .env
-worker/harness/.env
+
+# dataset/ is DERIVED (worker/tools/build_dataset.py). The specs and the manifest
+# are small, diffable, and worth reviewing in git; the PDFs are byte-identical
+# copies of files already under benchmarks/, and the text is extracted from them.
+# Committing 30 MB to say the same thing twice helps nobody.
+dataset/pdf/
+dataset/text/
+
+# Eval artifacts: raw API responses, one per (model, case). Regenerate, or copy a
+# leaderboard.md out deliberately.
+/workspace/runs/

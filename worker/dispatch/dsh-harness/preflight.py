@@ -11,12 +11,17 @@ This needs NO API key. The model call fails (`finish_reason: "error"`), but the 
 turn pipeline up to `agent/request` fires first, and `request/header` carries both the
 system prompt and the full tool schema list.
 
-    python worker/harness/preflight.py                 # default route, from worker/harness/.env
-    python worker/harness/preflight.py --route mock    # no credentials at all
-    python worker/harness/preflight.py --json          # machine-readable, for CI
+    python worker/dispatch/dsh-harness/preflight.py              # default route, from ./.env
+    python worker/dispatch/dsh-harness/preflight.py --route mock # no credentials at all
+    python worker/dispatch/dsh-harness/preflight.py --json       # machine-readable, for CI
 
-Exit 0 = composition matches. 1 = a required tool is missing. 2 = the runtime would
-not start.
+Exit 0 = composition matches. 1 = the header was read and a required tool is missing.
+2 = the runtime would not start, OR no request/header event ever fired.
+
+The 1/2 split matters. If the runtime or the event schema changes so that
+`request/header` never arrives, `header` stays empty and EVERY tool reads as missing
+-- which sends you debugging bench.cordis.yml when what actually broke is the probe.
+Exit 2 says "I learned nothing", exit 1 says "I looked, and the composition is wrong".
 """
 from __future__ import annotations
 
@@ -27,9 +32,9 @@ import sys
 import tempfile
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent          # worker/harness
-WORKER = HERE.parent                            # worker
-REPO = WORKER.parent                            # repo root
+HERE = Path(__file__).resolve().parent          # worker/dispatch/dsh-harness
+WORKER = HERE.parent.parent                     # worker
+ENV_FILE = WORKER / ".env"                      # shared by every job
 
 # What bench.cordis.yml is supposed to produce. A tool going missing here is a
 # silent capability loss, which is exactly what this file exists to catch.
@@ -89,10 +94,12 @@ def probe(route: str, timeout: float) -> dict:
         env["DEEPSEEK_API_KEY"] = "preflight-no-key-needed"
 
     header: dict = {}
+    seen = {"header": False}
 
     def tap(n):
         ev = (n.payload or {}).get("event")
         if isinstance(ev, dict) and ev.get("type") == "request/header":
+            seen["header"] = True
             header.update(ev.get("data", {}).get("header", {}))
 
     h = DeepSeekHarness(
@@ -113,7 +120,7 @@ def probe(route: str, timeout: float) -> dict:
         pass                                        # model failure is fine
     finally:
         h.close()
-    return header
+    return header, seen["header"]
 
 
 def main(argv=None) -> int:
@@ -123,22 +130,34 @@ def main(argv=None) -> int:
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
 
-    loaded = load_env(HERE / ".env")
-    header = probe(a.route, a.timeout)
+    loaded = load_env(ENV_FILE)
+    header, saw_header = probe(a.route, a.timeout)
     tools = {t["name"] for t in header.get("tools", [])}
     missing = {k: v for k, v in REQUIRED.items() if k not in tools}
     extra = sorted(tools - set(REQUIRED) - OPTIONAL)
 
     if a.json:
         print(json.dumps({
-            "ok": not missing, "tools": sorted(tools),
-            "missing": sorted(missing), "unexpected": extra,
+            "ok": saw_header and not missing,
+            "header_observed": saw_header,
+            "tools": sorted(tools),
+            "missing": sorted(missing) if saw_header else [],
+            "unexpected": extra,
             "model": header.get("config", {}).get("model"),
             "system_prompt_chars": len(header.get("system", "")),
         }, indent=2))
-        return 1 if missing else 0
+        return 0 if (saw_header and not missing) else (1 if saw_header else 2)
 
-    print(f"env      : worker/harness/.env -> {', '.join(loaded) if loaded else 'nothing loaded'}")
+    if not saw_header:
+        print("no request/header event was observed — the PROBE is broken, not the "
+              "composition.\n"
+              "  Nothing can be said about the tool list from this run. Check that the\n"
+              "  runtime starts, that the event is still called 'request/header', and\n"
+              "  that a turn gets as far as agent/request.", file=sys.stderr)
+        return 2
+
+    print(f"env      : {ENV_FILE} -> "
+          f"{', '.join(loaded) if loaded else 'nothing loaded'}")
     print(f"route    : {a.route}")
     print(f"model    : {header.get('config', {}).get('model', '?')}  "
           f"maxTokens={header.get('config', {}).get('maxTokens', '?')}")
