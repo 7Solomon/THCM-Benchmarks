@@ -1,1 +1,3075 @@
-/home/johannes/programme/THCM-Fem/SKILLs/benchmark.schema.json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thcm-benchmarks/benchmark.schema.json",
+  "title": "THCM Benchmark",
+  "description": "Schema for a single benchmark.json consumed by the FEM simulation pipeline (tools/simulations). Structure, arities and enums are enforced here; the accompanying CREATE.md skill covers the judgement calls (provenance, sanity checks, traps) the schema cannot express. Keys starting with '_' (e.g. _comment) are ignored by the pipeline and allowed everywhere as provenance annotations.",
+  "type": "object",
+  "required": [
+    "metadata",
+    "geometry",
+    "physics",
+    "materials",
+    "assignment",
+    "time_stepping"
+  ],
+  "additionalProperties": true,
+  "patternProperties": {
+    "^_": true
+  },
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    },
+    "geometry": {
+      "$ref": "#/$defs/geometry"
+    },
+    "physics": {
+      "$ref": "#/$defs/physics"
+    },
+    "materials": {
+      "$ref": "#/$defs/materials"
+    },
+    "initial_conditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/initialCondition"
+      }
+    },
+    "boundary_conditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/boundaryCondition"
+      }
+    },
+    "assignment": {
+      "$ref": "#/$defs/assignment"
+    },
+    "time_stepping": {
+      "$ref": "#/$defs/timeStepping"
+    },
+    "results": {
+      "$ref": "#/$defs/results"
+    }
+  },
+  "$defs": {
+    "_commentable": {
+      "$comment": "Mixin marker: objects allow any '_'-prefixed key as a comment.",
+      "patternProperties": {
+        "^_": true
+      }
+    },
+    "vec3": {
+      "description": "Coordinate vector — ALWAYS exactly 3 values [x,y,z], even in 2D (use z=0).",
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "vec2": {
+      "description": "Exactly 2 values — used only for rectangle size and prism base_polygon vertices.",
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "box6": {
+      "description": "Bounding box — ALWAYS exactly 6 values [xmin,ymin,zmin,xmax,ymax,zmax], even for 2D/dim-1/dim-0 groups (pad z by +/-1e-6 in 2D).",
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 6,
+      "maxItems": 6
+    },
+    "coord23": {
+      "description": "Probe coordinate for geometry.points — 2 or 3 values. Resolved at runtime by snapping to the nearest mesh node, so a trailing z=0 is harmless here. NOT interchangeable with lineCoord: line_profile endpoints are NOT snapped and reject an over-long vector.",
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 3
+    },
+    "lineCoord": {
+      "description": "line_profile endpoint — EXACTLY as many coordinates as the mesh has dimensions: 2 in 2D, 3 in 3D. This INVERTS the 'every coordinate vector is 3 values, z=0 in 2D' rule that geometry uses. A 3-value endpoint on a 2D mesh is a hard error at the first step ('line_profile start has 3 coordinates but the mesh is 2-dimensional', adapters.py _as_point), because the endpoint is used to sample the field directly rather than snapped to a node, and padding a genuine axis would silently sample the wrong plane. A bare scalar is also accepted and is placed on `axis` with the other coordinates zero. NB when this raises, the run still completes and the query id is simply absent, which additionally triggers the misleading 'never fired: at_time is outside the simulated window' warning — check for a ValueError above it before believing the at_time diagnosis.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 3
+        },
+        {
+          "type": "number"
+        }
+      ]
+    },
+    "timeValue": {
+      "description": "A scalar, or a time-table. The table's rows are given either INLINE ({time_table:[[t_seconds,value],...]}) or read from a CSV column ({file, column}) -- two spellings of one thing, and the file form is expanded to the inline form at config load, so everything downstream sees a plain table. Any time_table present triggers per-step reassembly.",
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "required": [
+            "time_table"
+          ],
+          "additionalProperties": true,
+          "patternProperties": {
+            "^_": true
+          },
+          "properties": {
+            "time_table": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "interp": {
+              "enum": [
+                "step",
+                "linear"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "required": [
+            "file",
+            "column"
+          ],
+          "additionalProperties": false,
+          "patternProperties": {
+            "^_": true
+          },
+          "properties": {
+            "file": {
+              "type": "string",
+              "description": "CSV relative to the benchmark directory (same convention as results.reference_curves). MUST have a header row. Raw instrument/climate files are converted once by a prep script (tools/extract/climate2csv.py) -- the pipeline reads CSV only, so unit arithmetic never sits on the solver's hot path."
+            },
+            "column": {
+              "type": "string",
+              "description": "Name of the value column."
+            },
+            "time_column": {
+              "type": "string",
+              "default": "t_s",
+              "description": "Name of the time column, in ABSOLUTE seconds."
+            },
+            "interp": {
+              "enum": [
+                "step",
+                "linear"
+              ],
+              "default": "step",
+              "description": "How the value behaves BETWEEN rows. 'step' = piecewise constant, the convention for hourly climate data that is 'constant during the hour'."
+            },
+            "scale": {
+              "type": "number",
+              "default": 1.0,
+              "description": "Multiplies the column. Lets a paper's own coefficient stay in this file next to its citation, e.g. alpha = beta_p * p_sat(T) as {column: p_sat_e, scale: 2e-7}."
+            },
+            "offset": {
+              "type": "number",
+              "default": 0.0,
+              "description": "Added AFTER scale: value = column*scale + offset."
+            },
+            "period": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Seconds. Tile the file over the run, for data that covers one cycle and repeats (HAMSTAD B1: hourly values for one year, 'repeated values for ensuing years shall be used'). Rows in [t_first, t_first+period) are repeated; the file's own trailing wrap-around row, if any, is dropped."
+            }
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "dimension"
+      ],
+      "patternProperties": {
+        "^_": true
+      },
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "kebab-case slug"
+        },
+        "title": {
+          "type": "string"
+        },
+        "dimension": {
+          "description": "Read by load_mesh_node_sets(); must match the mesh and displacement.components.",
+          "enum": [
+            2,
+            3
+          ]
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "authors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "year": {
+              "type": [
+                "integer",
+                "string"
+              ]
+            },
+            "journal": {
+              "type": "string"
+            },
+            "doi": {
+              "type": "string"
+            }
+          }
+        },
+        "physics_class": {
+          "type": "string"
+        },
+        "validation_method": {
+          "type": "string"
+        },
+        "validation_target": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Put RISKY: caveats here."
+        }
+      }
+    },
+    "geometry": {
+      "type": "object",
+      "required": [
+        "entities",
+        "physical_groups"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entity"
+          }
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/operation"
+          }
+        },
+        "physical_groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/physicalGroup"
+          }
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point"
+          }
+        },
+        "mesh": {
+          "$ref": "#/$defs/mesh"
+        }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "parameters"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "cube",
+            "rectangle",
+            "cylinder",
+            "sphere",
+            "prism",
+            "line",
+            "point"
+          ]
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "transform": {
+          "description": "Singular key. A 'transforms' key is silently ignored.",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/transform"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "cube"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "parameters": {
+                "type": "object",
+                "required": [
+                  "origin",
+                  "size"
+                ],
+                "additionalProperties": true,
+                "patternProperties": {
+                  "^_": true
+                },
+                "properties": {
+                  "origin": {
+                    "$ref": "#/$defs/vec3"
+                  },
+                  "size": {
+                    "$ref": "#/$defs/vec3"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "rectangle"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "parameters": {
+                "type": "object",
+                "required": [
+                  "origin",
+                  "size"
+                ],
+                "additionalProperties": true,
+                "patternProperties": {
+                  "^_": true
+                },
+                "properties": {
+                  "origin": {
+                    "$ref": "#/$defs/vec3"
+                  },
+                  "size": {
+                    "$ref": "#/$defs/vec2"
+                  },
+                  "normal": {
+                    "$ref": "#/$defs/vec3",
+                    "description": "Must be [0,0,1] or omitted; rotate via transform."
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "cylinder"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "parameters": {
+                "type": "object",
+                "required": [
+                  "base_center",
+                  "axis",
+                  "radius",
+                  "height"
+                ],
+                "additionalProperties": true,
+                "patternProperties": {
+                  "^_": true
+                },
+                "properties": {
+                  "base_center": {
+                    "$ref": "#/$defs/vec3"
+                  },
+                  "axis": {
+                    "$ref": "#/$defs/vec3"
+                  },
+                  "radius": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "height": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "sphere"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "parameters": {
+                "type": "object",
+                "required": [
+                  "center",
+                  "radius"
+                ],
+                "additionalProperties": true,
+                "patternProperties": {
+                  "^_": true
+                },
+                "properties": {
+                  "center": {
+                    "$ref": "#/$defs/vec3"
+                  },
+                  "radius": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "prism"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "parameters": {
+                "type": "object",
+                "required": [
+                  "base_polygon",
+                  "height"
+                ],
+                "additionalProperties": true,
+                "patternProperties": {
+                  "^_": true
+                },
+                "properties": {
+                  "base_polygon": {
+                    "type": "array",
+                    "minItems": 3,
+                    "items": {
+                      "$ref": "#/$defs/vec2"
+                    }
+                  },
+                  "height": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "line"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "parameters": {
+                "type": "object",
+                "required": [
+                  "start",
+                  "end"
+                ],
+                "additionalProperties": true,
+                "patternProperties": {
+                  "^_": true
+                },
+                "properties": {
+                  "start": {
+                    "$ref": "#/$defs/vec3"
+                  },
+                  "end": {
+                    "$ref": "#/$defs/vec3"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "point"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "parameters": {
+                "type": "object",
+                "required": [
+                  "coordinates"
+                ],
+                "additionalProperties": true,
+                "patternProperties": {
+                  "^_": true
+                },
+                "properties": {
+                  "coordinates": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 3,
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "transform": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "type": {
+          "enum": [
+            "translate",
+            "rotate",
+            "scale"
+          ]
+        },
+        "vector": {
+          "$ref": "#/$defs/vec3"
+        },
+        "center": {
+          "$ref": "#/$defs/vec3"
+        },
+        "axis": {
+          "$ref": "#/$defs/vec3"
+        },
+        "angle": {
+          "type": "number",
+          "description": "radians"
+        },
+        "factor": {
+          "type": "number"
+        },
+        "factors": {
+          "$ref": "#/$defs/vec3"
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "type": {
+          "enum": [
+            "cut",
+            "fuse",
+            "intersect",
+            "fragment"
+          ]
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "remove_tools": {
+          "type": "boolean"
+        },
+        "result_id": {
+          "type": "string"
+        },
+        "result_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "physicalGroup": {
+      "type": "object",
+      "required": [
+        "name",
+        "dimension"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Case-sensitive; referenced byte-for-byte in BCs/ICs/assignment/queries."
+        },
+        "dimension": {
+          "enum": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "entity_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Only valid for untouched volumes; never after a boolean operation (use selection.box)."
+        },
+        "selection": {
+          "$ref": "#/$defs/selection"
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "oneOf": [
+        {
+          "required": [
+            "box"
+          ],
+          "additionalProperties": true,
+          "patternProperties": {
+            "^_": true
+          },
+          "properties": {
+            "box": {
+              "$ref": "#/$defs/box6"
+            }
+          }
+        },
+        {
+          "required": [
+            "boxes"
+          ],
+          "additionalProperties": true,
+          "patternProperties": {
+            "^_": true
+          },
+          "properties": {
+            "boxes": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/box6"
+              }
+            }
+          }
+        },
+        {
+          "required": [
+            "type"
+          ],
+          "additionalProperties": true,
+          "patternProperties": {
+            "^_": true
+          },
+          "properties": {
+            "type": {
+              "const": "distance_from_axis"
+            },
+            "axis_point": {
+              "$ref": "#/$defs/vec3"
+            },
+            "radius": {
+              "type": "number"
+            },
+            "tolerance": {
+              "type": "number"
+            },
+            "min_height": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "required": [
+            "type",
+            "domains"
+          ],
+          "additionalProperties": true,
+          "patternProperties": {
+            "^_": true
+          },
+          "properties": {
+            "type": {
+              "const": "interface_between_domains"
+            },
+            "domains": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "point": {
+      "type": "object",
+      "required": [
+        "name",
+        "coordinates"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "coordinates": {
+          "$ref": "#/$defs/coord23"
+        }
+      }
+    },
+    "mesh": {
+      "type": "object",
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "element_size": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "order": {
+          "enum": [
+            1,
+            2
+          ]
+        },
+        "recombine": {
+          "type": "boolean"
+        },
+        "refinement": {
+          "type": "array",
+          "description": "GRADED sizing. Without it the mesh is UNIFORM at element_size, so resolving a small feature means refining the whole domain. Each entry refines around a physical group and grades back to element_size.",
+          "items": {
+            "type": "object",
+            "required": [
+              "around",
+              "element_size"
+            ],
+            "additionalProperties": true,
+            "patternProperties": {
+              "^_": true
+            },
+            "properties": {
+              "around": {
+                "description": "Physical group name, or a list of them. Must be a group that resolves to entities (dim 0, 1 or 2) -- refinement targets the same entities the BCs do.",
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                ]
+              },
+              "element_size": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "Fine size AT the feature [m]. Scaled by the CLI --mesh-size preset like the global size."
+              },
+              "transition": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "Distance [m] over which the size grows back to mesh.element_size. Default 10x the fine size."
+              },
+              "distance_min": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Hold the fine size out to this radius [m] before grading. Default 0."
+              }
+            }
+          }
+        },
+        "optimize": {
+          "type": "boolean"
+        },
+        "algorithm": {
+          "type": "string"
+        }
+      }
+    },
+    "physics": {
+      "type": "object",
+      "description": "Keys are arbitrary block names; each value is a field/ode_source/coupling block. THE EXCEPTION: the MONOLITHIC coupling keys named below are matched by exact name (they select a field plugin rather than a source->target pair), so they are pinned here and take no target_field.",
+      "minProperties": 1,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "heat_moisture_transport": {
+          "$ref": "#/$defs/monolithicCouplingBlock",
+          "description": "Kunzel heat+moisture in ONE engine (hygrothermal field: temperature + humidity). Requires humidity model 'kunzel'."
+        },
+        "hydro_mechanical": {
+          "$ref": "#/$defs/monolithicCouplingBlock",
+          "description": "Biot poroelasticity in ONE engine (hydro_mechanical field: displacement + pore_pressure). Requires a pore_pressure material section; 2D quad meshes only, plane strain."
+        }
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/physicsBlock"
+      }
+    },
+    "monolithicCouplingBlock": {
+      "type": "object",
+      "description": "A monolithic coupling has no source->target direction -- the fields are solved together in one tangent -- so it carries no target_field/source_field.",
+      "required": [
+        "type"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "type": {
+          "const": "coupling"
+        },
+        "strategy": {
+          "type": "string",
+          "description": "Documentation only."
+        }
+      }
+    },
+    "physicsBlock": {
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/couplingBlock"
+        },
+        {
+          "$ref": "#/$defs/fieldOrOdeBlock"
+        }
+      ]
+    },
+    "couplingBlock": {
+      "type": "object",
+      "required": [
+        "type",
+        "target_field"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "type": {
+          "const": "coupling"
+        },
+        "target_field": {
+          "type": "string"
+        },
+        "source_field": {
+          "type": "string",
+          "description": "The field that DRIVES the coupling. Present for thermal_strain (temperature), thermal_aging (temperature) and drying_shrinkage (humidity); creep and autogenous shrinkage have none (they read material state internally), and the monolithic keys have neither source nor target."
+        },
+        "strategy": {
+          "type": "string",
+          "description": "Documentation only. On the oofem backend two coupling mechanisms exist (D12): STAGGERED lockstep (default; N single-field engines, one-way flow into a mechanics target: thermal_strain, thermal_aging, drying_shrinkage) and MONOLITHIC (one engine solves several fields because the coupling is two-way at the PDE level: heat_moisture_transport, hydro_mechanical)."
+        }
+      },
+      "description": "One coupling entry. NAME IT AFTER THE COUPLING YOU MEAN: the backend resolves a registered key to that coupling directly, and only falls back to matching the (source_field, target_field) pair for an unregistered name. That fallback is AMBIGUOUS for (temperature, displacement) -- thermal_strain (expansion) and thermal_aging (creep-chain maturity) are different physics on the same pair -- and is rejected rather than resolved to whichever was registered first (D14)."
+    },
+    "fieldOrOdeBlock": {
+      "type": "object",
+      "required": [
+        "dependent_variable"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "type": {
+          "description": "'field' or 'ode_source'; not parsed for ODE fields (dependent_variable.type/managed_by decide).",
+          "type": "string"
+        },
+        "dependent_variable": {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "additionalProperties": true,
+          "patternProperties": {
+            "^_": true
+          },
+          "properties": {
+            "name": {
+              "enum": [
+                "temperature",
+                "displacement",
+                "humidity",
+                "ionic",
+                "degree_of_hydration",
+                "pore_pressure"
+              ],
+              "description": "pore_pressure is the Biot pore-pressure DOF (oofem P_f). It is only solvable together with displacement under the 'hydro_mechanical' coupling -- there is no pressure-only engine."
+            },
+            "symbol": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "scalar",
+                "vector",
+                "ode"
+              ]
+            },
+            "components": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "managed_by": {
+              "const": "hydration",
+              "description": "Required for ODE fields; only registered provider."
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "name": {
+                    "const": "degree_of_hydration"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "managed_by"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "name": {
+                    "const": "displacement"
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "type": {
+                    "const": "vector"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "materials": {
+      "type": "object",
+      "description": "Keys are material names referenced by assignment.domains[].material.",
+      "minProperties": 1,
+      "patternProperties": {
+        "^_": true
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/materialBlock"
+      }
+    },
+    "materialBlock": {
+      "type": "object",
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "temperature": {
+          "$ref": "#/$defs/mat_temperature"
+        },
+        "displacement": {
+          "$ref": "#/$defs/mat_displacement"
+        },
+        "humidity": {
+          "$ref": "#/$defs/mat_humidity"
+        },
+        "pore_pressure": {
+          "$ref": "#/$defs/mat_pore_pressure"
+        },
+        "degree_of_hydration": {
+          "$ref": "#/$defs/mat_hydration"
+        },
+        "ionic": {
+          "type": "object",
+          "patternProperties": {
+            "^_": true
+          },
+          "additionalProperties": true
+        },
+        "thermal_strain": {
+          "$ref": "#/$defs/mat_thermal_strain"
+        },
+        "b3_creep": {
+          "$ref": "#/$defs/mat_b3_creep"
+        },
+        "power_law_creep": {
+          "$ref": "#/$defs/mat_power_law_creep"
+        },
+        "drying_shrinkage": {
+          "$ref": "#/$defs/mat_drying_shrinkage"
+        },
+        "thermal_aging": {
+          "$ref": "#/$defs/mat_thermal_aging"
+        },
+        "autogenous_shrinkage": {
+          "$ref": "#/$defs/mat_autogenous_shrinkage"
+        }
+      },
+      "dependentRequired": {
+        "thermal_aging": [
+          "b3_creep"
+        ]
+      },
+      "$comment": "dependentRequired holds on EVERY backend. thermal_aging is oofem-only to begin with, so its b3_creep dependency is safe to enforce here. drying_shrinkage also requires b3_creep on oofem (mps hosts both) but NOT on legacy fem/, whose DryingShrinkageEigenstrainProvider is standalone -- so that edge lives in x-backend-dependentRequired and is enforced by the backend at build time, not by validation.",
+      "x-section-status": {
+        "temperature": "wired",
+        "displacement": "wired",
+        "humidity": "wired",
+        "pore_pressure": "wired",
+        "degree_of_hydration": "wired",
+        "thermal_strain": "wired",
+        "b3_creep": "wired",
+        "drying_shrinkage": "wired",
+        "thermal_aging": "wired",
+        "autogenous_shrinkage": "wired",
+        "power_law_creep": "wired",
+        "ionic": "legacy-only"
+      },
+      "x-oofem-class": {
+        "power_law_creep": "doublepowerlaw (sm/Materials/RheoChainMaterials/doublepowerlaw.C) -- WIRED and validated against its own closed-form compliance (tests/test_double_power_law_e2e.py): J(t,t') = 1/E0 + fi1/E0*(t-t')^n*(t'^-m + alpha) with E0 = 1.5*E28. TRAP: oofem reads the input key \"n\" TWICE, as Poisson's ratio (rheoChM.C:589) and as the power-law exponent (doublepowerlaw.C:47), so displacement.nu and power_law_creep.n cannot differ -- the backend gates nu != n rather than silently equating them. Hosts no shrinkage/aging/damage and is mutually exclusive with b3_creep."
+      },
+      "x-status-doc": "Per-entry backend status. FOUR states, not two, because the author's next action differs in each: 'wired' = builder exists here and is validated; 'unverified' = builder exists, never checked against a reference, usable with a stated caveat; 'not-wired' = the physics EXISTS in OOFEM but has no builder yet, so it is effort rather than a wall (x-oofem-class names what to wire); 'legacy-only' = runs on the fem/ backend and is SILENTLY IGNORED here; 'impossible' = not in OOFEM at all. Conflating not-wired with impossible is what made power_law_creep read as a dead end. Enforced by tests/test_skill_contract.py.",
+      "x-backend-dependentRequired": {
+        "oofem": {
+          "drying_shrinkage": [
+            "b3_creep"
+          ]
+        }
+      }
+    },
+    "mat_temperature": {
+      "type": "object",
+      "required": [
+        "k",
+        "rho",
+        "cp"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "model": {
+          "const": "linear_conduction"
+        },
+        "k": {
+          "type": "number",
+          "description": "W/(m.K)"
+        },
+        "rho": {
+          "type": "number",
+          "description": "kg/m^3"
+        },
+        "cp": {
+          "type": "number",
+          "description": "J/(kg.K)"
+        },
+        "k_alpha_reduction": {
+          "type": "number",
+          "description": "lambda(a)=k*(1-c*a); default 0."
+        }
+      }
+    },
+    "mat_displacement": {
+      "type": "object",
+      "required": [
+        "E",
+        "nu"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "model": {
+          "enum": [
+            "linear_elastic",
+            "elastic",
+            "rotating_crack",
+            "fixed_crack",
+            "damage_rankine",
+            "compression_softening",
+            "rotating_crack_crush",
+            "fcm_viscoelastic",
+            "cdpm2",
+            "cdpm1",
+            "damage_mazars"
+          ],
+          "description": "Union across backends -- x-model-status says which one runs each. NB 'fixed_crack' as a MODEL is legacy-only, but a fixed-crack law IS reachable here as the 'fcm_viscoelastic' model plus its 'fixed_crack' sub-section; the two are different things with the same word.",
+          "x-model-status": {
+            "linear_elastic": "wired",
+            "elastic": "wired",
+            "damage_rankine": "wired",
+            "fcm_viscoelastic": "unverified",
+            "rotating_crack": "legacy-only",
+            "fixed_crack": "legacy-only",
+            "compression_softening": "legacy-only",
+            "rotating_crack_crush": "legacy-only",
+            "cdpm2": "unverified",
+            "cdpm1": "unverified",
+            "damage_mazars": "unverified"
+          },
+          "x-status-doc": "Per-entry backend status. FOUR states, not two, because the author's next action differs in each: 'wired' = builder exists here and is validated; 'unverified' = builder exists, never checked against a reference, usable with a stated caveat; 'not-wired' = the physics EXISTS in OOFEM but has no builder yet, so it is effort rather than a wall (x-oofem-class names what to wire); 'legacy-only' = runs on the fem/ backend and is SILENTLY IGNORED here; 'impossible' = not in OOFEM at all. Conflating not-wired with impossible is what made power_law_creep read as a dead end. Enforced by tests/test_skill_contract.py.",
+          "x-oofem-class": {
+            "cdpm2": "con2dpm (ConcreteDPM2, Grassl et al. 2013) -- damage-plastic concrete with SEPARATE tensile and compressive damage. Params in the 'damage_plastic' sub-section; wf required. Hosts NO creep chain.",
+            "cdpm1": "concretedpm (ConcreteDPM, Grassl & Jirasek 2006) -- one scalar damage, exponential softening only. Takes damage_plastic.wf OR Gf, never both. Hosts NO creep chain.",
+            "damage_mazars": "mazarsmodel (Mazars 1984) -- isotropic damage, params in the 'mazars' sub-section. version 'original' takes At/Bt, 'mod_tension' takes eps_f (crack-band regularized). Hosts NO creep chain."
+          }
+        },
+        "E": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Pa"
+        },
+        "nu": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 0.5,
+          "description": "Poisson's ratio, 0 <= nu < 0.5. nu = 0 is admissible (no lateral contraction) and is the usual choice for verification cases, where it makes the plane-strain constrained modulus M = E(1-nu)/((1+nu)(1-2nu)) reduce to E."
+        },
+        "rho": {
+          "type": "number"
+        },
+        "plane_stress": {
+          "type": "boolean",
+          "description": "2D only; default false = plane strain."
+        },
+        "thickness": {
+          "type": "number",
+          "description": "m; only allowed with plane_stress:true."
+        },
+        "alpha_0": {
+          "type": "number",
+          "description": "Percolation threshold; required when hydration active."
+        },
+        "alpha_inf": {
+          "type": "number"
+        },
+        "a_E": {
+          "type": "number"
+        },
+        "E_min": {
+          "type": "number"
+        },
+        "ft": {
+          "type": "number",
+          "description": "Pa"
+        },
+        "Gf": {
+          "type": "number",
+          "description": "J/m^2 = N/m"
+        },
+        "beta_shear": {
+          "type": "number",
+          "description": "LEGACY fem/ ONLY (fixed_crack kernel's shear retention). The OOFEM backend never reads it -- use fcm_viscoelastic's fixed_crack.beta instead."
+        },
+        "fc": {
+          "type": "number",
+          "description": "Pa"
+        },
+        "wd": {
+          "type": "number",
+          "description": "LEGACY fem/ ONLY -- the OOFEM backend never reads it."
+        },
+        "alpha_min": {
+          "type": "number"
+        },
+        "damage_plastic": {
+          "$ref": "#/$defs/mat_damage_plastic"
+        },
+        "mazars": {
+          "$ref": "#/$defs/mat_mazars"
+        },
+        "fixed_crack": {
+          "$ref": "#/$defs/mat_fixed_crack"
+        },
+        "time_dependent_fracture": {
+          "$ref": "#/$defs/mat_time_dependent_fracture"
+        }
+      }
+    },
+    "mat_pore_pressure": {
+      "type": "object",
+      "description": "Biot poroelasticity (oofem upm). Elastic parameters E/nu/rho are NOT repeated here -- they come from the same material's 'displacement' section. Only runs under the 'hydro_mechanical' coupling; there is no pressure-only engine.",
+      "required": [
+        "biot_alpha"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "model": {
+          "enum": [
+            "biot"
+          ],
+          "description": "Optional; 'biot' is the only model and the default.",
+          "x-model-status": {
+            "biot": "wired"
+          }
+        },
+        "biot_alpha": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "description": "Biot coefficient b = 1 - K_drained/K_solid [-]."
+        },
+        "mobility": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Darcy mobility k/mu [m^2/(Pa.s)] -- what oofem's upm 'k' ACTUALLY is (its viscosity is hard-wired to 1.0). Give this OR intrinsic_permeability+fluid_viscosity OR hydraulic_conductivity+fluid_unit_weight; exactly one route."
+        },
+        "intrinsic_permeability": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Intrinsic permeability k [m^2]; needs fluid_viscosity. mobility = k / mu."
+        },
+        "fluid_viscosity": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Dynamic viscosity of the pore fluid mu [Pa.s] (water at 20 degC: 1.0e-3). Constant -- a temperature-dependent viscosity is NOT supported."
+        },
+        "hydraulic_conductivity": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Hydraulic conductivity K [m/s]; needs fluid_unit_weight. mobility = K / gamma_w."
+        },
+        "fluid_unit_weight": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Unit weight of the pore fluid gamma_w [N/m^3] (water: 9810)."
+        },
+        "storage": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Storage coefficient 1/Q [1/Pa]. Give this OR porosity+fluid_bulk_modulus(+solid_bulk_modulus)."
+        },
+        "porosity": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "exclusiveMaximum": 1,
+          "description": "Porosity n [-]; with fluid_bulk_modulus gives 1/Q = n/K_f + (b - n)/K_s."
+        },
+        "fluid_bulk_modulus": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "K_f [Pa] (water: ~2.2e9)."
+        },
+        "solid_bulk_modulus": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "K_s [Pa]. Omitted = incompressible grains, so the (b - n)/K_s term vanishes (consistent only with biot_alpha = 1)."
+        }
+      }
+    },
+    "mat_humidity": {
+      "type": "object",
+      "required": [
+        "model"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "model": {
+          "enum": [
+            "linear",
+            "bazant_najjar",
+            "isolin_moisture",
+            "kunzel"
+          ],
+          "description": "isolin_moisture (oofem isolinmoisturemat) is CONSTANT-coefficient diffusion, taking D0 and capacity only -- the right model when the benchmark's own formulation is linear. kunzel is COUPLED heat+moisture (oofem hemokunzel): it only runs under the 'heat_moisture_transport' coupling (monolithic hygrothermal field, D12), NOT as a moisture-only material. Thermal params (k/cp/rho) come from the temperature material section.",
+          "x-model-status": {
+            "bazant_najjar": "wired",
+            "isolin_moisture": "wired",
+            "kunzel": "wired",
+            "linear": "legacy-only"
+          }
+        },
+        "capacity": {
+          "type": "number"
+        },
+        "D0": {
+          "type": "number"
+        },
+        "D_h": {
+          "type": "number"
+        },
+        "hc": {
+          "type": "number"
+        },
+        "n": {
+          "type": "number"
+        },
+        "alpha": {
+          "type": "number"
+        },
+        "wf": {
+          "type": "number",
+          "description": "kunzel: free saturation water content [kg/m^3]"
+        },
+        "w80": {
+          "type": "number",
+          "description": "kunzel: water content at RH=0.8 [kg/m^3]; derives iso_b = 0.8*(wf-w80)/(0.8*wf-w80). Give this OR iso_b."
+        },
+        "iso_b": {
+          "type": "number",
+          "description": "kunzel isotherm shape parameter: w(h) = wf*(iso_b-1)*h/(iso_b-h). Must exceed 1 (enforced).",
+          "exclusiveMinimum": 1
+        },
+        "A": {
+          "type": "number",
+          "description": "kunzel: liquid water absorption coefficient [kg/m^2/s^0.5]"
+        },
+        "mu": {
+          "type": "number",
+          "description": "kunzel: water-vapour diffusion resistance factor [-]"
+        },
+        "lambda_moisture_coeff": {
+          "type": "number",
+          "description": "kunzel: thermal-conductivity moisture supplement b in lambda=lambda0*(1+b*w/rho)"
+        }
+      }
+    },
+    "mat_hydration": {
+      "type": "object",
+      "required": [
+        "model",
+        "B1",
+        "B2",
+        "alpha_inf",
+        "eta",
+        "Ea",
+        "R",
+        "T_ref",
+        "Hu",
+        "c_cement"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "model": {
+          "const": "affinity"
+        },
+        "B1": {
+          "type": "number",
+          "description": "1/s (papers often quote 1/h)"
+        },
+        "B2": {
+          "type": "number"
+        },
+        "alpha_inf": {
+          "type": "number"
+        },
+        "eta": {
+          "type": "number"
+        },
+        "Ea": {
+          "type": "number",
+          "description": "J/mol"
+        },
+        "R": {
+          "type": "number"
+        },
+        "T_ref": {
+          "type": "number",
+          "description": "Affinity reference temperature in KELVIN -- the ONLY Kelvin temperature in the file (it is converted FROM Kelvin by the builder). A degC value here is not a schema error but makes the Arrhenius factor ~1e94; a runtime guard rejects T_ref < 200."
+        },
+        "Hu": {
+          "type": "number",
+          "description": "J/g"
+        },
+        "c_cement": {
+          "type": "number",
+          "description": "kg/m^3"
+        }
+      }
+    },
+    "mat_thermal_strain": {
+      "type": "object",
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "alpha_T": {
+          "type": "number",
+          "description": "1/K"
+        },
+        "T_strain_free_ref": {
+          "type": "number",
+          "description": "Stress-free (casting) temperature, in DEGREES CELSIUS -- NOT Kelvin. oofem's hydratingConcreteMat works in degC and adds 273.15 itself (D2), so the whole temperature field is degC. THE ONE EXCEPTION is a 'heat_moisture_transport' (Kunzel) domain, whose temperature DOF is absolute KELVIN -- the opposite convention, which is why hydration and hygrothermal cannot be combined (D12). It is compared against the temperature field directly (oofem referencetemperature), so it MUST use the same convention as the field. Contrast degree_of_hydration.T_ref, which is the only Kelvin temperature in the file."
+        },
+        "autogenous_shrinkage_max": {
+          "type": "number",
+          "description": "DEPRECATED: prefer the dedicated 'autogenous_shrinkage' section. Kept for back-compat; combining the two on one material is a hard error (double count). Same sign convention as that section -- unconstrained."
+        },
+        "alpha_inf": {
+          "type": "number"
+        }
+      }
+    },
+    "mat_autogenous_shrinkage": {
+      "type": "object",
+      "required": [
+        "shrinkage_max"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "shrinkage_max": {
+          "type": "number",
+          "description": "Ultimate autogenous strain [-]. SIGN IS NOT CONSTRAINED: negative is shrinkage, POSITIVE IS SWELLING and is legitimate -- oofem's own B4 cement table yields positive eps_au_infty for some cement types (mps.C:410). On the oofem backend this is the asymptote of the mps B4 curve on EQUIVALENT AGE, not the legacy eps = shrinkage_max*alpha/alpha_inf (divergence D9), so it needs no hydration section."
+        },
+        "alpha_inf": {
+          "type": "number",
+          "description": "ultimate degree of hydration for normalisation; set equal to the hydration alpha_inf"
+        },
+        "age_at_start_days": {
+          "type": "number",
+          "description": "oofem backend only: material age at t=0 [days], required for shrinkage-only (no b3_creep) runs"
+        }
+      }
+    },
+    "mat_b3_creep": {
+      "type": "object",
+      "required": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "E28"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "q1": {
+          "type": "number"
+        },
+        "q2": {
+          "type": "number"
+        },
+        "q3": {
+          "type": "number"
+        },
+        "q4": {
+          "type": "number"
+        },
+        "E28": {
+          "type": "number"
+        },
+        "n": {
+          "type": "number"
+        },
+        "m": {
+          "type": "number"
+        },
+        "r": {
+          "type": "number"
+        },
+        "min_loading_age_days": {
+          "type": "number"
+        },
+        "max_history_entries": {
+          "type": "number"
+        },
+        "merge_rel_tol": {
+          "type": "number"
+        }
+      }
+    },
+    "mat_power_law_creep": {
+      "type": "object",
+      "required": [
+        "E28",
+        "phi_inf"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "E28": {
+          "type": "number"
+        },
+        "phi_inf": {
+          "type": "number"
+        },
+        "n": {
+          "type": "number",
+          "description": "(t-t') exponent. On the oofem backend this is ALSO Poisson's ratio -- see x-oofem-class; it must equal displacement.nu or the build is rejected."
+        },
+        "m": {
+          "type": "number",
+          "description": "loading-age exponent in (t'^-m + alpha). 0 = age-independent creep. Required by the oofem backend (doublepowerlaw), absent from the legacy one."
+        },
+        "alpha": {
+          "type": "number",
+          "description": "age-independent floor added to t'^-m. Required by the oofem backend (doublepowerlaw), absent from the legacy one."
+        },
+        "age_at_start_days": {
+          "type": "number",
+          "description": "material age at simulation t=0, in days; oofem relmatage. Must be > 0 -- the compliance goes as t'^-m and is singular at t'=0."
+        },
+        "t1": {
+          "type": "number",
+          "description": "legacy fem/ backend only -- the double power law has no t1; ignored (loudly) on oofem."
+        },
+        "t_load": {
+          "type": "number",
+          "description": "legacy fem/ backend only -- use age_at_start_days on oofem; ignored (loudly) there."
+        }
+      }
+    },
+    "mat_drying_shrinkage": {
+      "type": "object",
+      "required": [
+        "k_sh"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "k_sh": {
+          "type": "number"
+        },
+        "h_ref": {
+          "type": "number"
+        },
+        "mus": {
+          "type": "number",
+          "description": "OOFEM backend only (REQUIRED there): mps microprestress flow viscosity muS [1/(Pa*s)] -- activates MPS drying creep under load; stress-free shrinkage is independent of it (D11)."
+        }
+      }
+    },
+    "initialCondition": {
+      "type": "object",
+      "required": [
+        "field",
+        "value"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "component": {
+          "enum": [
+            "ux",
+            "uy",
+            "uz",
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            }
+          ]
+        },
+        "location": {
+          "type": "string",
+          "description": "physical-group name or 'all'"
+        }
+      }
+    },
+    "boundaryCondition": {
+      "type": "object",
+      "required": [
+        "type",
+        "field",
+        "location"
+      ],
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "type": {
+          "enum": [
+            "dirichlet",
+            "neumann",
+            "point_load",
+            "robin"
+          ],
+          "description": "'neumann' is a traction/flux DENSITY integrated over the boundary (location must be a dim-(N-1) physical group); 'point_load' is a concentrated nodal quantity added straight to the force vector. They differ by the tributary area of each node -- do not substitute one for the other."
+        },
+        "field": {
+          "type": "string"
+        },
+        "component": {
+          "enum": [
+            "ux",
+            "uy",
+            "uz",
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        "location": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "dirichlet"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "value"
+            ],
+            "additionalProperties": true,
+            "patternProperties": {
+              "^_": true
+            },
+            "properties": {
+              "type": {},
+              "field": {},
+              "component": {},
+              "location": {},
+              "value": {
+                "$ref": "#/$defs/timeValue",
+                "description": "A number, or a time_table of ABSOLUTE values in seconds. Prefer the table whenever the timing is PHYSICAL: 'time_function' is relative to t_end of the WHOLE run, so it cannot express 'ramp over the first 24 h then hold', and changing t_end silently rescales it."
+              },
+              "time_function": {
+                "description": "Shorthand for a table: value * f(t / t_end OF THE WHOLE RUN). Right for a quasi-static pseudo-time 0->1 load test, where 'ramp over the run' IS the intent. Mutually exclusive with a time_table value.",
+                "enum": [
+                  "constant",
+                  "step",
+                  "linear",
+                  "smooth",
+                  "cosine",
+                  "quadratic",
+                  "cubic"
+                ]
+              },
+              "start_time": {
+                "type": "number",
+                "description": "absolute seconds; BC skipped before this time"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "neumann"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "value"
+            ],
+            "additionalProperties": true,
+            "patternProperties": {
+              "^_": true
+            },
+            "properties": {
+              "type": {},
+              "field": {},
+              "component": {},
+              "location": {},
+              "value": {
+                "$ref": "#/$defs/timeValue",
+                "description": "Traction / flux DENSITY, INTEGRATED over the boundary facets: [Pa] for a traction, [W/m^2] for a heat flux. Mesh-independent. A number, or a time_table of ABSOLUTE values in seconds (an excavation stress release, a climate flux). 'location' MUST be a dim-(N-1) physical group with real element sides -- a node-only location is an error, not a point load. Components are GLOBAL x/y/z."
+              },
+              "time_function": {
+                "description": "Shorthand for a table: value * f(t / t_end OF THE WHOLE RUN). Right for a quasi-static pseudo-time 0->1 load test, where 'ramp over the run' IS the intent. Mutually exclusive with a time_table value.",
+                "enum": [
+                  "constant",
+                  "step",
+                  "linear",
+                  "smooth",
+                  "cosine",
+                  "quadratic",
+                  "cubic"
+                ]
+              },
+              "start_time": {
+                "type": "number",
+                "description": "absolute seconds; BC inactive before this time"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "robin"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "alpha",
+              "u_ref"
+            ],
+            "additionalProperties": true,
+            "patternProperties": {
+              "^_": true
+            },
+            "properties": {
+              "type": {},
+              "field": {},
+              "component": {},
+              "location": {},
+              "alpha": {
+                "$ref": "#/$defs/timeValue",
+                "description": "Surface transfer coefficient: h_conv [W/(m^2.K)] for temperature (papers quoting kJ/(h.m^2.K) must be divided by 3.6), a film coefficient for humidity, or a spring stiffness [N/m^3] for a displacement component. NOTE the key is 'alpha', not h_conv. A time_table alpha requires interp:'step' and cannot be combined with start_time; a MECHANICAL alpha must be a constant number with u_ref exactly 0."
+              },
+              "u_ref": {
+                "$ref": "#/$defs/timeValue",
+                "description": "Reference value the surface exchanges with: ambient temperature, ambient relative humidity (0-1), or 0 for a mechanical spring. NOTE the key is 'u_ref', not T_ext. Temperature is in DEGREES CELSIUS -- NOT Kelvin. oofem's hydratingConcreteMat works in degC and adds 273.15 itself (D2), so the whole temperature field is degC. THE ONE EXCEPTION is a 'heat_moisture_transport' (Kunzel) domain, whose temperature DOF is absolute KELVIN -- the opposite convention, which is why hydration and hygrothermal cannot be combined (D12). On a hydration benchmark a u_ref >= 200 is REJECTED at build time as Kelvin-looking, so this is a hard error, not a silent mis-scaling."
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "point_load"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "value"
+            ],
+            "additionalProperties": true,
+            "patternProperties": {
+              "^_": true
+            },
+            "properties": {
+              "type": {},
+              "field": {},
+              "component": {},
+              "location": {},
+              "value": {
+                "$ref": "#/$defs/timeValue",
+                "description": "CONCENTRATED nodal quantity [N] or [W], added to EVERY node of the location with no integration -- so the total scales with the node count. A number, or a time_table of ABSOLUTE values in seconds. Prefer a dim-0 group or a geometry.points probe as the location. Not available on the pinn backend."
+              },
+              "time_function": {
+                "description": "Shorthand for a table: value * f(t / t_end OF THE WHOLE RUN). Right for a quasi-static pseudo-time 0->1 load test, where 'ramp over the run' IS the intent. Mutually exclusive with a time_table value.",
+                "enum": [
+                  "constant",
+                  "step",
+                  "linear",
+                  "smooth",
+                  "cosine",
+                  "quadratic",
+                  "cubic"
+                ]
+              },
+              "start_time": {
+                "type": "number",
+                "description": "absolute seconds; BC inactive before this time"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "assignment": {
+      "type": "object",
+      "required": [
+        "domains"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "domains": {
+          "type": "object",
+          "minProperties": 1,
+          "patternProperties": {
+            "^_": true
+          },
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "active_fields",
+              "material"
+            ],
+            "additionalProperties": true,
+            "patternProperties": {
+              "^_": true
+            },
+            "properties": {
+              "active_fields": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "temperature",
+                    "displacement",
+                    "humidity",
+                    "ionic",
+                    "degree_of_hydration",
+                    "pore_pressure"
+                  ]
+                },
+                "description": "ODE fields must be listed here; coupling providers must NOT. pore_pressure must be listed together with displacement (the hydro_mechanical engine solves both)."
+              },
+              "material": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "timeStepping": {
+      "type": "object",
+      "required": [
+        "t_start",
+        "t_end"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "t_start": {
+          "type": "number"
+        },
+        "t_end": {
+          "type": "number"
+        },
+        "linear_solver": {
+          "enum": [
+            "skyline",
+            "dss"
+          ],
+          "description": "Sparse linear solver. Default 'skyline' (oofem's own, accurate to ~1e-15). 'dss' reorders internally, so it is dramatically faster on unstructured gmsh meshes where skyline's cost explodes with node-numbering bandwidth (measured 107 s/step -> 0.8 s/step on an 11857-node triangle mesh, identical results). OPT-IN because DSS's accuracy floor is ~1e-10 relative: on a problem whose converged state carries zero external load, NRSolver compares an ABSOLUTE residual and DSS may never formally converge."
+        },
+        "analysis_type": {
+          "enum": [
+            "transient",
+            "steady_state",
+            "quasi_static"
+          ]
+        },
+        "dt": {
+          "type": "number",
+          "description": "uniform dt; takes priority over dt_strategy"
+        },
+        "dt_strategy": {
+          "$ref": "#/$defs/dtStrategy"
+        }
+      }
+    },
+    "dtStrategy": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "type": {
+          "enum": [
+            "uniform",
+            "log",
+            "piecewise"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "uniform"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "n_steps"
+            ],
+            "properties": {
+              "n_steps": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "log"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "dt_min",
+              "dt_max",
+              "n_steps"
+            ],
+            "properties": {
+              "dt_min": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "dt_max": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "n_steps": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "piecewise"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "segments"
+            ],
+            "properties": {
+              "segments": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "patternProperties": {
+                    "^_": true
+                  },
+                  "additionalProperties": true,
+                  "properties": {
+                    "t_end": {
+                      "type": [
+                        "number",
+                        "null"
+                      ],
+                      "description": "omit/null = run to global t_end; make the last segment explicit"
+                    },
+                    "dt": {
+                      "type": "number"
+                    },
+                    "strategy": {
+                      "$ref": "#/$defs/dtStrategy"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "reference_curves": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/referenceCurve"
+          }
+        },
+        "queries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/query"
+          }
+        },
+        "plots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/plot"
+          }
+        },
+        "console": {
+          "$ref": "#/$defs/console"
+        },
+        "aux_fields": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "const": "*"
+            }
+          ],
+          "description": "['*'] or list of element fields to export: damage, kappa, total_strain, mechanical_strain, strain, stress, mechanical_stress, creep_driving_stress, heat_flux; on the oofem backend also degree_of_hydration, equivalent_age, maturity and the mps set (creep_equivalent_age, creep_strain, autogenous_shrinkage_strain, drying_shrinkage_strain, total_shrinkage_strain); with model cdpm2 also damage_tension, damage_compression, dissipated_work and plastic_strain (cdpm2 publishes NO scalar 'damage'), and with cdpm1 also cumulative_plastic_strain and plastic_strain."
+        },
+        "save_checkpoint": {
+          "type": "boolean"
+        },
+        "export_vtu": {
+          "type": "boolean"
+        },
+        "save_db": {
+          "type": "boolean"
+        }
+      }
+    },
+    "referenceCurve": {
+      "type": "object",
+      "required": [
+        "id",
+        "file"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string",
+          "description": "path relative to the benchmark directory"
+        },
+        "has_header": {
+          "type": "boolean"
+        },
+        "x_col": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "y_col": {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "query": {
+      "type": "object",
+      "required": [
+        "id",
+        "type"
+      ],
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "time",
+            "field",
+            "reaction",
+            "stress",
+            "strain",
+            "difference",
+            "line_profile",
+            "formula"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "display": {
+          "type": "boolean"
+        },
+        "evaluate_in": {
+          "const": "fem"
+        },
+        "at_time": {
+          "type": "number",
+          "description": "Evaluate this query ONCE, on the step crossing this time (solver time units), instead of every step. Intended for line_profile: the result is a single snapshot a plot curve reads via source:'query'. On a SCALAR query it yields a one-element series that cannot be used as a simulation curve's x/y key."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "field"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "field"
+            ],
+            "properties": {
+              "field": {
+                "type": "string",
+                "description": "A DOF field ('temperature', 'humidity', 'displacement', 'pore_pressure'), a DOF component ('T', 'ux'), or an ELEMENT field published from the integration points. Element fields on the oofem backend: 'stress' (alias 'mechanical_stress'), 'strain'/'total_strain', 'damage'; with a degree_of_hydration material section also 'degree_of_hydration', 'equivalent_age', 'maturity'; wherever an mps chain was built (b3_creep / autogenous_shrinkage / drying_shrinkage / thermal_aging) also 'creep_equivalent_age', 'creep_strain', 'autogenous_shrinkage_strain', 'drying_shrinkage_strain', 'total_shrinkage_strain'. An element field is present ONLY where the material that publishes it was actually built -- elsewhere the query fails with 'Unknown field' rather than returning zeros."
+              },
+              "component": {
+                "type": [
+                  "string",
+                  "integer"
+                ],
+                "description": "Component of a VECTOR DOF field ('ux') or of an element TENSOR, which carries a PREFIX from Tensor.to_dict(): stress sxx/syy/szz/sxy/sxz/syz, strains exx/eyy/ezz/exy/exz/eyz (2D: xx, yy, xy only). OMIT for scalars -- 'degree_of_hydration', 'equivalent_age', 'maturity', 'creep_equivalent_age' and 'damage' are bare element scalars and a component on them is rejected with \"Field '<name>' is scalar\"."
+              },
+              "at": {
+                "type": "string"
+              },
+              "reduce": {
+                "$ref": "#/$defs/reduce"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "reaction"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "component"
+            ],
+            "properties": {
+              "component": {
+                "type": "string"
+              },
+              "at": {
+                "type": "string"
+              },
+              "reduce": {
+                "$ref": "#/$defs/reduce"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "stress",
+                  "strain"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "component"
+            ],
+            "properties": {
+              "component": {
+                "type": "string"
+              },
+              "at": {
+                "type": "string"
+              },
+              "reduce": {
+                "$ref": "#/$defs/reduce"
+              },
+              "coordinate_system": {
+                "enum": [
+                  "cartesian",
+                  "cylindrical"
+                ],
+                "description": "COMSOL-only, like the stress/strain query types themselves. There is no cylindrical projection on the fem/oofem 'field'-query workaround."
+              },
+              "domain_filter": {
+                "type": "string"
+              }
+            },
+            "description": "BACKEND-LIMITED: query types 'stress' and 'strain' are implemented ONLY on the COMSOL backend. q_stress/q_strain call ctx.stress_component()/ctx.strain_component(), which exist solely on comsol/evaluate_adapter.py; FEMContextAdapter -- used by BOTH the fem and oofem backends -- does not define them, so on those backends the query raises AttributeError every step and its id is absent from the results. ON fem/oofem USE A 'field' QUERY INSTEAD: the oofem extractor already publishes the IP tensors as element fields named 'stress' (alias 'mechanical_stress'), 'strain' (alias 'total_strain') and 'damage'. Component names carry a PREFIX from Tensor.to_dict(): stress is sxx/syy/szz/sxy/sxz/syz and strain is exx/eyy/ezz/exy/exz/eyz -- 'yy' alone is rejected. So {\"type\":\"stress\",\"component\":\"yy\"} becomes {\"type\":\"field\",\"field\":\"stress\",\"component\":\"syy\"}. In 2D only xx/yy/xy exist. The 'coordinate_system' key below has no equivalent on that path: hoop/radial are COMSOL-only."
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "difference"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "field",
+              "at_a",
+              "at_b"
+            ],
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "at_a": {
+                "type": "string"
+              },
+              "at_b": {
+                "type": "string"
+              },
+              "component": {
+                "type": "string",
+                "description": "Component of a VECTOR field, e.g. 'ux' on 'displacement'. Omit for a scalar field ('temperature', 'humidity') -- its single component is used."
+              },
+              "reduce": {
+                "$ref": "#/$defs/reduce"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "line_profile"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "field",
+              "axis",
+              "start",
+              "end",
+              "n_samples"
+            ],
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "axis": {
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
+              },
+              "start": {
+                "$ref": "#/$defs/lineCoord"
+              },
+              "end": {
+                "$ref": "#/$defs/lineCoord"
+              },
+              "n_samples": {
+                "type": "integer",
+                "minimum": 2
+              },
+              "at_time": {
+                "type": "number",
+                "description": "Seconds. Fires on the ONE step crossing it (prev_t < at_time <= t), so it is single-shot, not a series. at_time EXACTLY equal to t_end does fire (the last step crosses it), but anything beyond t_end never does and the query id is then absent from the results with a 'never fired' warning."
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "formula"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "formula"
+            ],
+            "properties": {
+              "formula": {
+                "type": "string"
+              },
+              "depends_on": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "documentation only"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "reduce": {
+      "type": "string",
+      "description": "avg | mean | max | min | sum | norm — any other value (e.g. 'value') silently falls back to mean"
+    },
+    "plot": {
+      "type": "object",
+      "required": [
+        "name",
+        "curves"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "grid": {
+          "type": "boolean"
+        },
+        "x_axis": {
+          "$ref": "#/$defs/axis"
+        },
+        "y_axis": {
+          "$ref": "#/$defs/axis"
+        },
+        "xlim": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Axis window [min, max]. Set it whenever the reference curves span a WIDER range than the simulation -- a benchmark reproducing one phase of a longer published run. Without it the whole comparison window is squeezed into a sliver at the edge and the plot is unreadable."
+        },
+        "ylim": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "xscale": {
+          "type": "string",
+          "description": "matplotlib axis scale, e.g. 'log'. Match the source figure's own axis when overlaying curves digitised from it."
+        },
+        "yscale": {
+          "type": "string"
+        },
+        "legend_location": {
+          "type": "string"
+        },
+        "curves": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/curve"
+          }
+        }
+      }
+    },
+    "axis": {
+      "type": "object",
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "scale": {
+          "type": "string"
+        }
+      }
+    },
+    "curve": {
+      "type": "object",
+      "required": [
+        "source"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "source": {
+          "enum": [
+            "simulation",
+            "reference",
+            "query"
+          ]
+        },
+        "query_key": {
+          "type": "string",
+          "description": "source:'query' only - id of a SPATIAL query (line_profile). Plots its coordinates vs its values; pair the query with at_time to pick the instant. MUST be accompanied by 'axis' - see that key."
+        },
+        "label": {
+          "type": "string"
+        },
+        "x": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        },
+        "y": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        },
+        "ref_id": {
+          "type": "string"
+        },
+        "style": {
+          "type": "object"
+        },
+        "scale_x": {
+          "type": "number"
+        },
+        "scale_y": {
+          "type": "number"
+        },
+        "offset_x": {
+          "type": "number"
+        },
+        "offset_y": {
+          "type": "number"
+        },
+        "axis": {
+          "enum": [
+            0,
+            1,
+            2
+          ],
+          "description": "source:'query' only. Which coordinate COLUMN of the spatial result becomes the plot's x. DEFAULTS TO 0, and this is the single most common line_profile mistake. It is NOT the same key as the line_profile query's own 'axis': that one only places a SCALAR endpoint and is inert when start/end are points, and it is never carried into the result. Set this to the index of the coordinate that actually VARIES between the query's start and end - horizontal profile 0, vertical 1, through-depth 3D 2. Get it wrong and the simulated curve is a single VERTICAL STRIPE at the profile line's constant coordinate: right value range, no shape."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "const": "simulation"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "x",
+              "y"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "const": "reference"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "ref_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "source": {
+                "const": "query"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "query_key"
+            ]
+          }
+        },
+        {
+          "$comment": "a query curve without an explicit axis silently defaults to 0",
+          "if": {
+            "properties": {
+              "source": {
+                "const": "query"
+              }
+            },
+            "required": [
+              "source"
+            ]
+          },
+          "then": {
+            "required": [
+              "query_key",
+              "axis"
+            ]
+          }
+        }
+      ]
+    },
+    "console": {
+      "type": "object",
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "summary_every_steps": {
+          "type": "integer"
+        },
+        "compact_summary_every_steps": {
+          "type": "integer"
+        },
+        "show_picard_compact": {
+          "type": "boolean"
+        },
+        "show_query_details": {
+          "enum": [
+            "always",
+            "periodic"
+          ]
+        },
+        "show_picard_inner_bar": {
+          "type": "boolean"
+        },
+        "reference_deviation": {
+          "type": "object",
+          "additionalProperties": true,
+          "patternProperties": {
+            "^_": true
+          },
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "show_in_progress_bar": {
+              "type": "boolean"
+            },
+            "pairs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "x",
+                  "y",
+                  "ref_id"
+                ],
+                "additionalProperties": true,
+                "patternProperties": {
+                  "^_": true
+                },
+                "properties": {
+                  "x": {
+                    "type": "string"
+                  },
+                  "y": {
+                    "type": "string"
+                  },
+                  "ref_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "lineCoord2d": {
+      "description": "line_profile endpoint on a 2D mesh: exactly 2 values [x, y], or a bare scalar placed on `axis`. A third (z) value is a hard RUNTIME error - the endpoint samples the field directly and is never snapped to a node, so padding would select the wrong plane.",
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        {
+          "type": "number"
+        }
+      ]
+    },
+    "mat_thermal_aging": {
+      "type": "object",
+      "required": [
+        "kTm",
+        "mus"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "description": "OOFEM backend only. Switches the mps creep chain from real time to temperature-adjusted equivalent time (coupledanalysistype 3, or 1 alongside drying_shrinkage). REQUIRES a b3_creep section on the same material. NB this does NOT read degree_of_hydration -- mps runs its own Arrhenius maturity clock off the temperature field (D14).",
+      "properties": {
+        "kTm": {
+          "type": "number",
+          "description": "Replaces ln(h) in the microprestress equation when temperature is the only driver; oofem REQUIRES it for coupledanalysistype 3 (mps.C:336)."
+        },
+        "mus": {
+          "type": "number",
+          "description": "mps microprestress flow viscosity muS [1/(Pa*s)], required by oofem for ANY coupled mps type."
+        },
+        "Q_E_over_R": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Activation energy / R for the EQUIVALENT TIME (aging) term [K]. oofem default 2700 (Bazant 1995). Set to the hydration Ea/R to make the creep clock agree with hydratingConcreteMat's."
+        },
+        "Q_R_over_R": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Activation energy / R for the VISCOSITY (creep rate) term [K]. oofem default 5000. Larger than Q_E_over_R, so elevated temperature nets MORE creep, not less."
+        },
+        "Q_S_over_R": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Activation energy / R for the MICROPRESTRESS term [K]. oofem default 3000."
+        }
+      }
+    },
+    "mat_damage_plastic": {
+      "type": "object",
+      "description": "Hardening/softening parameters for the damage-plastic models cdpm2 (oofem con2dpm) and cdpm1 (oofem concretedpm). Strengths fc/ft live in the displacement section itself, as POSITIVE magnitudes. Every key here is optional to OOFEM except wf (cdpm2) / wf-or-Gf (cdpm1) -- omitted keys keep OOFEM's own defaults rather than being reasserted by the backend.",
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "wf": {
+          "type": "number",
+          "description": "crack opening at zero stress [m]. REQUIRED for cdpm2; for cdpm1 give this OR Gf, never both."
+        },
+        "Gf": {
+          "type": "number",
+          "description": "cdpm1 only: fracture energy [J/m2]; OOFEM derives wf = Gf/ft. Mutually exclusive with wf."
+        },
+        "ecc": {
+          "type": "number",
+          "description": "eccentricity of the failure surface (default 0.525)"
+        },
+        "k_init": {
+          "type": "number",
+          "description": "initial hardening parameter (default 0.3)"
+        },
+        "h_p": {
+          "type": "number",
+          "description": "cdpm2 only: hardening slope at the peak (default 0.5, clamped to 1-k_init)"
+        },
+        "A_hard": {
+          "type": "number"
+        },
+        "B_hard": {
+          "type": "number"
+        },
+        "C_hard": {
+          "type": "number"
+        },
+        "D_hard": {
+          "type": "number"
+        },
+        "A_soft": {
+          "type": "number",
+          "description": "compressive softening parameter (default 15)"
+        },
+        "eps_fc": {
+          "type": "number",
+          "description": "cdpm2 only: compressive softening ductility (default 100e-6)"
+        },
+        "softening": {
+          "type": "integer",
+          "enum": [
+            0,
+            1,
+            2
+          ],
+          "description": "cdpm2 only: 0 linear, 1 bilinear (default), 2 exponential. cdpm1 has exponential softening only."
+        },
+        "ft_1": {
+          "type": "number",
+          "description": "cdpm2 bilinear kink stress (default 0.3*ft); read ONLY when softening=1"
+        },
+        "wf_1": {
+          "type": "number",
+          "description": "cdpm2 bilinear kink opening (default 0.15*wf); read ONLY when softening=1"
+        },
+        "dilation": {
+          "type": "number",
+          "description": "dilation constant (default 0.85)"
+        },
+        "damage_flag": {
+          "type": "integer",
+          "description": "cdpm2 only: 1 (default) = damage in tension AND compression"
+        },
+        "h_elem": {
+          "type": "number",
+          "description": "crack band width [m]. Default 0 means OOFEM uses the ELEMENT size, which is what makes the crack-band method mesh-regularized -- set this only to override deliberately."
+        },
+        "h_ref": {
+          "type": "number",
+          "description": "cdpm1 only: reference element size"
+        },
+        "yield_tol": {
+          "type": "number"
+        },
+        "newton_iter": {
+          "type": "integer"
+        }
+      }
+    },
+    "mat_mazars": {
+      "type": "object",
+      "description": "Mazars (1984) isotropic damage parameters (oofem mazarsmodel), used with model 'damage_mazars'. The two versions take DIFFERENT parameters and OOFEM silently never reads the other version's -- the backend rejects a mismatch.",
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "version": {
+          "type": "string",
+          "enum": [
+            "original",
+            "mod_tension"
+          ],
+          "description": "'original' (default) takes A_t/B_t; 'mod_tension' takes eps_f and is the crack-band-regularized tensile branch."
+        },
+        "e0": {
+          "type": "number",
+          "description": "damage threshold strain [-]. Required."
+        },
+        "A_c": {
+          "type": "number",
+          "description": "compressive damage parameter. Required."
+        },
+        "B_c": {
+          "type": "number",
+          "description": "compressive damage parameter; default (A_c-1)/(A_c*e0), which keeps the curve smooth."
+        },
+        "A_t": {
+          "type": "number",
+          "description": "version 'original' only. Required there."
+        },
+        "B_t": {
+          "type": "number",
+          "description": "version 'original' only. Required there."
+        },
+        "eps_f": {
+          "type": "number",
+          "description": "version 'mod_tension' only. Required there."
+        },
+        "beta": {
+          "type": "number",
+          "description": "shear/biaxial factor"
+        },
+        "h_ref_t": {
+          "type": "number",
+          "description": "reference element size, tension"
+        },
+        "h_ref_c": {
+          "type": "number",
+          "description": "reference element size, compression"
+        }
+      }
+    },
+    "mat_fixed_crack": {
+      "type": "object",
+      "description": "Fixed-crack law for displacement model 'fcm_viscoelastic' (oofem concreteFcmViscoelastic). ft/Gf come from the displacement section; everything here shapes the crack law. Unknown keys are IGNORED (loudly) by the backend.",
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "softening": {
+          "type": "string",
+          "enum": [
+            "none",
+            "exponential",
+            "linear",
+            "hordijk"
+          ],
+          "description": "default 'hordijk'"
+        },
+        "shear_retention": {
+          "type": "string",
+          "enum": [
+            "none",
+            "const_factor",
+            "const_coeff"
+          ],
+          "description": "default 'none' (no shear-stiffness reduction)"
+        },
+        "shear_strength": {
+          "type": "string",
+          "enum": [
+            "none",
+            "const_ft",
+            "collins_interlock",
+            "residual_ft"
+          ],
+          "description": "default 'const_ft'"
+        },
+        "multiple_crack_shear": {
+          "type": "boolean",
+          "description": "default true"
+        },
+        "beta": {
+          "type": "number",
+          "description": "constant shear retention factor; needs shear_retention 'const_factor'"
+        },
+        "sf": {
+          "type": "number",
+          "description": "shear factor coefficient"
+        },
+        "fc": {
+          "type": "number",
+          "description": "compressive strength [Pa], for the Collins shear-strength law"
+        },
+        "ag": {
+          "type": "number",
+          "description": "max aggregate size [m], ditto"
+        },
+        "n_cracks": {
+          "type": "integer",
+          "description": "max number of cracks per point"
+        },
+        "crack_spacing": {
+          "type": "number"
+        },
+        "length_scale": {
+          "type": "number"
+        }
+      }
+    },
+    "mat_time_dependent_fracture": {
+      "type": "object",
+      "description": "fib Model Code time-dependent fracture for 'fcm_viscoelastic': ft and Gf EVOLVE with the chain's equivalent age instead of staying constant -- the early-age cracking feature mpsDamMat has no equivalent for. TRAP: setting this section makes OOFEM OVERWRITE the displacement section's static ft/Gf with -1 and read ft28/gf28 instead, so ft/Gf become inert. OOFEM makes the whole block required once the flag is set.",
+      "required": [
+        "fib_s",
+        "fcm28"
+      ],
+      "additionalProperties": true,
+      "patternProperties": {
+        "^_": true
+      },
+      "properties": {
+        "fib_s": {
+          "type": "number",
+          "description": "cement-class coefficient"
+        },
+        "fcm28": {
+          "type": "number",
+          "description": "28-day mean compressive strength [Pa]"
+        },
+        "ft28": {
+          "type": "number",
+          "description": "28-day tensile strength [Pa]"
+        },
+        "gf28": {
+          "type": "number",
+          "description": "28-day fracture energy [J/m2]"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "line_profile endpoints must match the mesh dimension; only checkable here, where metadata.dimension is in scope.",
+      "if": {
+        "properties": {
+          "metadata": {
+            "properties": {
+              "dimension": {
+                "const": 2
+              }
+            }
+          },
+          "results": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "metadata",
+          "results"
+        ]
+      },
+      "then": {
+        "properties": {
+          "results": {
+            "properties": {
+              "queries": {
+                "items": {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "line_profile"
+                      }
+                    },
+                    "required": [
+                      "type"
+                    ]
+                  },
+                  "then": {
+                    "properties": {
+                      "start": {
+                        "$ref": "#/$defs/lineCoord2d"
+                      },
+                      "end": {
+                        "$ref": "#/$defs/lineCoord2d"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
