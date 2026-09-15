@@ -1,14 +1,27 @@
 # Which models the eval sweeps, and anything one of them needs done differently.
 #
-#   worker/run_queue.sh --list-models        what the endpoint serves right now
+#   worker/worker.sh eval --list-models      what the endpoint serves RIGHT NOW,
+#                                            split into free and metered, and which
+#                                            entries below it no longer knows
+#   worker/worker.sh eval --probe            which free API chat models answer
 #
-# BUDGET: the KIT Toolbox meters externally-routed models (azure.*, google.*)
-# against a per-user budget and refuses them with HTTP 400 "ExceededBudget" once
-# it is spent. KIT-hosted models (kit.*, standard-local) are not metered that way.
+# BUDGET: the KIT Toolbox meters externally-routed models against a per-user
+# budget and refuses them with HTTP 400 "ExceededBudget" once it is spent.
+# KIT-hosted models are not metered that way.
+#
+# The endpoint answers the budget question itself, per model, as
+# `connection_type`: `local` is hosted at KIT and free, `external` is routed out
+# and billed. That is the rule --list-models applies. The `kit.` prefix happens
+# to agree with it today and is only a naming convention.
 #
 # `metered: true` is a HARD GATE, not a label: run_eval.py refuses to sweep those
 # models unless you pass --allow-metered. Default runs cost nothing.
-# `run_eval.py --probe` reports reachability and budget state for everything.
+#
+# THE ROSTER DRIFTS. Between the 2026-08-28 run and 2026-09-11, four of the eight
+# models listed here stopped resolving -- kit.gpt-oss-120b, kit.qwen3.5-397b-A17b,
+# kit.gemma4-31b-it and google.gemini-2.5-pro all returned "Model not found", and
+# a sweep would have spent one failed call per case on each. Run --list-models
+# before a sweep, not after.
 
 endpoint: https://ki-toolbox.scc.kit.edu/api/v1
 
@@ -16,36 +29,116 @@ defaults:
   max_tokens: 32000        # a benchmark.json is 3-25k output tokens
   temperature: 0.0
   timeout_seconds: 900     # per-model override below; large models need more
+  probe_timeout_seconds: 180
 
-# `default: true` is what runs when --models is not given.
+# `default: true` is what runs when --models is not given, and every default is
+# free. Probed 2026-09-14; the note records what was actually observed, not what
+# the endpoint advertises.
 models:
-  - id: kit.gpt-oss-120b
-    default: true
-    note: KIT-hosted, unmetered
-  - id: kit.qwen3.5-397b-A17b
-    default: true
-    # 9 of 19 attempts in the 2026-08-27 run were lost to read timeouts at the
-    # 900 s default -- 47%, and every one of them a transport error rather than
-    # a bad answer. It is the largest model here and generates a 3-25k-token
-    # document in one shot, so it needs the room.
-    timeout_seconds: 2400
-    note: KIT-hosted, unmetered, largest open model here -- slowest, needs a long timeout
+
+  # ---- FREE: KIT-hosted, connection_type=local, unmetered --------------------
+
   - id: kit.mistral-small-4-119b-a8b
     default: true
-    note: KIT-hosted, unmetered
-  - id: kit.gemma4-31b-it
+    # The only model that survived the roster change, so it is the one
+    # continuous series this eval has -- it appears in the 2026-08-28 run and
+    # every run since. It was also the weakest there: accuracy 0.492 and
+    # validates 0.182, both last.
+    #
+    # WEAK AT EMITTING JSON AT ALL. On 2026-09-11, 0 of 3 spot-checked cases
+    # produced a parseable object, each for a different reason: a `}` closing a
+    # list, a dropped `{"` before a key, and `"q1": 1.0 / (34133.0e6)` -- an
+    # arithmetic expression, which JSON has no syntax for. All three are real
+    # authoring failures and `unparseable` is the correct verdict on them, so it
+    # stays in the default set: "cannot reliably emit valid JSON" is a result
+    # this eval exists to measure, not a reason to stop measuring it.
+    note: Mixture-of-Experts, context approx 256K, unmetered, weakest here
+
+  - id: kit.deepseek-v4-flash
     default: true
-    max_tokens: 16000
-    timeout_seconds: 1800
-    # 0 of 3 attempts produced a candidate on 2026-08-27 (2 timeouts, 1 with no
-    # response at all). Not yet shown to be viable for authoring; keep it in the
-    # set to find out whether the timeout was the whole story.
-    note: smallest KIT chat model; lower cap. UNPROVEN -- produced no candidate in the last run
+    # The strongest free model actually observed answering. On 2026-09-11 it
+    # scored 0.900 on jedrzejewska-2018-cost-tu1404/cube with 8 findings --
+    # better than any (model, case) result in the whole 2026-08-28 run, whose
+    # best was 0.887 -- and 0.602 on ConCracksRestrainedBeam. Fastest thing on
+    # the endpoint, and the longest context of the free models, which matters
+    # here: a thesis-length paper is 500k characters and the sweep truncates
+    # at 400k.
+    #
+    # One caveat for whoever reads a `truncated` row against it. On ATENA/GFM it
+    # fell into a repetition loop at temperature 0.0 -- 134k characters of
+    # "The paper does not give the exact value of ..." over and over -- and hit
+    # the 32000-token cap. The outcome table says truncated means "raise
+    # max_tokens", and for THAT row it does not: a larger cap buys more of the
+    # same loop. Check the tail of raw.json before raising anything.
+    note: coding-tuned, context approx 512K, unmetered, fastest and strongest free model here
+
+  - id: kit.glm-5.3
+    # NOT a default, on evidence. The endpoint rates it the most capable open
+    # model it serves and it is free, so it is the one most worth having -- but
+    # on 2026-09-11 FOUR separate 200-token requests failed: one errored after
+    # 168 s, and three timed out after 388 s, 553 s and 1244 s. The endpoint
+    # calls it "Hardware Limited" and rates it the slowest thing it serves, so
+    # this looks like queueing rather than a fault. That is a trivial prompt --
+    # the authoring prompt is ~60k tokens in and up to 25k out.
+    #
+    # kit.qwen3.5-397b-A17b lost 47% of its attempts to exactly this failure in
+    # the 2026-08-27 run, and sweeping 19 cases against a model that may never
+    # answer costs hours of wall clock for nothing.
+    #
+    # Opt in deliberately once it is answering:
+    #   worker/worker.sh eval --models kit.glm-5.3 --limit 2
+    timeout_seconds: 2400
+    # It timed out again on a 64-token probe after 180 s on 2026-09-14; its
+    # moving alias, alias.complex-local, timed out in the same probe.
+    note: best open model here and free, but UNRESPONSIVE through 2026-09-14 -- retry before trusting
+
+  # Deliberately absent, all three free:
+  #
+  #   alias.simple-local / alias.medium-local / alias.complex-local
+  #     Aliases onto the three models above (Mistral 4 Small, DeepSeek V4 Flash,
+  #     GLM-5.3 as of 2026-09-11). They are moving targets by design, and a
+  #     benchmark whose point is comparing runs over time cannot have a row whose
+  #     meaning changes silently underneath it. Name the model, not the alias.
+  #
+  #   standard-local
+  #     Not a raw model: Mistral Small 4 wrapped in an "optimized system prompt"
+  #     and "quality improvement mechanisms". Asked for one line of JSON on
+  #     2026-09-11 it replied `[RETRY]`. That is a different harness, not a
+  #     different model, and this eval exists to hold the harness fixed.
+  #
+  #   kit.flux.2-dev, kit.qwen3-embedding-8b, kit.qwen3-reranker-8b,
+  #   kit.voxtral-4b-tts-2603, kit.whisper-large-v3
+  #     Image, embedding, rerank, TTS and transcription. They share the endpoint
+  #     and cannot author anything.
+
+  # ---- METERED: routed externally, billed ------------------------------------
+  #
+  # The endpoint now tags most of these "OUTDATED MODEL" in their own
+  # description. The current generation as of 2026-09-11 is azure.gpt-5.6-sol /
+  # -terra / -luna, google.claude-opus-5, google.claude-fable-5.1 and
+  # google.gemini-3.8-flash. The two azure entries below still answer, so they
+  # are left as they are rather than silently redirected at a model you have not
+  # chosen to spend on -- see --list-models for the full current roster.
+
   - id: azure.gpt-5.1
     metered: true
   - id: azure.gpt-5-mini
     metered: true
-  - id: google.gemini-2.5-pro
+  - id: google.gemini-3.8-flash
     metered: true
+    # Replaces google.gemini-2.5-pro, which stopped resolving before 2026-09-11.
+    note: Google's current workhorse
+
   - id: google.claude-sonnet-5
     metered: true
+    # `analyst: true` marks the model that writes the eval's WHY-diagnoses
+    # (jobs/eval/explain.py). Exactly one model does every diagnosis in a run,
+    # and it is never one of the models under audit: a per-model analyst would
+    # make summary quality track the audited model's own ability, and this eval
+    # exists to keep very different models comparable on one identical input.
+    # It reads a paper, two specs and a finding list and answers in one shot, so
+    # it wants the most capable model available rather than the cheapest.
+    #
+    # google.claude-opus-5 and google.claude-fable-5.1 are stronger and also
+    # served; move the marker if the diagnoses are not sharp enough.
+    analyst: true

@@ -27,10 +27,13 @@ the comparator after a scoring change without paying for the calls again.
       <model>/<case>/raw.json       the API response, untouched
       <model>/<case>/candidate.json the extracted object (when one was extractable)
       <model>/<case>/score.json     compare_benchmark.py output
+      <model>/<case>/score.txt      the same thing for a person: the causes behind
+                                    the findings, then the findings themselves
 """
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import datetime as dt
 import json
 import os
@@ -54,6 +57,7 @@ RUNS = Path(os.environ.get("EVAL_RUNS", REPO / "workspace" / "runs"))
 
 sys.path.insert(0, str(REPO / "worker" / "tools"))
 import compare_benchmark as CMP                 # noqa: E402
+import cluster_findings as CLU                  # noqa: E402
 
 ENV_FILES = (WORKER / ".env",)
 API_KEY_VARS = ("WORKER_API_KEY", "KI_TOOLBOX_API_KEY", "DEEPSEEK_API_KEY")
@@ -196,71 +200,144 @@ def call(endpoint: str, key: str, model: str, prompt: str,
         return {"error": str(e)}, f"{type(e).__name__}: {e}"
 
 
-def extract_json(text: str) -> dict | None:
-    """The reply should be one bare object. Models fence it, prefix it, or narrate
-    around it anyway, so fall back to the largest balanced {...} span."""
+def extract_json(text: str) -> tuple[dict | None, str | None]:
+    """Extract a JSON object and preserve parse diagnostics."""
     text = (text or "").strip()
     if not text:
-        return None
-    for candidate in (text, *re.findall(r"```(?:json)?\s*(.*?)```", text, re.S)):
+        return None, "empty reply"
+
+    candidates = [text]
+    candidates.extend(re.findall(r"```(?:json)?\s*(.*?)```", text, re.S))
+
+    errors = []
+
+    for candidate in candidates:
+        candidate = candidate.strip()
         try:
-            obj = json.loads(candidate.strip())
+            obj = json.loads(candidate)
             if isinstance(obj, dict):
-                return obj
-        except Exception:
-            pass
-    start, depth, in_str, esc = text.find("{"), 0, False, False
+                return obj, None
+            errors.append(
+                f"top-level JSON value is {type(obj).__name__}, expected object"
+            )
+        except json.JSONDecodeError as e:
+            errors.append(
+                f"{e.msg} at line {e.lineno}, column {e.colno} "
+                f"(character {e.pos})"
+            )
+
+    start = text.find("{")
     if start < 0:
-        return None
+        return None, "no opening '{' found"
+
+    depth = 0
+    in_str = False
+    esc = False
+
     for i in range(start, len(text)):
         ch = text[i]
+
         if in_str:
-            esc = (ch == "\\") and not esc
-            if ch == '"' and not esc:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
                 in_str = False
             continue
+
         if ch == '"':
-            in_str, esc = True, False
+            in_str = True
         elif ch == "{":
             depth += 1
         elif ch == "}":
             depth -= 1
             if depth == 0:
+                candidate = text[start:i + 1]
                 try:
-                    obj = json.loads(text[start:i + 1])
-                    return obj if isinstance(obj, dict) else None
-                except Exception:
-                    return None
-    return None
+                    obj = json.loads(candidate)
+                    return (obj, None) if isinstance(obj, dict) else (
+                        None,
+                        f"balanced span is {type(obj).__name__}, expected object",
+                    )
+                except json.JSONDecodeError as e:
+                    errors.append(
+                        f"balanced object: {e.msg} at line {e.lineno}, "
+                        f"column {e.colno} (character {e.pos})"
+                    )
+                break
+
+    return None, "; ".join(errors[-3:]) or "no parseable JSON object found"
 
 
 def interpret(resp: dict) -> tuple[str, str | None, dict | None, str]:
-    """(outcome, message, candidate, finish_reason)."""
+    """Return (outcome, message, candidate, finish_reason)."""
     if "http_error" in resp:
         blocked = "ExceededBudget" in resp.get("detail", "")
-        return (REFUSED if blocked else ERROR,
-                resp.get("detail", "")[:200], None, "http_error")
+        return (
+            REFUSED if blocked else ERROR,
+            resp.get("detail", "")[:200],
+            None,
+            "http_error",
+        )
+
     if "error" in resp:
         return ERROR, resp["error"][:200], None, "error"
+
     choices = resp.get("choices") or [{}]
     msg = choices[0].get("message") or {}
     finish = choices[0].get("finish_reason") or "?"
-    # Reasoning models on this endpoint put the chain in `reasoning_content` and
-    # the answer in `content`; reading the wrong one scores thinking, not output.
+
+    # Bei Reasoning-Modellen ist reasoning_content nicht die eigentliche Antwort.
     content = msg.get("content")
+
     if not content:
         if msg.get("reasoning_content"):
-            return (TRUNCATED, "content empty; the whole budget went to reasoning_content",
-                    None, finish)
+            return (
+                TRUNCATED,
+                "content empty; the whole budget went to reasoning_content",
+                None,
+                finish,
+            )
         return UNPARSEABLE, "empty content", None, finish
-    obj = extract_json(content)
+
+    obj, parse_error = extract_json(content)
+
     if obj is None:
         if finish == "length":
-            return TRUNCATED, "cut off mid-object (raise max_tokens)", None, finish
-        return UNPARSEABLE, "no JSON object in the reply", None, finish
+            return (
+                TRUNCATED,
+                f"cut off or invalid JSON: {parse_error}",
+                None,
+                finish,
+            )
+        return UNPARSEABLE, f"invalid JSON: {parse_error}", None, finish
+
     if finish == "length":
-        return TRUNCATED, "finish_reason=length but an object was recovered", obj, finish
+        return (
+            TRUNCATED,
+            "finish_reason=length but an object was recovered",
+            obj,
+            finish,
+        )
+
     return OK, None, obj, finish
+
+def write_score(out: Path, score: dict) -> None:
+    """score.json for machines, score.txt for a person.
+
+    The comparator has always been able to render itself -- `compare_benchmark.py
+    CAND --case X` prints exactly this -- but the eval never called it, so a run
+    directory held nothing a human could read and every question about one case
+    meant grepping a 7 kB JSON. The causes go above the findings because they are
+    the answer; the finding list below them is the evidence.
+    """
+    (out / "score.json").write_text(json.dumps(score, indent=2), encoding="utf-8")
+    clusters = CLU.cluster(score.get("findings", []))
+    text = (f"{len(score.get('findings', []))} finding(s) from "
+            f"{len(clusters)} cause(s)\n\n" + CLU.render(clusters) + "\n\n"
+            + CMP.render(score, 12))
+    (out / "score.txt").write_text(text, encoding="utf-8")
 
 
 def main(argv=None) -> int:
@@ -280,12 +357,27 @@ def main(argv=None) -> int:
                     help="permit models marked `metered: true` in worker/models.yaml; "
                          "without it they are refused, so a default run costs nothing")
     ap.add_argument("--probe", action="store_true",
-                    help="check which models answer, then exit without a sweep")
+                    help="probe all live free chat models, or the models selected "
+                         "with --models, then exit without a sweep")
+    ap.add_argument("--list-models", action="store_true",
+                    help="what the endpoint serves right now, split into free "
+                         "(KIT-hosted) and metered, and which models.yaml entries "
+                         "it no longer knows")
     ap.add_argument("--rescore", metavar="RUN_ID",
                     help="re-score an existing run; makes no API calls")
     a = ap.parse_args(argv)
 
     load_env()
+    # Before the dataset check: asking what is reachable must work whether or not
+    # the corpus has been built.
+    if a.list_models:
+        return list_models(a.endpoint, api_key(), cfg)
+
+    known = {m["id"]: m for m in cfg.get("models", [])}
+    if a.probe:
+        return probe_models(a.endpoint, api_key(), cfg, known, a.models,
+                            a.allow_metered)
+
     manifest_path = DATASET / "manifest.json"
     if not manifest_path.exists():
         sys.exit(f"no dataset at {DATASET} — run: python worker/tools/build_dataset.py")
@@ -295,7 +387,6 @@ def main(argv=None) -> int:
         return rescore(RUNS / a.rescore, manifest, a.tol)
 
     key = api_key()
-    known = {m["id"]: m for m in cfg.get("models", [])}
     if a.models:
         models = [known.get(m, {"id": m}) for m in a.models]
     else:
@@ -311,9 +402,6 @@ def main(argv=None) -> int:
                  f"  re-run with --allow-metered to spend, or pick KIT-hosted models "
                  f"(they are unmetered).\n"
                  f"  `run_eval.py --probe` shows what is reachable.")
-
-    if a.probe:
-        return probe(a.endpoint, key, list(known.values()) or models)
 
     cases = [c for c in manifest["cases"]
              if (a.allow_no_pdf or c["paper_text"])
@@ -369,7 +457,7 @@ def main(argv=None) -> int:
                                 encoding="utf-8")
                 ref = DATASET / case["json"]
                 score = CMP.compare(cand, ref, a.tol, strict_files=False)
-                (out / "score.json").write_text(json.dumps(score, indent=2), encoding="utf-8")
+                write_score(out, score)
                 rec["overall"] = score["overall"]
                 rec["accuracy"] = score["accuracy"]
                 rec["validates"] = score["validation"]["score"]
@@ -398,20 +486,150 @@ def main(argv=None) -> int:
     return 0
 
 
-def probe(endpoint: str, key: str, models: list) -> int:
+def fetch_models(endpoint: str, key: str) -> list:
+    req = urllib.request.Request(f"{endpoint.rstrip('/')}/models",
+                                 headers={"Authorization": f"Bearer {key}"})
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.loads(r.read().decode()).get("data", [])
+
+
+def is_chat_model(model: dict) -> bool:
+    """The endpoint marks image/audio/embedding models as hidden."""
+    meta = ((model.get("info") or {}).get("meta") or {})
+    return not meta.get("hidden")
+
+
+def probe_models(endpoint: str, key: str, cfg: dict, known: dict,
+                 requested: list[str] | None, allow_metered: bool) -> int:
+    """Resolve probe targets against the live roster before making chat calls.
+
+    With no explicit selection, probe every free chat route advertised right
+    now. This includes moving aliases, which belong in a reachability check but
+    deliberately do not belong in a reproducible benchmark roster. Explicit
+    selections may include metered models, but only behind --allow-metered.
+    """
+    try:
+        served = fetch_models(endpoint, key)
+    except Exception as e:
+        sys.exit(f"could not list models before probing: {type(e).__name__}: {e}")
+
+    live = {m["id"]: m for m in served if is_chat_model(m)}
+    if requested:
+        target_ids = list(dict.fromkeys(requested))
+        missing = [mid for mid in target_ids if mid not in live]
+        if missing:
+            print("configured/requested but not served by the endpoint:")
+            for mid in missing:
+                print(f"  {mid}")
+        target_ids = [mid for mid in target_ids if mid in live]
+    else:
+        target_ids = sorted(mid for mid, model in live.items()
+                            if model.get("connection_type") == "local")
+
+    metered = [mid for mid in target_ids
+               if live[mid].get("connection_type") != "local"]
+    if metered and not allow_metered:
+        sys.exit("these probe targets are metered: " + ", ".join(metered) + "\n"
+                 "  pass --allow-metered only if you intend to call them")
+    if not target_ids:
+        return 1
+
+    defaults = cfg.get("defaults", {})
+    timeout = float(defaults.get("probe_timeout_seconds", 180))
+    targets = [known.get(mid, {"id": mid}) for mid in target_ids]
+    return probe(endpoint, key, targets, timeout, known)
+
+
+def list_models(endpoint: str, key: str, cfg: dict) -> int:
+    """What the endpoint serves RIGHT NOW, and which half of it is free.
+
+    `connection_type` is the endpoint's own answer to the budget question and it
+    is exact: `local` is hosted at KIT and unmetered, `external` is routed out
+    and billed. That beats matching on the `kit.` prefix, which is a convention
+    the roster is under no obligation to keep.
+
+    The roster drifts -- between the 2026-08-28 run and 2026-09-11 four of the
+    eight models in models.yaml stopped resolving -- so this also reports which
+    configured entries the endpoint no longer knows. A dead entry is not a
+    warning at sweep time; it is one wasted call per case.
+    """
+    try:
+        served = fetch_models(endpoint, key)
+    except Exception as e:
+        sys.exit(f"could not list models: {type(e).__name__}: {e}")
+
+    known = {m["id"]: m for m in cfg.get("models", [])}
+    free, metered, other = [], [], []
+    for m in served:
+        info = m.get("info") or {}
+        meta = info.get("meta") or {}
+        row = (m["id"], str(meta.get("description") or "").split("\n")[0][:78])
+        # `hidden` marks the embedding, rerank, transcription and image models.
+        # They share the endpoint and cannot author anything.
+        if not is_chat_model(m):
+            other.append(m["id"])
+        elif m.get("connection_type") == "local":
+            free.append(row)
+        else:
+            metered.append(row)
+
+    def show(rows):
+        for mid, desc in sorted(rows):
+            mark = ""
+            if mid in known:
+                mark = " [default]" if known[mid].get("default") else " [in models.yaml]"
+            print(f"  {mid:34s}{mark}")
+            if desc:
+                print(f"      {desc}")
+
+    print(f"{endpoint}  —  {len(served)} model(s)\n")
+    print(f"FREE — KIT-hosted (connection_type=local), unmetered, a sweep costs nothing")
+    show(free)
+    print(f"\nMETERED — routed externally, billed against your KIT budget "
+          f"(need --allow-metered)")
+    show(metered)
+    if other:
+        print(f"\nnot chat models: {', '.join(sorted(other))}")
+
+    dead = sorted(set(known) - {m["id"] for m in served})
+    if dead:
+        print(f"\nIN models.yaml BUT NO LONGER SERVED — every call to these fails:")
+        for mid in dead:
+            print(f"  {mid}")
+    return 0
+
+
+def probe(endpoint: str, key: str, models: list, timeout: float = 180,
+          known: dict | None = None) -> int:
     """Which models answer at all. Cheap, and it separates "the model is bad" from
     "you are over budget", which otherwise both arrive as a failed sweep."""
     print(f"{endpoint}\n")
-    for m in models:
+    known = known or {m["id"]: m for m in models}
+
+    def check(m: dict) -> tuple[dict, str]:
         resp, _ = call(endpoint, key, m["id"],
-                       "Reply with the single word: ok", 64, 0.0, 60)
+                       "Reply with the single word: ok", 64, 0.0, timeout)
         if "choices" in resp:
             verdict = "reachable"
         elif "ExceededBudget" in str(resp.get("detail", "")):
             verdict = "REFUSED — over budget"
         else:
             verdict = f"error — {str(resp.get('detail') or resp.get('error'))[:70]}"
-        print(f"  {m['id']:34s} {verdict}")
+        return m, verdict
+
+    # A slow hardware-limited route must not hold up every other independent
+    # reachability check. Print each result as soon as it completes.
+    with concurrent.futures.ThreadPoolExecutor(max_workers=min(8, len(models))) as pool:
+        futures = [pool.submit(check, m) for m in models]
+        for future in concurrent.futures.as_completed(futures):
+            m, verdict = future.result()
+            configured = known.get(m["id"])
+            if configured:
+                mark = (" [default]" if configured.get("default")
+                        else " [in models.yaml]")
+            else:
+                mark = " [live only]"
+            print(f"  {m['id']:34s} {verdict}{mark}", flush=True)
     return 0
 
 
@@ -427,7 +645,7 @@ def rescore(run_dir: Path, manifest: dict, tol: float) -> int:
         if not cand.exists():
             continue
         score = CMP.compare(cand, DATASET / by_case[rec["case"]]["json"], tol, False)
-        (out / "score.json").write_text(json.dumps(score, indent=2), encoding="utf-8")
+        write_score(out, score)
         rec.update(overall=score["overall"], accuracy=score["accuracy"],
                    validates=score["validation"]["score"],
                    n_findings=len(score["findings"]),

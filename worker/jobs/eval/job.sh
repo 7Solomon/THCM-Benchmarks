@@ -5,7 +5,7 @@
 # physics modules, the schema and the paper text in, one JSON object out. No
 # tools, no solver. Scored against dataset/ by worker/tools/compare_benchmark.py.
 #
-#   worker.sh eval --probe                  which models answer, and your budget
+#   worker.sh eval --probe                  which free API chat models answer
 #   worker.sh eval                          free models, every case with a paper
 #   worker.sh eval --models M [M ...]       pick models  (--list-models to see them)
 #   worker.sh eval --cases C [C ...]        pick cases
@@ -13,6 +13,8 @@
 #   worker.sh eval --allow-metered          permit models that cost money
 #   worker.sh eval --rescore RUN_ID         re-score a finished run, no API calls
 #   worker.sh eval --report [RUN_ID]        leaderboard for a run (default: latest)
+#   worker.sh eval --explain [RUN_ID]       ask an analyst model WHY each spec is wrong
+#                                           (metered: needs --allow-metered)
 #   worker.sh eval --dataset                rebuild dataset/ from benchmarks/
 #
 # A run with no flags touches only unmetered KIT-hosted models and costs nothing.
@@ -25,6 +27,8 @@ case "${1:-}" in
   --where)    echo "$WORKSPACE/runs"; exit 0 ;;
   --dataset)  shift; exec "$PY" "$WORKER_DIR/tools/build_dataset.py" "$@" ;;
   --report)   shift; exec "$PY" "$HERE/report.py" "${@:---latest}" ;;
+  --explain)  shift; exec "$PY" "$HERE/explain.py" "$@" ;;
+  --list-models|--probe) exec "$PY" "$HERE/run_eval.py" "$@" ;;
 esac
 
 # The dataset is the eval's input; building it is seconds and skipping the check

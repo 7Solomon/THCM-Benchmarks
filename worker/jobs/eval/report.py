@@ -29,6 +29,9 @@ HERE = Path(__file__).resolve().parent          # worker/jobs/eval
 REPO = HERE.parent.parent.parent                # repo root
 RUNS = Path(os.environ.get("EVAL_RUNS", REPO / "workspace" / "runs"))
 
+sys.path.insert(0, str(REPO / "worker" / "tools"))
+import cluster_findings as CLU                  # noqa: E402
+
 # Column order for the section tables: strict first, because those are the ones
 # that decide whether the spec is the same experiment.
 STRICT_COLS = ["physics", "materials", "boundary_conditions", "initial_conditions"]
@@ -77,6 +80,14 @@ def build(run: dict, runs_root: Path) -> str:
          "condition blocks are compared strictly — every key, every value. "
          "`results.queries` is matched loosely on what is measured. "
          "`results.plots` and `results.reference_curves` are ignored.", ""]
+
+    # The leaderboard says WHAT scored how. explain.py answers WHY, and a reader
+    # who has one should be told before they start reading tables.
+    if (runs_root / run["run_id"] / "explain.md").exists():
+        L += ["> An analyst's diagnosis of this run exists: **`explain.md`** in this "
+              "directory. It groups the findings below into the decisions behind "
+              "them and marks which are the comparator's fault rather than a "
+              "model's.", ""]
 
     L += ["## Models", "",
           "| model | accuracy | validates | " + " | ".join(SHORT[c] for c in cols)
@@ -159,6 +170,47 @@ def build(run: dict, runs_root: Path) -> str:
     return "\n".join(L) + "\n"
 
 
+def causes(run_dir: Path, n_models: int) -> list:
+    """The census one level up: ranked by CAUSE, not by differing key.
+
+    A model that never writes `time_function` produces one finding per boundary
+    condition, so the key-by-key census below ranks the same mistake four times
+    and buries a rarer, worse one. cluster_findings.py groups findings by the
+    decision behind them first; this counts those.
+    """
+    per: dict[tuple, set] = defaultdict(set)
+    weight: dict[tuple, float] = {}
+    for score_file in sorted(run_dir.glob("*/*/score.json")):
+        model, case = score_file.parent.parent.name, score_file.parent.name
+        try:
+            data = json.loads(score_file.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        for c in CLU.cluster(data.get("findings", [])):
+            # Singletons are the key-by-key census by another name; the causes
+            # table earns its place only above that resolution.
+            if c.kind == "single":
+                continue
+            key = (case, c.section, c.title)
+            per[key].add(model)
+            weight[key] = max(weight.get(key, 0.0), c.weight)
+    if not per:
+        return []
+    L = ["", "## What gets misinterpreted", "", "### By cause", "",
+         "One row per *decision*, not per differing key — a model that omits one "
+         "required key from every boundary condition made one mistake, not six. "
+         f"Ranked by how many of the {n_models} model(s) made the same decision on "
+         "the same case; a row every model hits is a property of the paper or of "
+         "the authoring guide, not of any one model.", "",
+         "| models | case | section | the decision |", "|---:|---|---|---|"]
+    ranked = sorted(per.items(), key=lambda kv: (-len(kv[1]), -weight[kv[0]], kv[0]))
+    for (case, section, title), models in ranked[:30]:
+        L.append(f"| {len(models)}/{n_models} | `{case}` | {section} | {title} |")
+    if len(ranked) > 30:
+        L.append(f"\n{len(ranked) - 30} further cause(s) not shown.")
+    return L
+
+
 def census(run: dict, runs_root: Path) -> list:
     """What gets misread, aggregated over every candidate in the run.
 
@@ -190,24 +242,25 @@ def census(run: dict, runs_root: Path) -> list:
     n_models = len({r["model"] for r in run["records"]})
     if not per_key:
         return []
-    L = ["", "## What gets misinterpreted", "",
-         f"Ranked by how many of the {n_models} model(s) made the same mistake on "
-         "the same case. A row every model hits is a property of the paper or the "
-         "prompt, not of any one model — and those are the rows worth acting on.", "",
-         "| models | case | section | kind | what | candidate | reference |",
-         "|---:|---|---|---|---|---|---|"]
+    L = causes(run_dir, n_models)
+    L += ["", "### Key by key", "",
+          f"The same census at the comparator's own resolution — one row per "
+          f"differing key, ranked by how many of the {n_models} model(s) hit it on "
+          "the same case. Use it to check a cause above, not to read first.", "",
+          "| models | case | section | kind | what | candidate | reference |",
+          "|---:|---|---|---|---|---|---|"]
     ranked = sorted(per_key.items(), key=lambda kv: (-len(kv[1]), kv[0]))
     shown = [kv for kv in ranked if len(kv[1]) > 1] or ranked
-    for (case, section, kind, what), models in shown[:40]:
+    for (case, section, kind, what), models in shown[:25]:
         ex = detail[(case, section, kind, what)][0]
         cand = "—" if ex["candidate"] is None else str(ex["candidate"])[:32]
         refv = "—" if ex["reference"] is None else str(ex["reference"])[:32]
         L.append(f"| {len(models)}/{n_models} | `{case}` | {section} | {kind} | "
                  f"`{what}` | {cand} | {refv} |")
-    hidden = len(ranked) - min(len(shown), 40)
+    hidden = len(ranked) - min(len(shown), 25)
     if hidden > 0:
         L.append(f"\n{hidden} further finding(s) not shown "
-                 f"(one-model-only, or beyond the first 40).")
+                 f"(one-model-only, or beyond the first 25).")
     return L
 
 

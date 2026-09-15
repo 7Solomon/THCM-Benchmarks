@@ -5,20 +5,40 @@ this scores the spec, not the physics.
 
 ```bash
 python worker/tools/build_dataset.py         # once: benchmarks/ -> dataset/
-worker/worker.sh eval --probe       # what is reachable, and your budget
+worker/worker.sh eval --probe       # which live free chat routes actually answer
 worker/worker.sh eval                       # free models, every case with a paper
 worker/worker.sh eval --report        # leaderboard
+worker/worker.sh eval --explain --allow-metered   # and WHY each spec is wrong
 ```
 
 ## Cost
 
 Models marked `metered: true` in `models.yaml` are refused unless you pass
-`--allow-metered`. **A run with no flags costs nothing** — it touches only the
-KIT-hosted (`kit.*`) models, which are unmetered.
+`--allow-metered`. **A run with no flags costs nothing** — it touches only
+KIT-hosted models, which are unmetered.
+
+The endpoint answers the budget question itself, per model, as
+`connection_type`: `local` is hosted at KIT and free, `external` is routed out
+and billed. `--list-models` applies exactly that rule:
+
+```bash
+worker/worker.sh eval --list-models   # what is served now, free vs metered
+worker/worker.sh eval --probe         # which of them actually answer
+```
+
+**The roster drifts.** Between the 2026-08-28 run and 2026-09-11, four of the
+eight models in `models.yaml` stopped resolving — a sweep would have spent one
+failed call per case on each. `--list-models` names any configured model the
+endpoint no longer knows, so run it *before* a sweep.
 
 The metered ones are billed against a per-user KIT budget and return
-`HTTP 400 ExceededBudget` once it is spent. `--probe` tells you which is the case
-before a sweep discovers it the expensive way.
+`HTTP 400 ExceededBudget` once it is spent. The default probe never calls them;
+probe one explicitly with `--models MODEL --allow-metered` only when needed.
+
+`--probe` gets its default targets from the live API rather than from the YAML.
+That makes it include free moving aliases and report actual reachability. The
+benchmark itself still uses the fixed, `default: true` IDs in `models.yaml`, so
+an alias cannot silently change what a time-series row means.
 
 ## What it does
 
@@ -96,27 +116,119 @@ Two rules are excluded: `reference-missing` and `bc-table-missing` check that a
 digitized CSV, so they would fire on every candidate and carry no signal.
 `--strict-files` puts them back.
 
+### Findings are not the unit a person reads in
+
+The comparator reports one finding per differing key, which is right for scoring
+and wrong for reading. A model that simply never writes `time_function` on a
+boundary condition produces one finding per condition; a model that authored a
+full THM problem where the reference is the conduction-only leg produced **15
+findings across five sections from one decision**.
+
+`worker/tools/cluster_findings.py` groups findings by the decision behind them.
+It is purely mechanical — no model, no network — and it never touches a score,
+because clustering is a view over findings and findings are what accuracy is
+computed from. It runs automatically, and standalone:
+
+```bash
+python worker/tools/cluster_findings.py RUN/<model>/<case>/score.json
+```
+
+```
+28 finding(s) -> 14 cause(s)
+
+  14x  [physics] the spec models physics the reference does not have: displacement,
+                 hydro_mechanical, pore_pressure
+        a scope decision, not 14 mistakes — every material, condition and query
+        attached to those follows from it
+   2x  [boundary_conditions] 2 `temperature/dirichlet/-` conditions in the
+                 reference, absent from the spec
+```
+
 ### The census
 
-`report.py` ends with **What gets misinterpreted** — every finding ranked by how
-many models made it *on the same case*. A row every model hits is a property of
-the paper or of the prompt, not of any one model, and those are the rows worth
-acting on.
+`report.py` ends with **What gets misinterpreted**, at two resolutions. **By
+cause** first — one row per decision, ranked by how many models made the same
+one *on the same case*. **Key by key** below it, the comparator's own resolution,
+for checking a cause rather than for reading first.
+
+A row every model hits is a property of the paper or of the authoring guide, not
+of any one model, and those are the rows worth acting on.
+
+## Why, not just what
+
+Scoring answers *what differs*. It cannot answer *why*: `score.json` holds a
+candidate value and a reference value and no source, so "u_ref 15 vs 10" is
+unexplainable from it. `explain.py` supplies the paper, the reference and the
+candidate to an analyst model and asks for the diagnosis.
+
+```bash
+worker/worker.sh eval --explain --allow-metered          # worst 5 cases per model
+worker/worker.sh eval --explain RUN_ID --worst 0         # every scored candidate
+worker/worker.sh eval --explain RUN_ID --no-paper        # cheap; loses "the paper says"
+worker/worker.sh eval --explain RUN_ID --rollup-only     # rewrite the summary only
+```
+
+### Two things it deliberately is not
+
+**Not self-critique.** The analyst is ONE fixed model — `analyst: true` in
+`models.yaml` — for every (model, case), never the model under audit. If each
+model diagnosed its own output, summary quality would track that model's
+ability, and this eval exists to keep a 31-billion-parameter model and a
+frontier model comparable on one identical input.
+
+**Not part of the score.** Accuracy stays exactly what `compare_benchmark.py`
+computed, offline and reproducible. The diagnosis sits beside it, the way
+`validates` does.
+
+### Grounded, so a claim can be checked
+
+The analyst must assign every finding index to exactly one group, and coverage is
+then verified mechanically — uncovered, duplicated and invented indices are all
+recorded in `explain.json` and flagged in `explain.md`. A diagnosis that does not
+account for the findings is still written, but the reader is told.
+
+Each group is tagged `model_error`, `comparator_artifact` or `paper_ambiguous`.
+That last distinction is the point: the **artifact rate** tells you which
+comparator rule to fix, and every rule fixed makes every future run's accuracy
+mean more. On the first trial run it independently found the three false
+positives already known by hand — `physical_groups (count)`, `dt_strategy.type`
+`uniform` vs `fixed dt`, and `physics_class` `mechanics` vs `mechanical`.
+
+### Cost
+
+`--worst 5` is the default because a full pass is one call per scored candidate
+with a whole paper in it. Diagnoses are cached on
+`(candidate, reference, prompt version, analyst)`, so a `--rescore` does not make
+you pay again; `--force` ignores the cache. The run-level rollup is a single call
+that sees only the grouped diagnoses — it is the cheapest part and the one that
+feeds back into `CREATE.md`.
 
 ## Layout
 
 ```
 worker/jobs/eval/
-  models.yaml                  which models; `metered: true` gates spending
-  prompts/author_benchmark.md  the single-shot prompt
-  run_eval.py                  (model x case) -> candidate.json + score.json
+  prompts/author_benchmark.md  the single-shot authoring prompt
+  prompts/explain_case.md      the per-case diagnosis prompt
+  prompts/explain_run.md       the run-level rollup prompt
+  run_eval.py                  (model x case) -> candidate.json + score.json/.txt
   report.py                    -> leaderboard.md
+  explain.py                   -> explain.json per case, explain.md per run
+
+worker/
+  models.yaml                  which models; `metered: true` gates spending,
+                               `analyst: true` names who writes the diagnoses
+  tools/compare_benchmark.py   candidate vs reference -> findings + score
+  tools/cluster_findings.py    findings -> the decisions behind them
 
 workspace/runs/<run-id>/       machine output, gitignored ($EVAL_RUNS overrides)
   run.json                     what was asked, and what every call did
+  leaderboard.md               report.py: the tables and the census
+  explain.md                   explain.py: the diagnosis and the artifact rate
   <model>/<case>/raw.json      the API response, untouched
   <model>/<case>/candidate.json
-  <model>/<case>/score.json
+  <model>/<case>/score.json    the comparator's output
+  <model>/<case>/score.txt     the same, for a person: causes, then findings
+  <model>/<case>/explain.json  the analyst's grouped diagnosis + coverage check
 ```
 
 Raw responses are written **before** scoring, so `run_eval.py --rescore RUN_ID`
