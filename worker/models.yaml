@@ -25,6 +25,13 @@
 
 endpoint: https://ki-toolbox.scc.kit.edu/api/v1
 
+# OPTIONAL per-model pricing, read by the `oofem --agent` arm. An agentic run
+# takes as many turns as the model chooses, so a score means little without what
+# it spent: add `price_in_per_mtok` / `price_out_per_mtok` (USD per million
+# tokens) to a model and its records carry a `cost_usd`. A model with no price
+# reports null rather than a fabricated number. KIT-hosted models are free and
+# need no entry.
+
 defaults:
   max_tokens: 32000        # a benchmark.json is 3-25k output tokens
   temperature: 0.0
@@ -40,6 +47,7 @@ models:
 
   - id: kit.mistral-small-4-119b-a8b
     default: true
+    vision: true
     # The only model that survived the roster change, so it is the one
     # continuous series this eval has -- it appears in the 2026-08-28 run and
     # every run since. It was also the weakest there: accuracy 0.492 and
@@ -72,7 +80,10 @@ models:
     # same loop. Check the tail of raw.json before raising anything.
     note: coding-tuned, context approx 512K, unmetered, fastest and strongest free model here
 
-  - id: kit.glm-5.3
+  - id: kit.glm-5.3-flash
+    # Renamed by the endpoint: `kit.glm-5.3` answered "Model not found" on
+    # 2026-10-09 and --list-models serves it as kit.glm-5.3-flash. Same day it
+    # answered every turn of a 44-turn oofem-native --agent run (~45 s/turn).
     # NOT a default, on evidence. The endpoint rates it the most capable open
     # model it serves and it is free, so it is the one most worth having -- but
     # on 2026-09-11 FOUR separate 200-token requests failed: one errored after
@@ -86,7 +97,7 @@ models:
     # answer costs hours of wall clock for nothing.
     #
     # Opt in deliberately once it is answering:
-    #   worker/worker.sh eval --models kit.glm-5.3 --limit 2
+    #   worker/worker.sh eval --models kit.glm-5.3-flash --limit 2
     timeout_seconds: 2400
     # It timed out again on a 64-token probe after 180 s on 2026-09-14; its
     # moving alias, alias.complex-local, timed out in the same probe.

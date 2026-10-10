@@ -4,19 +4,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>THCM Benchmark Suite</title>
+  <title>THCM Benchmarks</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <header class="masthead">
-    <div class="wrap">
-      <h1>THCM Benchmarks</h1>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        THCM Benchmarks
+      </a>
+      <nav id="topnav" class="topnav" aria-label="Sections"></nav>
     </div>
   </header>
 
-  <main id="view" class="wrap">
+  <main id="view" class="wrap" data-width="normal">
     <p class="loading">Loading index&hellip;</p>
   </main>
 
@@ -29,7 +33,13 @@
     <img id="lightbox-img" alt="">
   </div>
 
-  <script src="app.js"></script>
+  <!-- scripts: order matters; build_index.py --standalone inlines this block -->
+  <script src="core.js"></script>
+  <script src="benchmarks.js"></script>
+  <script src="workflows.js"></script>
+  <script src="home.js"></script>
+  <script src="main.js"></script>
+  <!-- /scripts -->
 </body>
 
 </html>

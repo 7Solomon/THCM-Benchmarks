@@ -144,7 +144,8 @@ def build(out_root: Path, force: bool) -> int:
     # LEFTOVER from the previous run would depend on run order, and the output would
     # drift on every rebuild.
     json_dir, pdf_dir, text_dir = out_root / "json", out_root / "pdf", out_root / "text"
-    for d in (json_dir, pdf_dir, text_dir):
+    scope_dir = out_root / "scope"
+    for d in (json_dir, pdf_dir, text_dir, scope_dir):
         if d.exists():
             shutil.rmtree(d)
         d.mkdir(parents=True, exist_ok=True)
@@ -152,6 +153,7 @@ def build(out_root: Path, force: bool) -> int:
     status = load_status()
     by_hash: dict[str, str] = {}                 # sha256 -> filename in pdf/
     entries, no_paper, ambiguous = [], [], []
+    no_scope: list[str] = []
 
     for spec in specs:
         case = str(spec.parent.relative_to(BENCHMARKS))
@@ -183,6 +185,18 @@ def build(out_root: Path, force: bool) -> int:
 
         md[PDF_KEY] = pdf_name
         json_name = f"{flat_name(case)}.json"
+
+        # scope.md is the ONE hand-written line on what a case is and which paper
+        # figure it has to reproduce. It is the oofem job's task statement, so it
+        # is copied rather than derived -- absent is legal, and reported below.
+        scope_src = spec.parent / "scope.md"
+        scope_name = None
+        if scope_src.exists():
+            scope_name = f"{flat_name(case)}.md"
+            shutil.copy2(scope_src, scope_dir / scope_name)
+        else:
+            no_scope.append(case)
+
         (json_dir / json_name).write_text(
             json.dumps(body, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
@@ -193,6 +207,7 @@ def build(out_root: Path, force: bool) -> int:
             "paper_pdf": f"pdf/{pdf_name}" if pdf_name else None,
             "paper_text": f"text/{text_name}" if text_name else None,
             "paper_source": str(pdf.relative_to(REPO)) if pdf else None,
+            "scope": f"scope/{scope_name}" if scope_name else None,
             "id": md.get("id"),
             "title": md.get("title"),
             "doi": src.get("doi"),
@@ -213,6 +228,7 @@ def build(out_root: Path, force: bool) -> int:
             "with_paper": sum(e["paper_pdf"] is not None for e in entries),
             "without_paper": len(no_paper),
             "unique_papers": len(by_hash),
+            "with_scope": sum(e["scope"] is not None for e in entries),
         },
         "cases": entries,
     }
@@ -227,11 +243,19 @@ def build(out_root: Path, force: bool) -> int:
               f"{', '.join(ambiguous)}", file=sys.stderr)
     if no_paper:
         print("  no paper found for: " + ", ".join(no_paper))
+    if no_scope:
+        print("  no scope.md for: " + ", ".join(no_scope))
     return 0
 
 
 def write_readme(out_root: Path, manifest: dict, no_paper: list[str]) -> None:
     c = manifest["counts"]
+    # Both of these are built OUT HERE rather than inline in the f-string below.
+    # An f-string expression could not contain a backslash before Python 3.12, so
+    # a "\n".join() inside the template made this whole module a SyntaxError on
+    # every older interpreter -- including the one config.sh pins as $PY.
+    no_paper_block = ("## No paper in the repo\n\n"
+                      + "\n".join(f"- `{c_}`" for c_ in no_paper)) if no_paper else ""
     rows = "\n".join(
         f"| `{e['case']}` | {e['physics_class'] or '—'} | "
         f"{'`' + Path(e['paper_pdf']).name + '`' if e['paper_pdf'] else '—'} | "
@@ -246,7 +270,8 @@ python worker/tools/build_dataset.py
 ```
 
 {c['cases']} cases, {c['unique_papers']} unique papers,
-{c['without_paper']} cases with no paper in the repo.
+{c['without_paper']} cases with no paper in the repo,
+{c['cases'] - c['with_scope']} with no `scope.md`.
 
 | what | where |
 |---|---|
@@ -254,6 +279,7 @@ python worker/tools/build_dataset.py
 | reference specs | `json/<case with / as __>.json` |
 | papers | `pdf/` (deduplicated by content hash) |
 | papers as text | `text/` (`pdf_render.py text`, for models with no PDF input) |
+| case scope | `scope/<case with / as __>.md` (copied from `benchmarks/<case>/scope.md`) |
 
 Each spec carries `metadata.{PDF_KEY}` naming its paper, or `null` when there is
 none. `metadata` is unconstrained in `benchmark.schema.json`, so a dataset spec
@@ -268,7 +294,7 @@ that benchmark reproduces — useful for excluding cases we already know are wro
 |---|---|---|---|
 {rows}
 
-{"## No paper in the repo\n\n" + "\n".join(f"- `{c}`" for c in no_paper) if no_paper else ""}
+{no_paper_block}
 """, encoding="utf-8")
 
 

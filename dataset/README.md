@@ -7,7 +7,8 @@ python worker/tools/build_dataset.py
 ```
 
 21 cases, 16 unique papers,
-2 cases with no paper in the repo.
+2 cases with no paper in the repo,
+0 with no `scope.md`.
 
 | what | where |
 |---|---|
@@ -15,6 +16,7 @@ python worker/tools/build_dataset.py
 | reference specs | `json/<case with / as __>.json` |
 | papers | `pdf/` (deduplicated by content hash) |
 | papers as text | `text/` (`pdf_render.py text`, for models with no PDF input) |
+| case scope | `scope/<case with / as __>.md` (copied from `benchmarks/<case>/scope.md`) |
 
 Each spec carries `metadata.paper_pdf` naming its paper, or `null` when there is
 none. `metadata` is unconstrained in `benchmark.schema.json`, so a dataset spec

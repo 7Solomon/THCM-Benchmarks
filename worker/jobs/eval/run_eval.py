@@ -6,13 +6,20 @@ run_eval.py -- can a model author a benchmark.json from a paper?
     worker/worker.sh eval --cases cervera-1999-thermo-chemo-partI
     worker/worker.sh eval --models kit.gpt-oss-120b --limit 3
     worker/worker.sh eval --rescore RUN_ID            # re-score, no API calls
+    worker/worker.sh eval --run-solver                # execute candidates
+    worker/worker.sh eval --execute-run RUN_ID        # execute an old run
 
 (worker.sh is the entry point; this script also runs directly.)
 
 One identical single-shot call per (model, case): the guide, the physics modules,
-the schema and the paper text in, one JSON object out. No tools, no phases, no
-solver. That is the whole point -- it isolates "can it author the spec" from
-"does the physics reproduce", and it keeps very different models comparable.
+the schema, the case scope and the paper text in, one JSON object out. No tools,
+no phases, no solver. That is the whole point -- it isolates "can it author the
+spec" from "does it execute". Solver execution and diagnostic repair turns are
+opt-in and reported separately from authoring accuracy.
+
+A reply that is not parseable JSON gets its parser error back once
+(--json-repair-turns). The record keeps the first reply's `outcome`, so the
+parse rate still measures the model; the repaired object is scored normally.
 
 The agentic path is worker/dispatch/dsh.py, which is a different question.
 
@@ -29,6 +36,11 @@ the comparator after a scoring change without paying for the calls again.
       <model>/<case>/score.json     compare_benchmark.py output
       <model>/<case>/score.txt      the same thing for a person: the causes behind
                                     the findings, then the findings themselves
+      <model>/<case>/json-repairs/attempt-N/raw.json
+                                    replies to "your JSON did not parse"
+      <model>/<case>/solver/attempt-N/output/*/plots/
+                                    the candidate's own plots (reference curves
+                                    removed); _baseline/<case>/ keeps them
 """
 from __future__ import annotations
 
@@ -58,6 +70,7 @@ RUNS = Path(os.environ.get("EVAL_RUNS", REPO / "workspace" / "runs"))
 sys.path.insert(0, str(REPO / "worker" / "tools"))
 import compare_benchmark as CMP                 # noqa: E402
 import cluster_findings as CLU                  # noqa: E402
+import execute_candidate as EXEC                # noqa: E402
 
 ENV_FILES = (WORKER / ".env",)
 API_KEY_VARS = ("WORKER_API_KEY", "KI_TOOLBOX_API_KEY", "DEEPSEEK_API_KEY")
@@ -165,7 +178,7 @@ def compact_schema(node):
     return node
 
 
-def build_prompt(paper_text: str) -> str:
+def build_prompt(paper_text: str, scope_text: str) -> str:
     tpl = (HERE / "prompts" / "author_benchmark.md").read_text(encoding="utf-8")
     skills = WORKER / "SKILLs"
     modules = "\n\n".join(
@@ -179,13 +192,15 @@ def build_prompt(paper_text: str) -> str:
             .replace("{CREATE}", (skills / "CREATE.md").read_text(encoding="utf-8"))
             .replace("{MODULES}", modules)
             .replace("{SCHEMA}", schema)
+            .replace("{SCOPE}", scope_text)
             .replace("{PAPER}", paper_text))
 
 
-def call(endpoint: str, key: str, model: str, prompt: str,
-         max_tokens: int, temperature: float, timeout: float) -> tuple[dict, str | None]:
+def call_messages(endpoint: str, key: str, model: str, messages: list[dict],
+                  max_tokens: int, temperature: float,
+                  timeout: float) -> tuple[dict, str | None]:
     body = {"model": model, "max_tokens": max_tokens, "temperature": temperature,
-            "messages": [{"role": "user", "content": prompt}], "stream": False}
+            "messages": messages, "stream": False}
     req = urllib.request.Request(
         f"{endpoint.rstrip('/')}/chat/completions",
         data=json.dumps(body).encode(), method="POST",
@@ -198,6 +213,13 @@ def call(endpoint: str, key: str, model: str, prompt: str,
         return {"http_error": e.code, "detail": detail}, f"HTTP {e.code}: {detail}"
     except Exception as e:
         return {"error": str(e)}, f"{type(e).__name__}: {e}"
+
+
+def call(endpoint: str, key: str, model: str, prompt: str,
+         max_tokens: int, temperature: float, timeout: float) -> tuple[dict, str | None]:
+    return call_messages(endpoint, key, model,
+                         [{"role": "user", "content": prompt}],
+                         max_tokens, temperature, timeout)
 
 
 def extract_json(text: str) -> tuple[dict | None, str | None]:
@@ -323,6 +345,94 @@ def interpret(resp: dict) -> tuple[str, str | None, dict | None, str]:
 
     return OK, None, obj, finish
 
+
+def reply_content(resp: dict) -> str:
+    choices = resp.get("choices") or [{}]
+    return ((choices[0].get("message") or {}).get("content") or "").strip()
+
+
+def json_error_context(text: str, radius: int = 200) -> str | None:
+    """The reply around the first syntax error, with the error position marked.
+
+    raw_decode, not loads: it stops at the end of the object, so prose after
+    the JSON does not move the reported position to the wrong place.
+    """
+    text = (text or "").strip()
+    start = text.find("{")
+    if start < 0:
+        return None
+    try:
+        json.JSONDecoder().raw_decode(text, start)
+        return None
+    except json.JSONDecodeError as e:
+        pos = e.pos
+    lo, hi = max(0, pos - radius), min(len(text), pos + radius)
+    return (("…" if lo else "") + text[lo:pos] + "⟪HERE⟫" + text[pos:hi]
+            + ("…" if hi < len(text) else ""))
+
+
+def format_repair_instruction(outcome: str, message: str | None,
+                              content: str, attempt: int) -> str:
+    if outcome == TRUNCATED:
+        why = ("Your reply hit the output token limit before the JSON object was "
+               "complete, so it cannot be parsed.")
+        ask = ("Return the complete object again, more compactly: drop optional "
+               "`_comment` prose rather than any data.")
+    else:
+        why = "Your reply is not valid JSON, so it could not be parsed."
+        ask = ("Fix the JSON syntax and return the complete corrected object. "
+               "Do not change any content that was not part of the error.")
+    context = json_error_context(content)
+    where = (f"\nThe reply around the error (⟪HERE⟫ marks the parser's "
+             f"position):\n\n{context}\n" if context else "")
+    return f"""{why}
+
+Parser error: {message or "(none)"}
+{where}
+{ask}
+Return one JSON object and nothing else. This is JSON repair attempt {attempt}.
+"""
+
+
+def recover_json(endpoint: str, key: str, model: str, history: list[dict],
+                 resp: dict, parsed: tuple, turns: int, mt: int, temp: float,
+                 tmo: float, repair_root: Path, log_prefix: str = "    "
+                 ) -> tuple[tuple, list[dict]]:
+    """Give the model its own parse error back, up to `turns` times.
+
+    `history` is the conversation that produced `resp`; `parsed` is
+    interpret(resp). Returns the final interpret() tuple and one record per
+    repair call. An empty reply, a refusal or an HTTP error is not a syntax
+    problem and is not retried.
+    """
+    repairs: list[dict] = []
+    for n in range(1, turns + 1):
+        outcome, message, obj, _ = parsed
+        content = reply_content(resp)
+        if obj is not None or outcome not in (UNPARSEABLE, TRUNCATED) or not content:
+            break
+        history = history + [
+            {"role": "assistant", "content": content},
+            {"role": "user", "content": format_repair_instruction(
+                outcome, message, content, n)},
+        ]
+        started = time.time()
+        resp, _ = call_messages(endpoint, key, model, history, mt, temp, tmo)
+        seconds = round(time.time() - started, 1)
+        out = repair_root / f"attempt-{n}"
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "raw.json").write_text(
+            json.dumps(resp, indent=2, ensure_ascii=False)[:4_000_000],
+            encoding="utf-8")
+        parsed = interpret(resp)
+        repairs.append({"attempt": n, "outcome": parsed[0], "message": parsed[1],
+                        "finish_reason": parsed[3], "seconds": seconds,
+                        "usage": resp.get("usage")})
+        print(f"{log_prefix}json repair {n}: {parsed[0]} ({seconds:.1f}s)"
+              + (f"  [{parsed[1]}]" if parsed[1] else ""), flush=True)
+    return parsed, repairs
+
+
 def write_score(out: Path, score: dict) -> None:
     """score.json for machines, score.txt for a person.
 
@@ -338,6 +448,81 @@ def write_score(out: Path, score: dict) -> None:
             f"{len(clusters)} cause(s)\n\n" + CLU.render(clusters) + "\n\n"
             + CMP.render(score, 12))
     (out / "score.txt").write_text(text, encoding="utf-8")
+
+
+def score_candidate(out: Path, candidate: Path, reference: Path,
+                    tol: float, record: dict) -> dict:
+    score = CMP.compare(candidate, reference, tol, strict_files=False)
+    write_score(out, score)
+    record.update(
+        overall=score["overall"], accuracy=score["accuracy"],
+        validates=score["validation"]["score"],
+        n_findings=len(score["findings"]),
+        finding_counts=score["finding_counts"],
+        sections={k: v["score"]
+                  for k, v in score["scores"]["sections"].items()
+                  if v["applicable"]},
+    )
+    return score
+
+
+def execution_for_record(execution: dict) -> dict:
+    """Keep run.json concise; full logs and transforms live in solver/attempt-N."""
+    keys = ("status", "stage", "message", "seconds", "backend",
+            "candidate_sha256", "output")
+    return {key: execution.get(key) for key in keys if key in execution}
+
+
+def repair_instruction(execution: dict, attempt: int) -> str:
+    return f"""Your benchmark JSON was executed with THCM-FEM and did not produce a
+usable query result. Repair the JSON using the diagnostic below.
+
+Rules:
+- Return one complete corrected JSON object and nothing else.
+- Preserve the experiment and values supported by the paper; do not remove
+  physics merely to make execution pass.
+- Correct schema/API inconsistencies, geometry/group mismatches, unsupported
+  declarations, time stepping, and result queries indicated by the log.
+- Do not add reference files or other sibling files.
+- This is solver-feedback repair attempt {attempt}.
+
+{EXEC.feedback_text(execution)}
+"""
+
+
+def execute_existing_run(run_dir: Path, manifest: dict, args) -> int:
+    if not (run_dir / "run.json").exists():
+        sys.exit(f"no such run: {run_dir}")
+    info = EXEC.preflight(args.solver_backend)
+    print(f"solver preflight: ok ({info['backend']}, {info.get('oofem_version') or 'n/a'})")
+    run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+    by_case = {c["case"]: c for c in manifest["cases"]}
+    selected = 0
+    stamp = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    for rec in run["records"]:
+        if args.models and rec["model"] not in args.models:
+            continue
+        if args.cases and rec["case"] not in args.cases:
+            continue
+        out = run_dir / rec["model"].replace("/", "_") / rec["case"].replace("/", "__")
+        candidate = out / "candidate.json"
+        if not candidate.exists() or rec["case"] not in by_case:
+            continue
+        attempt_dir = out / "solver" / f"manual-{stamp}"
+        result = EXEC.execute(candidate, rec["case"], attempt_dir,
+                              backend=args.solver_backend,
+                              timeout=args.solver_timeout,
+                              keep_vtu=args.keep_vtu)
+        rec["execution"] = execution_for_record(result)
+        rec.setdefault("solver_attempts", []).append(execution_for_record(result))
+        selected += 1
+        print(f"  {rec['model']:32s} {rec['case']:46s} "
+              f"{result['status']:24s} {result['seconds']:7.1f}s", flush=True)
+        # Persist after every expensive solve so an interrupted sweep is resumable.
+        run["solver_environment"] = info
+        (run_dir / "run.json").write_text(json.dumps(run, indent=2), encoding="utf-8")
+    print(f"executed {selected} candidate(s) in {run_dir}")
+    return 0
 
 
 def main(argv=None) -> int:
@@ -365,7 +550,36 @@ def main(argv=None) -> int:
                          "it no longer knows")
     ap.add_argument("--rescore", metavar="RUN_ID",
                     help="re-score an existing run; makes no API calls")
+    ap.add_argument("--run-solver", action="store_true",
+                    help="execute each candidate with THCM-FEM after JSON scoring")
+    ap.add_argument("--execute-run", metavar="RUN_ID",
+                    help="execute candidates from an existing run; makes no API calls")
+    ap.add_argument("--solver-backend", choices=("oofem", "fem"), default="oofem",
+                    help="THCM-FEM backend (default: oofem)")
+    ap.add_argument("--solver-timeout", type=float, default=900,
+                    help="seconds allowed for each mesh and solve stage (default: 900)")
+    ap.add_argument("--solver-feedback-turns", type=int, default=0, metavar="N",
+                    help="up to N extra model calls using failed solver diagnostics")
+    ap.add_argument("--json-repair-turns", type=int, default=1, metavar="N",
+                    help="when a reply is not parseable JSON, send the parser error "
+                         "back up to N times (default: 1; 0 disables). The record "
+                         "keeps the first reply's outcome")
+    ap.add_argument("--keep-vtu", action="store_true",
+                    help="keep large VTU field output (off by default)")
+    ap.add_argument("--solver-baseline", action="store_true",
+                    help="also execute each curated reference JSON as a runner baseline")
     a = ap.parse_args(argv)
+
+    if a.solver_feedback_turns < 0:
+        ap.error("--solver-feedback-turns must be non-negative")
+    if a.json_repair_turns < 0:
+        ap.error("--json-repair-turns must be non-negative")
+    if a.solver_timeout <= 0:
+        ap.error("--solver-timeout must be positive")
+    if a.solver_feedback_turns:
+        a.run_solver = True
+    if a.solver_baseline:
+        a.run_solver = True
 
     load_env()
     # Before the dataset check: asking what is reachable must work whether or not
@@ -385,6 +599,17 @@ def main(argv=None) -> int:
 
     if a.rescore:
         return rescore(RUNS / a.rescore, manifest, a.tol)
+    if a.execute_run:
+        return execute_existing_run(RUNS / a.execute_run, manifest, a)
+
+    solver_info = None
+    if a.run_solver:
+        try:
+            solver_info = EXEC.preflight(a.solver_backend)
+        except RuntimeError as exc:
+            sys.exit(f"solver preflight failed before API calls: {exc}")
+        print(f"solver preflight: ok ({solver_info['backend']}, "
+              f"{solver_info.get('oofem_version') or 'n/a'})", flush=True)
 
     key = api_key()
     if a.models:
@@ -419,9 +644,33 @@ def main(argv=None) -> int:
     run_dir.mkdir(parents=True, exist_ok=True)
     defaults = cfg.get("defaults", {})
     records = []
+    baselines = {}
 
     print(f"run {run_id}: {len(models)} model(s) x {len(cases)} case(s) "
           f"= {len(models) * len(cases)} calls -> {run_dir}", flush=True)
+
+    if a.solver_baseline:
+        print("running curated solver baselines:", flush=True)
+        for case in cases:
+            reference = DATASET / case["json"]
+            baseline_dir = run_dir / "_baseline" / case["case"].replace("/", "__")
+            result = EXEC.execute(reference, case["case"], baseline_dir,
+                                  backend=a.solver_backend,
+                                  timeout=a.solver_timeout,
+                                  keep_vtu=a.keep_vtu, keep_references=True)
+            baselines[case["case"]] = execution_for_record(result)
+            plots = len((result.get("output") or {}).get("plots") or [])
+            print(f"  {case['case']:46s} {result['status']:24s} "
+                  f"{result['seconds']:7.1f}s  {plots} plot(s)", flush=True)
+            (run_dir / "run.json").write_text(json.dumps({
+                "run_id": run_id, "endpoint": a.endpoint, "tolerance": a.tol,
+                "models": [m["id"] for m in models],
+                "cases": [c["case"] for c in cases],
+                "solver_environment": solver_info,
+                "solver_baselines": baselines,
+                "solver_feedback_turns": a.solver_feedback_turns,
+                "records": records,
+            }, indent=2), encoding="utf-8")
 
     for model in models:
         mid = model["id"]
@@ -434,10 +683,15 @@ def main(argv=None) -> int:
             paper = ""
             if case["paper_text"]:
                 paper = (DATASET / case["paper_text"]).read_text(encoding="utf-8")
+            scope = "(no case scope provided)"
+            if case.get("scope"):
+                scope_path = DATASET / case["scope"]
+                if scope_path.exists():
+                    scope = scope_path.read_text(encoding="utf-8")
             truncated_paper = len(paper) > a.max_paper_chars
             if truncated_paper:
                 paper = paper[:a.max_paper_chars] + "\n\n[paper truncated]\n"
-            prompt = build_prompt(paper)
+            prompt = build_prompt(paper, scope)
 
             t0 = time.time()
             resp, err = call(a.endpoint, key, mid, prompt, mt, temp, tmo)
@@ -449,36 +703,146 @@ def main(argv=None) -> int:
             rec = {"model": mid, "case": case["case"], "outcome": outcome,
                    "finish_reason": finish, "message": message,
                    "seconds": elapsed, "prompt_chars": len(prompt),
+                   "scope_chars": len(scope),
                    "paper_truncated": truncated_paper,
                    "usage": resp.get("usage"), "overall": None}
-            if obj is not None:
-                cand = out / "candidate.json"
-                cand.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n",
-                                encoding="utf-8")
-                ref = DATASET / case["json"]
-                score = CMP.compare(cand, ref, a.tol, strict_files=False)
-                write_score(out, score)
-                rec["overall"] = score["overall"]
-                rec["accuracy"] = score["accuracy"]
-                rec["validates"] = score["validation"]["score"]
-                rec["n_findings"] = len(score["findings"])
-                rec["finding_counts"] = score["finding_counts"]
-                rec["sections"] = {k: v["score"]
-                                   for k, v in score["scores"]["sections"].items()
-                                   if v["applicable"]}
-            records.append(rec)
+            cand = out / "candidate.json"
+            ref = DATASET / case["json"]
 
-            flag = "" if outcome == OK else f"  [{outcome}: {message}]"
-            score_txt = ("—" if rec["overall"] is None
-                         else f"{rec['accuracy']:.3f}/{rec['n_findings']:>3d}f")
+            def save_and_score(value: dict) -> None:
+                cand.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n",
+                                encoding="utf-8")
+                score_candidate(out, cand, ref, a.tol, rec)
+
+            def score_text() -> str:
+                return ("—" if rec["overall"] is None
+                        else f"{rec['accuracy']:.3f}/{rec['n_findings']:>3d}f")
+
+            if obj is not None:
+                save_and_score(obj)
+            # The case line comes first, so the indented json-repair and solver
+            # lines below it read as belonging to this case.
             # flush: a sweep is minutes per call, and stdout block-buffers when it
             # is redirected to a log -- without this the run looks hung.
-            print(f"  {mid:32s} {case['case']:46s} {score_txt:>10s}  "
+            flag = "" if outcome == OK else f"  [{outcome}: {message}]"
+            print(f"  {mid:32s} {case['case']:46s} {score_text():>10s}  "
                   f"{elapsed:6.1f}s{flag}", flush=True)
+
+            # `outcome` stays the first reply's, so the parse rate still measures
+            # the model; the repaired object is scored for its content.
+            if obj is None and a.json_repair_turns:
+                parsed, json_repairs = recover_json(
+                    a.endpoint, key, mid, [{"role": "user", "content": prompt}],
+                    resp, (outcome, message, obj, finish), a.json_repair_turns,
+                    mt, temp, tmo, out / "json-repairs")
+                if json_repairs:
+                    rec["json_repairs"] = json_repairs
+                    rec["json_repaired"] = parsed[2] is not None
+                obj = parsed[2]
+                if obj is not None:
+                    save_and_score(obj)
+                    print(f"    scored after json repair: {score_text()}", flush=True)
+
+            if obj is not None:
+                rec["initial_accuracy"] = rec["accuracy"]
+
+                if a.run_solver:
+                    (out / "candidate.attempt-0.json").write_text(
+                        json.dumps(obj, indent=2, ensure_ascii=False) + "\n",
+                        encoding="utf-8")
+                    solver_attempts = []
+                    repairs = []
+                    current_obj = obj
+                    for solver_attempt in range(a.solver_feedback_turns + 1):
+                        result = EXEC.execute(
+                            cand, case["case"], out / "solver" / f"attempt-{solver_attempt}",
+                            backend=a.solver_backend, timeout=a.solver_timeout,
+                            keep_vtu=a.keep_vtu)
+                        solver_attempts.append(execution_for_record(result))
+                        plots = len((result.get("output") or {}).get("plots") or [])
+                        print(f"    solver attempt {solver_attempt}: {result['status']} "
+                              f"({result['seconds']:.1f}s, {plots} plot(s))", flush=True)
+                        if result["status"] == "ok" or \
+                                solver_attempt >= a.solver_feedback_turns:
+                            break
+
+                        repair_no = solver_attempt + 1
+                        repair_dir = out / "repairs" / f"attempt-{repair_no}"
+                        repair_dir.mkdir(parents=True, exist_ok=True)
+                        messages = [
+                            {"role": "user", "content": prompt},
+                            {"role": "assistant", "content": json.dumps(
+                                current_obj, ensure_ascii=False)},
+                            {"role": "user", "content": repair_instruction(
+                                result, repair_no)},
+                        ]
+                        repair_started = time.time()
+                        repair_resp, _ = call_messages(
+                            a.endpoint, key, mid, messages, mt, temp, tmo)
+                        repair_seconds = round(time.time() - repair_started, 1)
+                        (repair_dir / "raw.json").write_text(
+                            json.dumps(repair_resp, indent=2, ensure_ascii=False)[:4_000_000],
+                            encoding="utf-8")
+                        repair_parsed = interpret(repair_resp)
+                        repair_record = {
+                            "attempt": repair_no, "outcome": repair_parsed[0],
+                            "message": repair_parsed[1], "finish_reason": repair_parsed[3],
+                            "seconds": repair_seconds, "usage": repair_resp.get("usage"),
+                        }
+                        repairs.append(repair_record)
+                        print(f"    solver repair {repair_no}: {repair_parsed[0]} "
+                              f"({repair_seconds:.1f}s)"
+                              + (f"  [{repair_parsed[1]}]" if repair_parsed[1] else ""),
+                              flush=True)
+                        repair_parsed, json_repairs = recover_json(
+                            a.endpoint, key, mid, messages, repair_resp, repair_parsed,
+                            a.json_repair_turns, mt, temp, tmo,
+                            repair_dir / "json-repairs", log_prefix="      ")
+                        if json_repairs:
+                            repair_record["json_repairs"] = json_repairs
+                        repaired_obj = repair_parsed[2]
+                        if repaired_obj is None:
+                            break
+                        current_obj = repaired_obj
+                        (out / f"candidate.attempt-{repair_no}.json").write_text(
+                            json.dumps(current_obj, indent=2,
+                                       ensure_ascii=False) + "\n", encoding="utf-8")
+                        save_and_score(current_obj)
+                    rec["solver_attempts"] = solver_attempts
+                    rec["execution"] = solver_attempts[-1]
+                    rec["repairs"] = repairs
+                    rec["solver_seconds"] = round(sum(
+                        x.get("seconds", 0) for x in solver_attempts), 3)
+                    rec["repair_seconds"] = round(sum(
+                        x.get("seconds", 0) for x in repairs), 1)
+                    if case["case"] in baselines:
+                        rec["solver_baseline"] = baselines[case["case"]]
+                        rec["execution_comparable"] = (
+                            baselines[case["case"]].get("status") == "ok")
+                    if rec["accuracy"] != rec["initial_accuracy"]:
+                        print(f"    scored after solver repair: {score_text()}",
+                              flush=True)
+            records.append(rec)
+
+            # A solver-enabled run can last hours. Preserve progress after each
+            # candidate rather than waiting for the complete sweep.
+            (run_dir / "run.json").write_text(json.dumps({
+                "run_id": run_id, "endpoint": a.endpoint, "tolerance": a.tol,
+                "models": [m["id"] for m in models],
+                "cases": [c["case"] for c in cases],
+                "solver_environment": solver_info,
+                "solver_baselines": baselines,
+                "solver_feedback_turns": (
+                    a.solver_feedback_turns if a.run_solver else 0),
+                "records": records,
+            }, indent=2), encoding="utf-8")
 
     (run_dir / "run.json").write_text(json.dumps({
         "run_id": run_id, "endpoint": a.endpoint, "tolerance": a.tol,
         "models": [m["id"] for m in models], "cases": [c["case"] for c in cases],
+        "solver_environment": solver_info,
+        "solver_baselines": baselines,
+        "solver_feedback_turns": a.solver_feedback_turns if a.run_solver else 0,
         "records": records,
     }, indent=2), encoding="utf-8")
     print(f"\nwrote {run_dir / 'run.json'}\n"

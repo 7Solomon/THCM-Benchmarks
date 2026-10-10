@@ -1,0 +1,8 @@
+[
+  {"file": "cervera1999_fig1a_model.csv", "x": "time_h", "y": "T_degC",
+   "x_label": "time since casting [h]",
+   "y_label": "adiabatic temperature [degC]"},
+  {"file": "degree_of_hydration.csv", "x": "x", "y": "y",
+   "x_label": "UNLABELLED in the source CSV (header is `Series,x,y`); spans 0 to 0.75",
+   "y_label": "UNLABELLED; despite the filename this is NOT degree of hydration -- it rises to a peak near x=0.12 and decays to zero, so it is a rate-like quantity. Reproduce the shape as given."}
+]

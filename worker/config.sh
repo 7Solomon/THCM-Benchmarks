@@ -20,7 +20,48 @@ AUTHORING_DIR="$JOBS_DIR/authoring"
 EVAL_DIR="$JOBS_DIR/eval"
 
 # The solver lives in a separate repo. Override with THCM_FEM_ROOT if it moves.
-FEM_ROOT="${THCM_FEM_ROOT:-$HOME/programme/THCM-Fem}"
+# This checkout is installed editable into BENCH_ROOT/.venv, so edits to the
+# solver are picked up without reinstalling it.
+FEM_ROOT="${THCM_FEM_ROOT:-$HOME/Documents/johannes/THCM-FEM}"
+
+# OOFEM itself, for the `oofem` job. That job drives the bindings directly --
+# no THCM-Fem in between -- so this is a separate knob from FEM_ROOT above.
+#
+# These three must agree with each other, and the reason is that oofempy is a
+# COMPILED extension: it is built against one Python minor version, and any
+# other interpreter refuses it outright ("module was compiled for Python 3.10").
+#
+#   OOFEMPY_DIR   holds oofempy.so
+#   OOFEM_PY      the interpreter that .so was compiled against
+#   OOFEM_ROOT    the checkout that .so was BUILT FROM. The job feeds
+#                 bindings/python/{tests/test_5.py,util.py} to the model as API
+#                 reference, so pointing this at a different checkout would
+#                 document an API the binary does not have.
+#
+# BENCH_ROOT/.venv is deliberately built on Python 3.10 to match that ABI, so
+# OOFEM_PY and $PY below are the SAME interpreter: the worker, the dataset
+# builder and the model-written simulation scripts all run on one environment.
+# If the bindings are ever rebuilt against another version, rebuild .venv to
+# match or split these two apart again.
+#
+# The eval job's THCM-FEM backend imports the `oofem` wheel installed in .venv;
+# these legacy direct-binding paths remain the knobs for the separate oofem job.
+OOFEM_ROOT="${OOFEM_ROOT:-$HOME/Documents/Gereon/oofem/oofem-gw}"
+OOFEMPY_DIR="${OOFEMPY_DIR:-$HOME/Documents/Gereon/oofem/build/debug}"
+OOFEM_PY="${OOFEM_PY:-$BENCH_ROOT/.venv/bin/python}"
+# The Python interpreter behind .venv comes from the older Gereon conda env.
+# The wheel built by the system compiler needs the newer system libstdc++.
+# Keep this opt-in variable separate from LD_PRELOAD: only solver children get
+# it, not every worker/API process. Empty it after rebuilding with one toolchain.
+OOFEM_LD_PRELOAD="${OOFEM_LD_PRELOAD:-/usr/lib/x86_64-linux-gnu/libstdc++.so.6}"
+export OOFEM_ROOT OOFEMPY_DIR OOFEM_PY OOFEM_LD_PRELOAD
+
+# The `oofem-native` job skips the bindings and runs the solver executable on a
+# text input deck. The same build tree produces both, so the binary sits next to
+# oofempy.so and shares its OOFEM_ROOT (the source the prompts quote) and its
+# OOFEM_LD_PRELOAD (the same libstdc++ mismatch applies to liboofem.so).
+OOFEM_BIN="${OOFEM_BIN:-$OOFEMPY_DIR/oofem}"
+export OOFEM_BIN
 
 # Interpreters / entry points (BENCH_ROOT/.venv is an editable install of FEM_ROOT)
 PY="$BENCH_ROOT/.venv/bin/python"

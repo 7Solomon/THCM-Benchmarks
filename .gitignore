@@ -23,3 +23,5 @@ dataset/text/
 # Eval artifacts: raw API responses, one per (model, case). Regenerate, or copy a
 # leaderboard.md out deliberately.
 /workspace/runs/
+/workspace/solver-smoke/
+/workspace/.oofem-shim/

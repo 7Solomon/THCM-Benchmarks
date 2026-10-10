@@ -1,6 +1,14 @@
 # Benchmark viewer
 
-Static browser view of `benchmarks/`. No dependencies, no build step.
+Static browser view of the project. No dependencies, no build step. The home page
+(`#/`) leads to two sections:
+
+- **Benchmarks** (`#/benchmarks`): every `benchmarks/**/benchmark.json`, with its
+  plots and review verdict.
+- **Workflows** (`#/workflows`): every worker job drawn as a diagram from its
+  `worker/jobs/<job>/dataflow.json`, meaning the steps, the loops that send results
+  back to a model, and a flags panel that shows what each option changes and
+  builds the matching command line.
 
 ```bash
 python3 viewer/build_index.py     # scan benchmarks/ -> viewer/index.json
@@ -66,3 +74,33 @@ short tag list for filtering. Extend `PHYSICS_TAGS` there when a new class appea
 
 A PNG with no matching entry in `results.plots` is still shown, captioned with its
 filename. A benchmark with no `output/*/plots/` is listed as "no output".
+
+## Workflows
+
+`build_index.py` copies each `worker/jobs/<job>/dataflow.json` (format:
+`worker/schemas/dataflow.schema.json`) into the index and runs
+`worker/tools/check_dataflow.py` on it. A file that no longer matches the job's
+real flags is still drawn, under a "may be out of date" banner listing the
+problems: run the checker, fix the JSON, rebuild.
+
+The diagram is laid out top to bottom by `layoutFlow()` in `workflows.js`. Rows
+follow the longest path, feedback edges become numbered loops beside the boxes,
+and an edge that skips rows gets a lane of its own, so it never runs behind a box.
+
+## Code layout
+
+| file | holds |
+|---|---|
+| `core.js` | data, router, top navigation, lightbox, markdown, helpers |
+| `benchmarks.js` | the Benchmarks section |
+| `workflows.js` | the Workflows section: layout, flags panel, step drawer |
+| `home.js` | the landing page |
+| `main.js` | loads the index and starts the router (loaded last) |
+
+A section is one `registerSection({id, title, icon, blurb, stats, render, leave})`
+call in its own file; its home-page card, its top-navigation link and its route
+`#/<id>/...` all come from that. Add the file to `index.html` and to `SCRIPTS` in
+`build_index.py`, which inlines them in that order for the standalone export.
+
+Old links of the form `#HAMSTAD%2FB2` still work: they redirect to
+`#/benchmarks/HAMSTAD%2FB2`.

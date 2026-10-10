@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dataflow.schema.json",
+  "title": "Worker job dataflow",
+  "description": "What one worker job does, as a graph: steps (nodes), what flows between them (edges), and which CLI flags or config values change that graph (params). One file per job at worker/jobs/<job>/dataflow.json. The viewer draws it; worker/tools/check_dataflow.py keeps it honest against the job's real CLI.",
+  "type": "object",
+  "required": [
+    "version",
+    "job",
+    "title",
+    "summary",
+    "command",
+    "flag_sources",
+    "nodes",
+    "edges",
+    "params"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "const": 1
+    },
+    "job": {
+      "type": "string",
+      "description": "The job directory name under worker/jobs/."
+    },
+    "title": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Two or three sentences: what question the job answers and how."
+    },
+    "command": {
+      "type": "string",
+      "description": "How a person starts it, e.g. `worker/worker.sh eval`."
+    },
+    "flag_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "Repo-relative files whose CLI flags this file must account for: argparse `add_argument(\"--x\")` in .py, `--x)` case branches in .sh. Every flag found there must appear in params, and every param flag must be found there."
+    },
+    "groups": {
+      "type": "array",
+      "description": "Boxes drawn around nodes that repeat together, e.g. 'for each model x case'. A group may sit inside another via parent.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "label": {
+            "type": "string"
+          },
+          "parent": {
+            "$ref": "#/$defs/id"
+          },
+          "enabled_by": {
+            "$ref": "#/$defs/switch"
+          },
+          "detail": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "label"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "kind": {
+            "enum": [
+              "input",
+              "llm",
+              "tool",
+              "check",
+              "step",
+              "solver",
+              "artifact",
+              "human"
+            ],
+            "description": "input: data read from disk. llm: a model call. tool: something an agent calls. check: a gate or decision. step: deterministic processing. solver: a simulation run. artifact: something written for a person or a later step. human: a person has to act."
+          },
+          "label": {
+            "type": "string",
+            "description": "Two to five words; it goes inside the box."
+          },
+          "detail": {
+            "type": "string",
+            "description": "What the step does, shown when the node is selected."
+          },
+          "path": {
+            "type": "string",
+            "description": "Where its data lives or lands. <run>, <model>, <case> are placeholders."
+          },
+          "code": {
+            "type": "string",
+            "description": "Repo-relative file (optionally :function) that implements it."
+          },
+          "group": {
+            "$ref": "#/$defs/id"
+          },
+          "enabled_by": {
+            "$ref": "#/$defs/switch"
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "from": {
+            "$ref": "#/$defs/id"
+          },
+          "to": {
+            "$ref": "#/$defs/id"
+          },
+          "kind": {
+            "enum": [
+              "data",
+              "feedback",
+              "tool",
+              "control"
+            ],
+            "default": "data",
+            "description": "data: output of one step feeds the next. feedback: a loop that sends results back to a model. tool: an agent calls a tool and gets its result back (drawn both ways). control: flow that carries no data, such as a retry or a gate."
+          },
+          "label": {
+            "type": "string"
+          },
+          "when": {
+            "type": "string",
+            "description": "The condition under which this edge is taken."
+          },
+          "carries": {
+            "type": "string",
+            "description": "What travels along it. For feedback edges: exactly what the model gets to see."
+          },
+          "limit": {
+            "$ref": "#/$defs/limit"
+          },
+          "enabled_by": {
+            "$ref": "#/$defs/switch"
+          }
+        }
+      }
+    },
+    "params": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "help"
+        ],
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "flag"
+            ]
+          },
+          {
+            "required": [
+              "env"
+            ]
+          }
+        ],
+        "properties": {
+          "flag": {
+            "type": "string",
+            "pattern": "^--[a-z0-9][a-z0-9-]*$"
+          },
+          "env": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$",
+            "description": "A config.sh / environment variable rather than a flag."
+          },
+          "source": {
+            "type": "string",
+            "description": "For env params: the file that defines it."
+          },
+          "arg": {
+            "type": "string",
+            "description": "Metavariable shown after the flag, e.g. N, RUN_ID, M [M ...]."
+          },
+          "kind": {
+            "enum": [
+              "toggle",
+              "loop-limit",
+              "selection",
+              "tuning",
+              "mode",
+              "info"
+            ],
+            "description": "toggle: switches nodes/edges on (they name it in enabled_by). loop-limit: caps a loop (edges name it in limit). selection: picks what the run covers (models, cases). tuning: changes how a step behaves (a timeout, a tolerance, a backend) without changing the graph. mode: runs a different, smaller part of the graph instead of the full run (see runs). info: prints something and exits."
+          },
+          "default": {},
+          "help": {
+            "type": "string",
+            "description": "One sentence, in terms of the diagram."
+          },
+          "affects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/id"
+            },
+            "description": "Node ids this param changes, for highlighting. Toggles and loop limits are found from enabled_by / limit and need not repeat them."
+          },
+          "implies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Flags this one switches on too."
+          },
+          "runs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/id"
+            },
+            "description": "mode only: the nodes this mode executes."
+          },
+          "metered": {
+            "type": "boolean",
+            "description": "Can spend money."
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "switch": {
+      "type": "string",
+      "pattern": "^!?(--[a-z0-9-]+|[A-Z][A-Z0-9_]*=[A-Za-z0-9_-]+)$",
+      "description": "A toggle flag (`--run-solver`) or an env value (`WORKER_HARNESS=dsh`). A leading `!` means the opposite: on while that flag is off (`!--agent`)."
+    },
+    "limit": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What caps a loop: a flag, an env/config value, or a fixed number in the code or prompt.",
+      "properties": {
+        "flag": {
+          "type": "string"
+        },
+        "env": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "integer",
+            "string"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "description": "Where a fixed value lives, e.g. worker/jobs/oofem/agent.py:MAX_IDLE_TURNS."
+        }
+      },
+      "minProperties": 1
+    }
+  }
+}

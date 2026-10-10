@@ -108,7 +108,12 @@ def cmd_text(a):
         sys.exit(f"PDF needs a password, cannot be processed: {a.pdf}")
     parts, empty = [], 0
     for i, page in enumerate(doc, start=1):
-        body = page.get_text().strip()
+        # PDFs frequently store glyphs in drawing order rather than reading
+        # order.  The unsorted form turns equations and tables into streams of
+        # one-symbol lines (HAMSTAD is a particularly bad example).  PyMuPDF's
+        # positional sort reconstructs lines from top-left to bottom-right and
+        # preserves enough horizontal spacing for most equations and tables.
+        body = page.get_text("text", sort=True).strip()
         if not body:
             empty += 1
         parts.append(f"[page {i}]\n{body}")

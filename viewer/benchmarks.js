@@ -1,124 +1,14 @@
 "use strict";
+/* benchmarks.js -- the curated corpus: a filterable overview and one page per
+   benchmark (#/benchmarks and #/benchmarks/<path>). */
 
-const view = document.getElementById("view");
-let CASES = [];
 let filter = { q: "", physics: new Set(), status: "all" };
 let current = null;              // case on screen, for ←/→ keys and swipes
-let overviewBound = false;       // the delegated overview handler binds once
+let onOverview = false;          // the delegated overview handler acts only here
+let overviewBound = false;       // ...and binds once
 
-/* In the standalone export the builder inlines the index and base64 images into
-   the page, so there is nothing to fetch and no sibling files to link to. */
-const EMBEDDED = window.__BENCHMARK_DATA__ || null;
-const STANDALONE = EMBEDDED !== null;
-const ASSET = (p) => (STANDALONE ? p : "../" + p);
-
-/* ------------------------------------------------------------------ utils */
-
-const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) =>
-  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-
-const byPath = (p) => CASES.find((c) => c.path === p);
-
-function fmtDuration(t) {
-  if (t == null) return null;
-  if (t >= 86400) return `${(t / 86400).toFixed(t % 86400 ? 1 : 0)} d`;
-  if (t >= 3600) return `${(t / 3600).toFixed(t % 3600 ? 1 : 0)} h`;
-  if (t >= 60) return `${(t / 60).toFixed(0)} min`;
-  return `${t} s`;
-}
-
-/* -------------------------------------------------------------- markdown */
-/* Small block-level renderer: headings, fences, tables, lists, quotes, rules. */
-
-function inline(s) {
-  return esc(s)
-    .replace(/`([^`]+)`/g, "<code>$1</code>")
-    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-    .replace(/(^|[\s(])\*([^*\n]+)\*/g, "$1<em>$2</em>")
-    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
-}
-
-function markdown(src) {
-  const lines = src.replace(/\r\n/g, "\n").split("\n");
-  const out = [];
-  let i = 0, para = [], list = null;
-
-  const flushPara = () => {
-    if (para.length) { out.push(`<p>${inline(para.join(" "))}</p>`); para = []; }
-  };
-  const flushList = () => {
-    if (list) { out.push(`</${list}>`); list = null; }
-  };
-  const flush = () => { flushPara(); flushList(); };
-
-  while (i < lines.length) {
-    const line = lines[i];
-
-    if (/^```/.test(line)) {                                   // fenced code
-      flush();
-      const body = [];
-      i++;
-      while (i < lines.length && !/^```/.test(lines[i])) body.push(lines[i++]);
-      i++;
-      out.push(`<pre><code>${esc(body.join("\n"))}</code></pre>`);
-      continue;
-    }
-
-    if (!line.trim()) { flush(); i++; continue; }
-
-    if (/^\s{0,3}(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) {        // rule
-      flush(); out.push("<hr>"); i++; continue;
-    }
-
-    const h = line.match(/^(#{1,6})\s+(.*)$/);                  // heading
-    if (h) {
-      flush();
-      const lvl = Math.min(h[1].length, 3);
-      out.push(`<h${lvl}>${inline(h[2])}</h${lvl}>`);
-      i++; continue;
-    }
-
-    if (/^\s*\|/.test(line) && /^\s*\|[\s:|-]+\|?\s*$/.test(lines[i + 1] || "")) {
-      flush();                                                  // table
-      const row = (l) => l.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
-      const head = row(line);
-      i += 2;
-      const body = [];
-      while (i < lines.length && /^\s*\|/.test(lines[i])) body.push(row(lines[i++]));
-      out.push(
-        "<table><thead><tr>" + head.map((c) => `<th>${inline(c)}</th>`).join("") +
-        "</tr></thead><tbody>" +
-        body.map((r) => "<tr>" + r.map((c) => `<td>${inline(c)}</td>`).join("") + "</tr>").join("") +
-        "</tbody></table>"
-      );
-      continue;
-    }
-
-    const li = line.match(/^\s*([-*+]|\d+\.)\s+(.*)$/);         // list item
-    if (li) {
-      flushPara();
-      const want = /^\d/.test(li[1]) ? "ol" : "ul";
-      if (list !== want) { flushList(); out.push(`<${want}>`); list = want; }
-      out.push(`<li>${inline(li[2])}</li>`);
-      i++; continue;
-    }
-
-    const bq = line.match(/^>\s?(.*)$/);                        // blockquote
-    if (bq) {
-      flush();
-      const body = [];
-      while (i < lines.length && /^>/.test(lines[i])) body.push(lines[i++].replace(/^>\s?/, ""));
-      out.push(`<blockquote>${markdown(body.join("\n"))}</blockquote>`);
-      continue;
-    }
-
-    flushList();
-    para.push(line.trim());
-    i++;
-  }
-  flush();
-  return out.join("\n");
-}
+const CASES = () => DATA.cases;
+const byPath = (p) => CASES().find((c) => c.path === p);
 
 /* -------------------------------------------------------------- overview */
 
@@ -162,25 +52,30 @@ const isFiltered = () =>
   filter.q !== "" || filter.physics.size > 0 || filter.status !== "all";
 
 function verdictBadge(c) {
-  if (c.correct === true) return `<span class="badge ok">✓ correct</span>`;
-  if (c.correct === false) return `<span class="badge bad">✗ incorrect</span>`;
-  return `<span class="badge muted">unreviewed</span>`;
+  if (c.correct === true) return `<span class="badge ok">Correct</span>`;
+  if (c.correct === false) return `<span class="badge bad">Incorrect</span>`;
+  return `<span class="badge muted">Unreviewed</span>`;
 }
 
-function card(c) {
-  const badges = [`<span class="badge">${esc(c.physics)}</span>`];
-  if (c.dimension) badges.push(`<span class="badge plain">${c.dimension}D</span>`);
-  for (const s of c.solvers) badges.push(`<span class="badge plain">${esc(s.name)}</span>`);
-  badges.push(c.n_figures
-    ? `<span class="badge muted">${c.n_figures} figure${c.n_figures > 1 ? "s" : ""}</span>`
-    : `<span class="badge muted">no output</span>`);
-  badges.push(verdictBadge(c));
+const caseHref = (c) => link("benchmarks", c.path);
 
-  return `<a class="card" href="#${encodeURIComponent(c.path)}">
+function card(c) {
+  const meta = [physicsLabel(c.physics)];
+  if (c.dimension) meta.push(`${c.dimension}D`);
+  for (const s of c.solvers) meta.push(s.name);
+
+  return `<a class="card" href="${caseHref(c)}">
     <p class="eyebrow">${esc(c.path)}</p>
     <h2>${esc(c.title)}</h2>
     <p class="source">${esc(c.source || "—")}</p>
-    <div class="badges">${badges.join("")}</div>
+    <div class="card-foot">
+      <span class="meta">${meta.map(esc).join(" · ")}</span>
+      <span class="badges">
+        ${c.n_figures ? `<span class="badge plain">${plural(c.n_figures, "figure")}</span>`
+                      : `<span class="badge plain">No output</span>`}
+        ${verdictBadge(c)}
+      </span>
+    </div>
   </a>`;
 }
 
@@ -194,24 +89,24 @@ function chip({ dim, val, label, title, n, active }) {
 }
 
 function renderFacets() {
-  const tags = [...new Set(CASES.map((c) => c.physics))].sort();
+  const tags = [...new Set(CASES().map((c) => c.physics))].sort();
 
   const physics = [
     chip({
       dim: "physics", val: "all", label: "All",
-      n: CASES.filter((c) => matches(c, "physics")).length,
+      n: CASES().filter((c) => matches(c, "physics")).length,
       active: filter.physics.size === 0,
     }),
     ...tags.map((t) => chip({
       dim: "physics", val: t, label: physicsLabel(t), title: t,
-      n: CASES.filter((c) => matches(c, "physics") && c.physics === t).length,
+      n: CASES().filter((c) => matches(c, "physics") && c.physics === t).length,
       active: filter.physics.has(t),
     })),
   ].join("");
 
   const status = STATUS.map(([key, label, pred]) => chip({
     dim: "status", val: key, label,
-    n: CASES.filter((c) => matches(c, "status") && pred(c)).length,
+    n: CASES().filter((c) => matches(c, "status") && pred(c)).length,
     active: filter.status === key,
   })).join("");
 
@@ -227,7 +122,7 @@ function renderFacets() {
 }
 
 function renderResults() {
-  const shown = CASES.filter((c) => matches(c));
+  const shown = CASES().filter((c) => matches(c));
 
   view.querySelector("#results").innerHTML = shown.length
     ? `<div class="grid">${shown.map(card).join("")}</div>`
@@ -237,8 +132,8 @@ function renderResults() {
        </div>`;
 
   view.querySelector("#tally").innerHTML = isFiltered()
-    ? `<strong>${shown.length}</strong> of ${CASES.length}`
-    : `<strong>${CASES.length}</strong> benchmark${CASES.length === 1 ? "" : "s"}`;
+    ? `<strong>${shown.length}</strong> of ${CASES().length}`
+    : `<strong>${CASES().length}</strong> benchmark${CASES().length === 1 ? "" : "s"}`;
   view.querySelector("#reset").hidden = !isFiltered();
 }
 
@@ -254,7 +149,13 @@ function resetFilters() {
 }
 
 function renderOverview() {
+  onOverview = true;
   view.innerHTML = `
+    <header class="page-head">
+      <h1>Benchmarks</h1>
+      <p class="lede">Each benchmark is one experiment from the literature, written as a
+        <code>benchmark.json</code>, with the solver's plots and a review verdict.</p>
+    </header>
     <div class="filterbar">
       <div class="searchrow">
         <div class="searchfield">
@@ -281,12 +182,12 @@ function renderOverview() {
     if (e.key === "Escape" && search.value) { search.value = ""; filter.q = ""; refresh(); }
   });
 
-  /* Delegated: the facet chips are re-rendered on every change. Bound once —
+  /* Delegated: the facet chips are re-rendered on every change. Bound once --
      `view` itself outlives every re-render. */
   if (!overviewBound) {
     overviewBound = true;
     view.addEventListener("click", (e) => {
-      if (current) return;
+      if (!onOverview) return;
       const btn = e.target.closest("button");
       if (!btn) return;
       if (btn.dataset.action === "reset") return resetFilters();
@@ -309,43 +210,43 @@ function renderOverview() {
 /* Paging follows the list the user came from: with filters active the
    neighbours stay inside the filtered set, otherwise it is the whole suite. */
 function siblings(c) {
-  const shown = CASES.filter((x) => matches(x));
-  const scope = shown.includes(c) ? shown : CASES;
+  const all = CASES();
+  const shown = all.filter((x) => matches(x));
+  const scope = shown.includes(c) ? shown : all;
   const i = scope.indexOf(c);
   return {
     prev: scope[i - 1] || null,
     next: scope[i + 1] || null,
     pos: i + 1,
     total: scope.length,
-    scoped: scope !== CASES && isFiltered(),
+    scoped: scope !== all && isFiltered(),
   };
 }
 
-const href = (c) => `#${encodeURIComponent(c.path)}`;
-const goTo = (c) => { if (c) location.hash = href(c); };
+const goTo = (c) => { if (c) location.hash = caseHref(c); };
 
 function navBar(c) {
   const { prev, next, pos, total, scoped } = siblings(c);
   const arrow = (label, s, glyph) => s
-    ? `<a class="pager-btn" href="${href(s)}" title="${esc(s.title)}"
+    ? `<a class="pager-btn" href="${caseHref(s)}" title="${esc(s.title)}"
          aria-label="${label}: ${esc(s.title)}">${glyph}</a>`
     : `<span class="pager-btn" aria-disabled="true" aria-hidden="true">${glyph}</span>`;
 
-  return `<nav class="detail-nav" aria-label="Benchmark navigation">
-    <a class="back" href="#">← All benchmarks</a>
-    <div class="pager-mini">
+  return `<div class="detail-nav">
+    ${crumbs([["Benchmarks", link("benchmarks")], [c.path]])}
+    <div class="pager-mini" aria-label="Benchmark navigation">
       ${arrow("Previous benchmark", prev, "←")}
       <span class="pager-count">${pos}<span class="of">/</span>${total}${
         scoped ? ` <span class="of">filtered</span>` : ""}</span>
       ${arrow("Next benchmark", next, "→")}
     </div>
-  </nav>`;
+  </div>`;
 }
 
 function pagerFoot(c) {
   const { prev, next } = siblings(c);
   const cell = (dir, label, s) => s
-    ? `<a class="pager-card ${dir}" href="${href(s)}">
+    ? `<a class="pager-card ${dir}" href="${caseHref(s)}">
          <span class="pager-dir">${label}</span>
          <span class="pager-title">${esc(s.title)}</span>
          <span class="pager-path">${esc(s.path)}</span>
@@ -375,7 +276,7 @@ function factsList(c) {
     ["Review note", c.verdict_comment],
     ["Solvers", c.solvers.length ? c.solvers.map((s) => s.name).join(", ") : "not run"],
     ["Reference data", c.reference_files.length
-      ? `${c.reference_files.length} CSV file${c.reference_files.length > 1 ? "s" : ""}` : null],
+      ? plural(c.reference_files.length, "CSV file") : null],
     ["Specification", STANDALONE
       ? `<code>${esc(c.spec_path)}</code>`
       : `<a href="${esc(ASSET(c.spec_path))}"><code>${esc(c.spec_path)}</code></a>`],
@@ -388,7 +289,7 @@ function factsList(c) {
     `<dt>${esc(k)}</dt><dd>${/^<(a|code)[\s>]/.test(String(v)) ? v : esc(v)}</dd>`).join("")}</dl>`;
 }
 
-/* No curve list here — the plot image carries its own legend. */
+/* No curve list here -- the plot image carries its own legend. */
 function figure(f) {
   const axes = [f.y_label, f.x_label].filter(Boolean).join(" vs. ");
   return `<figure class="plot">
@@ -404,23 +305,22 @@ function figure(f) {
 function renderDetail(c) {
   const results = c.solvers.length
     ? c.solvers.map((s) => `
-        <p class="solver-label">Solver <strong>${esc(s.name)}</strong> &mdash;
-          ${s.figures.length} figure${s.figures.length > 1 ? "s" : ""}${s.has_vtu ? ", VTU field output" : ""}${s.has_logs ? ", logs" : ""}</p>
+        <p class="solver-label">Solver <strong>${esc(s.name)}</strong> &middot;
+          ${plural(s.figures.length, "figure")}${s.has_vtu ? " · VTU field output" : ""}${s.has_logs ? " · logs" : ""}</p>
         <div class="figures">${s.figures.map(figure).join("")}</div>`).join("")
     : `<p class="empty">No output plots on disk for this benchmark.</p>`;
 
   view.innerHTML = `
     ${navBar(c)}
-    <div class="detail-head">
+    <header class="detail-head">
       <h1>${esc(c.title)}</h1>
       <p class="source">${esc(c.source || c.path)}</p>
       <div class="badges">
-        <span class="badge">${esc(c.physics)}</span>
+        <span class="badge" title="${esc(c.physics_raw)}">${esc(c.physics)}</span>
         ${c.dimension ? `<span class="badge plain">${c.dimension}D</span>` : ""}
-        <span class="badge plain">${esc(c.path)}</span>
         ${verdictBadge(c)}
       </div>
-    </div>
+    </header>
 
     ${c.notes ? `<p class="abstract">${esc(c.notes)}</p>` : ""}
 
@@ -448,23 +348,13 @@ function renderDetail(c) {
     img.addEventListener("click", () => openLightbox(img.src, img.dataset.caption)));
 }
 
-/* ------------------------------------------------------------- lightbox */
+/* ------------------------------------------------------- keys and swipes */
 
-const lb = document.getElementById("lightbox");
-const lbImg = document.getElementById("lightbox-img");
-const lbCap = document.getElementById("lightbox-caption");
-
-function openLightbox(src, caption) {
-  lbImg.src = src;
-  lbCap.textContent = caption || "";
-  lb.hidden = false;
-}
-lb.addEventListener("click", () => { lb.hidden = true; lbImg.src = ""; });
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !lb.hidden) { lb.hidden = true; lbImg.src = ""; return; }
+  if (e.key === "Escape" && lightboxOpen()) { closeLightbox(); return; }
   // ← / → page through the benchmarks while a detail page is open.
-  const inField = /^(INPUT|TEXTAREA)$/.test(document.activeElement?.tagName || "");
-  if (current && lb.hidden && !inField && !e.metaKey && !e.ctrlKey && !e.altKey) {
+  const inField = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || "");
+  if (current && !lightboxOpen() && !inField && !e.metaKey && !e.ctrlKey && !e.altKey) {
     if (e.key === "ArrowLeft") { e.preventDefault(); return goTo(siblings(current).prev); }
     if (e.key === "ArrowRight") { e.preventDefault(); return goTo(siblings(current).next); }
   }
@@ -476,8 +366,6 @@ document.addEventListener("keydown", (e) => {
     search.select();
   }
 });
-
-/* ---------------------------------------------------------------- swipe */
 
 /* Horizontal drags page between benchmarks; anything that leans vertical is
    left to the scroller. */
@@ -492,42 +380,32 @@ document.addEventListener("touchstart", (e) => {
 document.addEventListener("touchend", (e) => {
   const from = touchStart;
   touchStart = null;
-  if (!from || !current || !lb.hidden) return;
+  if (!from || !current || lightboxOpen()) return;
   const t = e.changedTouches[0];
   const dx = t.clientX - from.x, dy = t.clientY - from.y;
   if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.8) return;
   goTo(dx < 0 ? siblings(current).next : siblings(current).prev);
 }, { passive: true });
 
-/* --------------------------------------------------------------- router */
+/* --------------------------------------------------------------- section */
 
-function route() {
-  const path = decodeURIComponent(location.hash.slice(1));
-  const c = (path && byPath(path)) || null;
-  current = c;
-  if (c) renderDetail(c); else renderOverview();
-  window.scrollTo(0, 0);
-}
-
-window.addEventListener("hashchange", route);
-
-function start(data) {
-  CASES = data.cases.sort((a, b) => a.path.localeCompare(b.path));
-  route();
-}
-
-if (STANDALONE) {
-  start(EMBEDDED);
-} else {
-  fetch("index.json")
-    .then((r) => {
-      if (!r.ok) throw new Error(`index.json → HTTP ${r.status}`);
-      return r.json();
-    })
-    .then(start)
-    .catch((err) => {
-      view.innerHTML = `<p class="error">Could not load <code>index.json</code>: ${esc(err.message)}<br>
-        Run <code>python3 viewer/build_index.py</code> from the repo root, then serve with
-        <code>python3 -m http.server</code> and open <code>localhost:8000/viewer/</code>.</p>`;
-    });
-}
+registerSection({
+  id: "benchmarks",
+  title: "Benchmarks",
+  icon: ICON.benchmarks,
+  blurb: "The curated corpus: each paper's setup, the solver's plots, and whether " +
+         "the result has been checked against the paper.",
+  stats() {
+    const all = CASES();
+    const withPlots = all.filter((c) => c.n_figures > 0).length;
+    const correct = all.filter((c) => c.correct === true).length;
+    return [plural(all.length, "benchmark"), `${withPlots} with results`, `${correct} reviewed correct`];
+  },
+  render(path) {
+    const c = path ? byPath(path) : null;
+    current = c;
+    if (c) renderDetail(c);
+    else renderOverview();
+  },
+  leave() { current = null; onOverview = false; },
+});

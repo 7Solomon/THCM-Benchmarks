@@ -1,0 +1,8 @@
+[
+  {"file": "uac_stress_strain.csv", "x": "strain_1e-3_50mm",  "y": "stress_exp_50mm"},
+  {"file": "uac_stress_strain.csv", "x": "strain_1e-3_50mm",  "y": "stress_sim_50mm"},
+  {"file": "uac_stress_strain.csv", "x": "strain_1e-3_100mm", "y": "stress_exp_100mm"},
+  {"file": "uac_stress_strain.csv", "x": "strain_1e-3_100mm", "y": "stress_sim_100mm"},
+  {"file": "uac_stress_strain.csv", "x": "strain_1e-3_200mm", "y": "stress_exp_200mm"},
+  {"file": "uac_stress_strain.csv", "x": "strain_1e-3_200mm", "y": "stress_sim_200mm"}
+]

@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import statistics
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -74,12 +75,16 @@ def build(run: dict, runs_root: Path) -> str:
          f"Endpoint `{run['endpoint']}` · numeric tolerance "
          f"{run.get('tolerance', 0.01):.1%} · {len(recs)} calls "
          f"({len(by_model)} models × {len(run['cases'])} cases)", "",
-         "Every model got the same single-shot prompt: the authoring guide, the "
-         "physics modules, the schema, and the paper text. No tools, no solver.", "",
+         "Every model got the same initial authoring prompt: the authoring guide, "
+         "physics modules, schema, case scope, and paper text. "
+         + ("THCM-FEM execution was enabled; any repair calls used only solver "
+            "diagnostics, not the reference JSON."
+            if any(r.get("execution") for r in recs)
+            else "No tools or solver were used."), "",
          "**Accuracy is section-weighted.** `physics`, `materials` and the two "
          "condition blocks are compared strictly — every key, every value. "
          "`results.queries` is matched loosely on what is measured. "
-         "`results.plots` and `results.reference_curves` are ignored.", ""]
+         "`results.plots` and `results.reference_curves` are not scored.", ""]
 
     # The leaderboard says WHAT scored how. explain.py answers WHY, and a reader
     # who has one should be told before they start reading tables.
@@ -90,22 +95,73 @@ def build(run: dict, runs_root: Path) -> str:
               "model's.", ""]
 
     L += ["## Models", "",
-          "| model | accuracy | validates | " + " | ".join(SHORT[c] for c in cols)
+          "| model | parsed | accuracy | validates | " + " | ".join(SHORT[c] for c in cols)
           + " | findings |",
-          "|---|---:|---:|" + "---:|" * len(cols) + "---:|"]
+          "|---|---:|---:|---:|" + "---:|" * len(cols) + "---:|"]
     rows = sorted(by_model.items(),
                   key=lambda kv: -(mean(r.get("accuracy") for r in kv[1]) or -1))
     for model, rs in rows:
         cells = " | ".join(fmt(section_mean(rs, c)) for c in cols)
         n_find = mean(r.get("n_findings") for r in rs)
-        L.append(f"| `{model}` | {fmt(mean(r.get('accuracy') for r in rs))} | "
+        parsed = sum(r["outcome"] == "ok" for r in rs)
+        L.append(f"| `{model}` | {parsed}/{len(rs)} | "
+                 f"{fmt(mean(r.get('accuracy') for r in rs))} | "
                  f"{fmt(mean(r.get('validates') for r in rs))} | {cells} | "
                  f"{'—' if n_find is None else f'{n_find:.0f}'} |")
 
-    L += ["", "`validates` is the fraction of cases whose spec parses, matches the "
+    L += ["", "`parsed` counts first replies that were usable JSON. A reply fixed "
+              "by a JSON repair turn is not counted there, but its content is "
+              "scored in `accuracy`.", "",
+          "`validates` is the fraction of cases whose spec parses, matches the "
               "schema and passes the authoring rules. It is reported beside accuracy, "
               "never folded into it — a spec can be perfectly valid and describe the "
               "wrong experiment.", ""]
+
+    if any(r.get("execution") for r in recs):
+        L += ["## THCM-FEM execution", "",
+              "Execution is separate from JSON accuracy. `ok` means the solver "
+              "finished and wrote at least one query row.", "",
+              "| model | ok | attempted | repaired | median solver s |",
+              "|---|---:|---:|---:|---:|"]
+        for model, rs in rows:
+            attempted = [r for r in rs if r.get("execution")]
+            ok = sum(r["execution"].get("status") == "ok" for r in attempted)
+            repaired = sum(bool(r.get("repairs")) for r in attempted)
+            durations = [r.get("solver_seconds", r["execution"].get("seconds"))
+                         for r in attempted]
+            durations = [v for v in durations if isinstance(v, (int, float))]
+            median = statistics.median(durations) if durations else None
+            L.append(f"| `{model}` | {ok} | {len(attempted)} | {repaired} | "
+                     f"{'—' if median is None else f'{median:.1f}'} |")
+
+        L += ["", "### Execution detail", "",
+              "| model | case | status | stage | rows | attempts | JSON Δ | solver s |",
+              "|---|---|---|---|---:|---:|---:|---:|"]
+        for r in sorted(recs, key=lambda item: (item["case"], item["model"])):
+            execution = r.get("execution")
+            if not execution:
+                continue
+            output = execution.get("output") or {}
+            delta = ((r.get("accuracy") - r.get("initial_accuracy"))
+                     if isinstance(r.get("accuracy"), (int, float)) and
+                     isinstance(r.get("initial_accuracy"), (int, float)) else None)
+            L.append(f"| `{r['model']}` | `{r['case']}` | "
+                     f"{execution.get('status', '—')} | {execution.get('stage', '—')} | "
+                     f"{output.get('rows', 0)} | {len(r.get('solver_attempts') or [])} | "
+                     f"{'—' if delta is None else f'{delta:+.3f}'} | "
+                     f"{r.get('solver_seconds', execution.get('seconds', 0)):.1f} |")
+        L += [""]
+
+        baseline_failures = {
+            case: value for case, value in (run.get("solver_baselines") or {}).items()
+            if value.get("status") != "ok"
+        }
+        if baseline_failures:
+            L += ["> **Runner baseline failed:** " + ", ".join(
+                f"`{case}` ({value.get('status')})"
+                for case, value in sorted(baseline_failures.items()))
+                + ". Candidate execution for these cases is diagnostic but should "
+                  "not be used to rank models.", ""]
 
     L += ["## Where the errors are", "",
           "| model | " + " | ".join(k for k in
@@ -144,7 +200,17 @@ def build(run: dict, runs_root: Path) -> str:
 
     L += census(run, runs_root)
 
-    failures = [r for r in recs if r["outcome"] != "ok"]
+    repaired = [r for r in recs if r.get("json_repaired")]
+    if repaired:
+        L += ["", "## Replies fixed by a JSON repair turn", "",
+              "| model | case | first outcome | first error | repair calls |",
+              "|---|---|---|---|---:|"]
+        for r in repaired:
+            L.append(f"| `{r['model']}` | `{r['case']}` | {r['outcome']} | "
+                     f"{(r.get('message') or '')[:120]} | "
+                     f"{len(r.get('json_repairs') or [])} |")
+
+    failures = [r for r in recs if r["outcome"] != "ok" and r.get("accuracy") is None]
     if failures:
         L += ["", "## Calls that produced no scorable spec", "",
               "| model | case | outcome | why |", "|---|---|---|---|"]

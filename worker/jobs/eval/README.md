@@ -1,12 +1,14 @@
-# Authoring eval
+# Authoring and execution eval
 
-**Which model can write a correct `benchmark.json` from a paper?** No solver runs —
-this scores the spec, not the physics.
+**Which model can write a correct `benchmark.json` from a paper, and does that
+JSON execute?** Solver execution is opt-in, so the original single-shot
+authoring comparison remains available unchanged.
 
 ```bash
 python worker/tools/build_dataset.py         # once: benchmarks/ -> dataset/
 worker/worker.sh eval --probe       # which live free chat routes actually answer
 worker/worker.sh eval                       # free models, every case with a paper
+worker/worker.sh eval --run-solver          # score JSON, then execute THCM-FEM
 worker/worker.sh eval --report        # leaderboard
 worker/worker.sh eval --explain --allow-metered   # and WHY each spec is wrong
 ```
@@ -16,6 +18,11 @@ worker/worker.sh eval --explain --allow-metered   # and WHY each spec is wrong
 Models marked `metered: true` in `models.yaml` are refused unless you pass
 `--allow-metered`. **A run with no flags costs nothing** — it touches only
 KIT-hosted models, which are unmetered.
+
+Solver feedback adds up to `--solver-feedback-turns` model calls for each
+candidate that has not produced query output yet. A reply that is not parseable
+JSON adds up to `--json-repair-turns` calls (default 1). The same metered-model
+gate applies to those calls.
 
 The endpoint answers the budget question itself, per model, as
 `connection_type`: `local` is hosted at KIT and free, `external` is routed out
@@ -43,14 +50,77 @@ an alias cannot silently change what a time-series row means.
 ## What it does
 
 One identical single-shot call per (model, case): `SKILLs/CREATE.md`, all six
-physics modules, a compacted `benchmark.schema.json`, and the paper's text in —
-one JSON object out. No tools, no phases, no browser.
+physics modules, a compacted `benchmark.schema.json`, the case's
+`dataset/scope/*.md`, and the paper's text in — one JSON object out. No tools,
+no phases, no browser.
 
 That is deliberate. It isolates *"can it author the spec"* from *"does the physics
 reproduce"*, and it keeps a 31-billion-parameter local model and a frontier model
 comparable on the same input. The agentic path — where the model gets tools, the
 PDF, and the seven phases — is `worker/dispatch/dsh.py`, and it answers a
 different question.
+
+## THCM-FEM execution and repair
+
+Execution is a second axis and is never folded into JSON accuracy. Start with a
+small case set:
+
+```bash
+worker/worker.sh eval \
+  --models kit.mistral-small-4-119b-a8b \
+  --cases HAMSTAD/B2 cervera-1999-thermo-chemo-partI \
+  --run-solver --solver-timeout 900
+```
+
+`--solver-feedback-turns N` permits up to N additional calls to the same model.
+Each repair call sees the original paper prompt, its current JSON, and only the
+THCM-FEM status/log/output summary. It never sees the curated JSON or comparator
+findings. Every revision remains in `candidate.attempt-N.json`; `candidate.json`
+is the final revision.
+
+```bash
+worker/worker.sh eval --models kit.mistral-small-4-119b-a8b \
+  --cases HAMSTAD/B2 --run-solver --solver-feedback-turns 2
+```
+
+To add solver output to an existing run without making API calls:
+
+```bash
+worker/worker.sh eval --execute-run RUN_ID --cases HAMSTAD/B2
+```
+
+Use `--solver-baseline` on pilot runs. It executes the curated JSON through the
+same installed solver, separating a broken/unsupported backend from a generated
+candidate failure. OOFEM is the default backend; `--solver-backend fem` selects
+the legacy FEM backend. VTU is disabled unless `--keep-vtu` is passed.
+
+Each execution is isolated under the candidate directory:
+
+```text
+solver/attempt-0/
+  benchmark.json             execution projection, not the scored candidate
+  execution_transform.json   presentation changes and copied input hashes
+  execution.json             classified status and output inventory
+  mesh.stdout.log / *.stderr.log
+  solver.stdout.log / *.stderr.log
+  results.csv                 exported query_results.db, when available
+  output/OOFEM/query_results.db
+  output/OOFEM/plots/         the candidate's own plots, reference curves removed
+```
+
+The execution projection removes reference curves (the model's
+`results.reference_curves` and every plot curve with `source: reference`; a plot
+left with no curves is dropped), disables live reference deviation, forces
+`save_db`, and disables checkpoint/VTU output. The candidate's remaining plots are
+drawn, so a run shows what the solver produced. A plotting crash after the solve
+has written its query rows still counts as `ok`, with `stage: postprocess` and the
+traceback in `plot_error`; a single bad plot is listed in `output.plot_failures`.
+The `--solver-baseline` run keeps the curated plots and reference curves and
+copies `benchmarks/<case>/reference/` in, so `_baseline/<case>/output/OOFEM/plots/`
+is the reference picture to compare against. Geometry is
+always remeshed from the candidate. A non-mesh `input/...` file is copied only
+when the candidate names that exact path and it exists in the curated case;
+missing or invented files are reported as `asset_missing`.
 
 Figures do not survive text extraction, so a value that only exists in a plot is
 not recoverable here. The prompt tells the model to tag those `MISSING` rather
@@ -243,9 +313,15 @@ differently:
 | outcome | means | what to do |
 |---|---|---|
 | `truncated` | `finish_reason: length`, or the whole budget went to `reasoning_content` | raise `max_tokens` for that model in `models.yaml` |
-| `unparseable` | a reply arrived with no JSON object in it | a real model failure |
+| `unparseable` | a reply arrived with no parseable JSON object in it | a real model failure |
 | `refused` | the endpoint rejected the call (budget) | not a model result |
 | `error` | transport or HTTP failure | retry |
+
+`unparseable` and `truncated` replies with content get the parser error back,
+with the text around the error position marked, up to `--json-repair-turns`
+times (default 1; `0` disables). The record keeps the first reply's `outcome`, so
+the parse rate still measures the model; a repaired object is scored like any
+other and flagged `json_repaired`. Replies land in `json-repairs/attempt-N/`.
 
 Reasoning models on this endpoint put the chain in `reasoning_content` and the
 answer in `content`. The runner reads `content` only — scoring the other one

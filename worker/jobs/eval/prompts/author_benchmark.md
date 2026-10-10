@@ -1,8 +1,8 @@
 You are authoring ONE benchmark specification for a finite-element validation suite.
 
 You are given: the authoring guide, the physics modules it routes to, the JSON
-schema the file must satisfy, and the full text of one paper. Produce the
-`benchmark.json` that reproduces that paper's validation case.
+schema the file must satisfy, a short scope identifying the intended validation
+case, and the full text of one paper. Produce the `benchmark.json` for that case.
 
 ## Rules
 
@@ -35,6 +35,13 @@ schema the file must satisfy, and the full text of one paper. Produce the
 ```json
 {SCHEMA}
 ```
+
+## Case scope
+
+The paper may describe several analyses. Use this scope to identify the specific
+case and outputs this benchmark must reproduce.
+
+{SCOPE}
 
 ## The paper
 
